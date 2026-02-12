@@ -47,6 +47,7 @@
 //  2026/02/06  Modified. 04 ：地図データ,ゴール座標のDF保存/読出し 追加
 //  2026/02/09  Modified. 05 ：地図データ削除 追加
 //  2026/02/09  Modified. 06 ：速度選択 追加
+//  2026/02/09  Modified. 07 ：速度制限 追加
 //
 //***************************************************************
 #include "typedefine.h"
@@ -150,6 +151,7 @@ short    L_REF;            // 左センサしきい値
 short    R_LIM;            // 右壁有無しきい値
 short    L_LIM;            // 左壁有無しきい値
 short    F_LIM;            // 前壁有無しきい値
+short    F_LIM2;           // 2マス先前壁有無しきい値
 // モータ関連
 ushort   timerL;           // 左タイマー設定値
 ushort   timerR;           // 右タイマー設定値
@@ -237,7 +239,7 @@ void main(void){
     PIN_WRITE(LED) = LED_OFF;                        // LEDを消灯
     Start_Sound(98); // 起動音再生
     // タイトル表示
-    LCD_print( 0, "Modded05" );
+    LCD_print( 0, "Modded07" );
 
     // 電圧表示
     LCD_print( 8, "   .  v " );
@@ -812,7 +814,7 @@ void mode9(int x){
 //  探索関数
 //-------------------------------------------------------------------------
 void mouse_search( int goal_x, int goal_y, int spd, int mode ){
-  short x,y,block_count,motion;
+  short x, y, block_count, motion, next_motion;
 
   while( 1 ){
     // １つのループは区間中心から次の区間中心まで
@@ -820,7 +822,6 @@ void mouse_search( int goal_x, int goal_y, int spd, int mode ){
     control_mode = 1;             // 姿勢制御ON
     rdir = 0; ldir = 0;           // 回転方向を直進
     STEP = 0;                     // 距離カウンタリセット
-    speed = spd;                  // 速度設定
 
     // 座標更新
     if     ( head == 0 ) pos_y++; // 北向き y+1
@@ -831,6 +832,9 @@ void mouse_search( int goal_x, int goal_y, int spd, int mode ){
         // ポテンシャルMAP計算
     make_potential( goal_x, goal_y, mode );
 
+    next_motion = search_adachi();  // 次の行動予測
+    if ( (F_SEN > F_LIM2 || next_motion == 1 || next_motion == 3) && spd > 700 ) speed = 700; // 2マス先に壁がある場合は速度制限
+    else  speed = spd;                  // 速度設定
     while( STEP < GO_STEP / 2 );  // 半区間進む
 
     // 柱まで進んだら
