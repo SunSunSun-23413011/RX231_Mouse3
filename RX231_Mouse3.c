@@ -48,7 +48,7 @@
 //  2026/02/09  Modified. 05 ：地図データ削除 追加
 //  2026/02/09  Modified. 06 ：速度選択 追加
 //  2026/02/12  Modified. 07 ：速度制限 追加
-//  2026/02/12  Modified. 08 ：後ろ壁当て 追加
+//  2026/02/12  Modified. 08 ：後ろ壁当て, 前壁補正 追加
 //
 //***************************************************************
 #include "typedefine.h"
@@ -148,6 +148,7 @@ short    F_SW;            // 前センサのスイッチ
 // センサのしきい値
 short    R_REF;            // 右センサしきい値
 short    L_REF;            // 左センサしきい値
+short    F_REF;            // 前センサしきい値
 // 壁の有無判定用しきい値
 short    R_LIM;            // 右壁有無しきい値
 short    L_LIM;            // 左壁有無しきい値
@@ -308,6 +309,7 @@ void load_param( void ){
   // センサしきい値の決め打ち
   R_REF   = 270;    // 区画中央での右センサ値
   L_REF   = 380;    // 区画中央での左センサ値
+  F_REF   = 1600;   // 区画中央での前センサ値
   // 壁の有無判定用しきい値:各センサ壁あり最小値と壁なし値の中間値
   R_LIM   = 150;    // 右
   L_LIM   = 200;    // 左
@@ -873,30 +875,30 @@ void mouse_search( int goal_x, int goal_y, int spd, int mode ){
                 head_change = 0;          // 進行方向更新変数を前に設定
                 break;
       // 右折
-      case  1 : while( STEP < GO_STEP - speed_now * 2 );  // 減速域を残して直進
+      case  1 : while( STEP < GO_STEP - speed_now * 2 && F_SEN < F_REF );  // 減速域を残して直進
                 speed = 1;
-                while( STEP < GO_STEP );  // 残りステップ数で減速
+                while( STEP < GO_STEP && F_SEN < F_REF );  // 残りステップ数で減速
                 com_turn( 0 );            // 右90度旋回
                 head_change = 1;          // 進行方向更新変数を右に設定
                 break;
       // 反転
-      case  2 : while( STEP < GO_STEP - speed_now * 2 );  // 減速域を残して直進
+      case  2 : while( STEP < GO_STEP - speed_now * 2 && F_SEN < F_REF );  // 減速域を残して直進
                 speed = 1;
-                while( STEP < GO_STEP );  // 残りステップ数で減速
+                while( STEP < GO_STEP && F_SEN < F_REF );  // 残りステップ数で減速
                 com_turn( 2 );            // 反転
                 head_change = 2;          // 進行方向更新変数を後に設定
                 break;
       // 左折
-      case  3 : while( STEP < GO_STEP - speed_now * 2 );  // 減速域を残して直進
+      case  3 : while( STEP < GO_STEP - speed_now * 2 && F_SEN < F_REF );  // 減速域を残して直進
                 speed = 1;
-                while( STEP < GO_STEP );  // 残りステップ数で減速
+                while( STEP < GO_STEP && F_SEN < F_REF );  // 残りステップ数で減速
                 com_turn( 1 );            // 左90度旋回
                 head_change = 3;          // 進行方向更新変数を左に設定
                 break;
       // 反転停止
-      case  4 : while( STEP < GO_STEP - speed_now * 2 );  // 減速域を残して直進
+      case  4 : while( STEP < GO_STEP - speed_now * 2 && F_SEN < F_REF );  // 減速域を残して直進
                 speed = 1;
-                while( STEP < GO_STEP );  // 残りステップ数で減速
+                while( STEP < GO_STEP && F_SEN < F_REF );  // 残りステップ数で減速
                 com_turn( 2 );            // 反転
                 com_stop();               // 停止
                 head_change = 2;          // 進行方向更新変数を後に設定
