@@ -1,0 +1,431 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<MicomToolCommonProjectFile Version="1.00">
+  <CreatorType Name="CubeSuite+" Version="V8.14.00  [02 Jun 2025]" />
+  <Placeholders>
+    <PlaceholderPrefix>%</PlaceholderPrefix>
+    <PlaceholderPostfix>%</PlaceholderPostfix>
+  </Placeholders>
+  <Project Name="RX231_Mouse3" Type="Application">
+    <Files>
+      <Path>LCDrx231.h</Path>
+      <Path>Coconut_Mall_2.h</Path>
+      <Path>Sound.h</Path>
+      <Path>RX231_Mouse3.c</Path>
+      <Category Name="Smart Configurator">
+        <Category Name="general">
+          <Path>src\smc_gen\general\r_smc_cgc.c</Path>
+          <Path>src\smc_gen\general\r_smc_cgc.h</Path>
+          <Path>src\smc_gen\general\r_smc_cgc_user.c</Path>
+          <Path>src\smc_gen\general\r_cg_macrodriver.h</Path>
+          <Path>src\smc_gen\general\r_cg_userdefine.h</Path>
+          <Path>src\smc_gen\general\r_cg_hardware_setup.c</Path>
+          <Path>src\smc_gen\general\r_cg_mtu2.h</Path>
+          <Path>src\smc_gen\general\r_cg_port.h</Path>
+          <Path>src\smc_gen\general\r_cg_s12ad.h</Path>
+          <Path>src\smc_gen\general\r_smc_entry.h</Path>
+          <Path>src\smc_gen\general\r_cg_cmt.h</Path>
+          <Path>src\smc_gen\general\r_smc_interrupt.c</Path>
+          <Path>src\smc_gen\general\r_smc_interrupt.h</Path>
+        </Category>
+        <Category Name="r_bsp">
+          <Path>src\smc_gen\r_bsp\platform.h</Path>
+          <Path>src\smc_gen\r_bsp\readme.txt</Path>
+          <Category Name="board">
+            <Category Name="generic_rx231">
+              <Path>src\smc_gen\r_bsp\board\generic_rx231\hwsetup.c</Path>
+              <Path>src\smc_gen\r_bsp\board\generic_rx231\hwsetup.h</Path>
+              <Path>src\smc_gen\r_bsp\board\generic_rx231\r_bsp.h</Path>
+              <Path>src\smc_gen\r_bsp\board\generic_rx231\r_bsp_config_reference.h</Path>
+            </Category>
+            <Category Name="user">
+              <Path>src\smc_gen\r_bsp\board\user\r_bsp.h</Path>
+            </Category>
+          </Category>
+          <Category Name="doc">
+            <Category Name="en">
+              <Path>src\smc_gen\r_bsp\doc\en\r01an1685ej0770-rx-bsp.pdf</Path>
+            </Category>
+            <Category Name="ja">
+              <Path>src\smc_gen\r_bsp\doc\ja\r01an1685jj0770-rx-bsp.pdf</Path>
+            </Category>
+          </Category>
+          <Category Name="mcu">
+            <Category Name="all">
+              <Path>src\smc_gen\r_bsp\mcu\all\dbsct.c</Path>
+              <Path>src\smc_gen\r_bsp\mcu\all\fsp_common_api.h</Path>
+              <Path>src\smc_gen\r_bsp\mcu\all\lowlvl.c</Path>
+              <Path>src\smc_gen\r_bsp\mcu\all\lowlvl.h</Path>
+              <Path>src\smc_gen\r_bsp\mcu\all\lowsrc.c</Path>
+              <Path>src\smc_gen\r_bsp\mcu\all\lowsrc.h</Path>
+              <Path>src\smc_gen\r_bsp\mcu\all\mcu_locks.c</Path>
+              <Path>src\smc_gen\r_bsp\mcu\all\r_bsp_common.c</Path>
+              <Path>src\smc_gen\r_bsp\mcu\all\r_bsp_common.h</Path>
+              <Path>src\smc_gen\r_bsp\mcu\all\r_bsp_cpu.c</Path>
+              <Path>src\smc_gen\r_bsp\mcu\all\r_bsp_interrupts.c</Path>
+              <Path>src\smc_gen\r_bsp\mcu\all\r_bsp_interrupts.h</Path>
+              <Path>src\smc_gen\r_bsp\mcu\all\r_bsp_locking.c</Path>
+              <Path>src\smc_gen\r_bsp\mcu\all\r_bsp_mcu_startup.c</Path>
+              <Path>src\smc_gen\r_bsp\mcu\all\r_bsp_mcu_startup.h</Path>
+              <Path>src\smc_gen\r_bsp\mcu\all\r_bsp_software_interrupt.c</Path>
+              <Path>src\smc_gen\r_bsp\mcu\all\r_bsp_software_interrupt.h</Path>
+              <Path>src\smc_gen\r_bsp\mcu\all\r_fsp_error.h</Path>
+              <Path>src\smc_gen\r_bsp\mcu\all\r_rtos.h</Path>
+              <Path>src\smc_gen\r_bsp\mcu\all\r_rx_compiler.h</Path>
+              <Path>src\smc_gen\r_bsp\mcu\all\r_rx_intrinsic_functions.c</Path>
+              <Path>src\smc_gen\r_bsp\mcu\all\r_rx_intrinsic_functions.h</Path>
+              <Path>src\smc_gen\r_bsp\mcu\all\r_typedefs.h</Path>
+              <Path>src\smc_gen\r_bsp\mcu\all\resetprg.c</Path>
+              <Path>src\smc_gen\r_bsp\mcu\all\sbrk.c</Path>
+              <Path>src\smc_gen\r_bsp\mcu\all\sbrk.h</Path>
+            </Category>
+            <Category Name="rx231">
+              <Path>src\smc_gen\r_bsp\mcu\rx231\mcu_clocks.c</Path>
+              <Path>src\smc_gen\r_bsp\mcu\rx231\mcu_clocks.h</Path>
+              <Path>src\smc_gen\r_bsp\mcu\rx231\mcu_info.h</Path>
+              <Path>src\smc_gen\r_bsp\mcu\rx231\mcu_init.c</Path>
+              <Path>src\smc_gen\r_bsp\mcu\rx231\mcu_init.h</Path>
+              <Path>src\smc_gen\r_bsp\mcu\rx231\mcu_interrupts.c</Path>
+              <Path>src\smc_gen\r_bsp\mcu\rx231\mcu_interrupts.h</Path>
+              <Path>src\smc_gen\r_bsp\mcu\rx231\mcu_locks.h</Path>
+              <Path>src\smc_gen\r_bsp\mcu\rx231\r_bsp_cpu.h</Path>
+              <Path>src\smc_gen\r_bsp\mcu\rx231\r_bsp_locking.h</Path>
+              <Path>src\smc_gen\r_bsp\mcu\rx231\r_bsp_vbatt.c</Path>
+              <Path>src\smc_gen\r_bsp\mcu\rx231\r_bsp_vbatt.h</Path>
+              <Path>src\smc_gen\r_bsp\mcu\rx231\vecttbl.c</Path>
+              <Path>src\smc_gen\r_bsp\mcu\rx231\vecttbl.h</Path>
+              <Category Name="register_access">
+                <Category Name="ccrx">
+                  <Path>src\smc_gen\r_bsp\mcu\rx231\register_access\ccrx\iodefine.h</Path>
+                </Category>
+              </Category>
+            </Category>
+          </Category>
+        </Category>
+        <Category Name="r_config">
+          <Path>src\smc_gen\r_config\r_bsp_config.h</Path>
+          <Path>src\smc_gen\r_config\r_bsp_config_readme.txt</Path>
+          <Path>src\smc_gen\r_config\r_datfrx_rx_config.h</Path>
+          <Path>src\smc_gen\r_config\r_flash_rx_config.h</Path>
+        </Category>
+        <Category Name="Config_CMT0">
+          <Path>src\smc_gen\Config_CMT0\Config_CMT0.h</Path>
+          <Path>src\smc_gen\Config_CMT0\Config_CMT0.c</Path>
+          <Path>src\smc_gen\Config_CMT0\Config_CMT0_user.c</Path>
+        </Category>
+        <Category Name="Config_MTU0">
+          <Path>src\smc_gen\Config_MTU0\Config_MTU0.h</Path>
+          <Path>src\smc_gen\Config_MTU0\Config_MTU0.c</Path>
+          <Path>src\smc_gen\Config_MTU0\Config_MTU0_user.c</Path>
+        </Category>
+        <Category Name="Config_MTU4">
+          <Path>src\smc_gen\Config_MTU4\Config_MTU4.h</Path>
+          <Path>src\smc_gen\Config_MTU4\Config_MTU4.c</Path>
+          <Path>src\smc_gen\Config_MTU4\Config_MTU4_user.c</Path>
+        </Category>
+        <Category Name="Config_MTU3">
+          <Path>src\smc_gen\Config_MTU3\Config_MTU3.h</Path>
+          <Path>src\smc_gen\Config_MTU3\Config_MTU3.c</Path>
+          <Path>src\smc_gen\Config_MTU3\Config_MTU3_user.c</Path>
+        </Category>
+        <Category Name="Config_PORT">
+          <Path>src\smc_gen\Config_PORT\Config_PORT.h</Path>
+          <Path>src\smc_gen\Config_PORT\Config_PORT.c</Path>
+          <Path>src\smc_gen\Config_PORT\Config_PORT_user.c</Path>
+        </Category>
+        <Category Name="Config_S12AD0">
+          <Path>src\smc_gen\Config_S12AD0\Config_S12AD0.h</Path>
+          <Path>src\smc_gen\Config_S12AD0\Config_S12AD0.c</Path>
+          <Path>src\smc_gen\Config_S12AD0\Config_S12AD0_user.c</Path>
+        </Category>
+        <Category Name="r_pincfg">
+          <Path>src\smc_gen\r_pincfg\Pin.h</Path>
+          <Path>src\smc_gen\r_pincfg\Pin.c</Path>
+        </Category>
+        <Category Name="Config_MTU1">
+          <Path>src\smc_gen\Config_MTU1\Config_MTU1.h</Path>
+          <Path>src\smc_gen\Config_MTU1\Config_MTU1.c</Path>
+          <Path>src\smc_gen\Config_MTU1\Config_MTU1_user.c</Path>
+        </Category>
+        <Category Name="r_datfrx_rx">
+          <Path>src\smc_gen\r_datfrx_rx\readme.txt</Path>
+          <Path>src\smc_gen\r_datfrx_rx\r_flash_dm_rx_if.h</Path>
+          <Category Name="doc">
+            <Category Name="en">
+              <Path>src\smc_gen\r_datfrx_rx\doc\en\DATFRX_BlockNumberCalculation_e_Rev110.xlsx</Path>
+              <Path>src\smc_gen\r_datfrx_rx\doc\en\r20an0507ej0231-rx-datfrx.pdf</Path>
+            </Category>
+            <Category Name="ja">
+              <Path>src\smc_gen\r_datfrx_rx\doc\ja\DATFRX_BlockNumberCalculation_j_Rev110.xlsx</Path>
+              <Path>src\smc_gen\r_datfrx_rx\doc\ja\r20an0507jj0231-rx-datfrx.pdf</Path>
+            </Category>
+          </Category>
+          <Category Name="src">
+            <Path>src\smc_gen\r_datfrx_rx\src\r_flash_dm_private.h</Path>
+            <Path>src\smc_gen\r_datfrx_rx\src\r_flash_dm_rx_if.c</Path>
+            <Category Name="flash_type_1">
+              <Path>src\smc_gen\r_datfrx_rx\src\flash_type_1\r_dispatch_1.c</Path>
+              <Path>src\smc_gen\r_datfrx_rx\src\flash_type_1\r_dispatch_1.h</Path>
+              <Path>src\smc_gen\r_datfrx_rx\src\flash_type_1\r_dispatch_1_df_1k.h</Path>
+              <Path>src\smc_gen\r_datfrx_rx\src\flash_type_1\r_dispatch_1_df_256b.h</Path>
+              <Path>src\smc_gen\r_datfrx_rx\src\flash_type_1\r_dm_1.c</Path>
+              <Path>src\smc_gen\r_datfrx_rx\src\flash_type_1\r_dm_1.h</Path>
+            </Category>
+            <Category Name="flash_type_3">
+              <Path>src\smc_gen\r_datfrx_rx\src\flash_type_3\r_dm_3.c</Path>
+              <Path>src\smc_gen\r_datfrx_rx\src\flash_type_3\r_dm_3.h</Path>
+            </Category>
+            <Category Name="flash_type_4">
+              <Path>src\smc_gen\r_datfrx_rx\src\flash_type_4\r_dm_4.c</Path>
+              <Path>src\smc_gen\r_datfrx_rx\src\flash_type_4\r_dm_4.h</Path>
+            </Category>
+            <Category Name="flash_type_5">
+              <Path>src\smc_gen\r_datfrx_rx\src\flash_type_5\r_dm_5.c</Path>
+              <Path>src\smc_gen\r_datfrx_rx\src\flash_type_5\r_dm_5.h</Path>
+            </Category>
+            <Category Name="flash_type_common">
+              <Path>src\smc_gen\r_datfrx_rx\src\flash_type_common\r_datf_crc.c</Path>
+              <Path>src\smc_gen\r_datfrx_rx\src\flash_type_common\r_datf_crc.h</Path>
+              <Path>src\smc_gen\r_datfrx_rx\src\flash_type_common\r_dispatch_2.c</Path>
+              <Path>src\smc_gen\r_datfrx_rx\src\flash_type_common\r_dispatch_2.h</Path>
+              <Path>src\smc_gen\r_datfrx_rx\src\flash_type_common\r_dispatch_2_df.h</Path>
+            </Category>
+          </Category>
+        </Category>
+        <Category Name="r_flash_rx">
+          <Path>src\smc_gen\r_flash_rx\readme.txt</Path>
+          <Path>src\smc_gen\r_flash_rx\r_flash_rx_if.h</Path>
+          <Category Name="doc">
+            <Category Name="en">
+              <Path>src\smc_gen\r_flash_rx\doc\en\r01an2184ej0522-rx-flash.pdf</Path>
+            </Category>
+            <Category Name="ja">
+              <Path>src\smc_gen\r_flash_rx\doc\ja\r01an2184jj0522-rx-flash.pdf</Path>
+            </Category>
+          </Category>
+          <Category Name="src">
+            <Path>src\smc_gen\r_flash_rx\src\r_flash_fcu.c</Path>
+            <Path>src\smc_gen\r_flash_rx\src\r_flash_fcu.h</Path>
+            <Path>src\smc_gen\r_flash_rx\src\r_flash_group.c</Path>
+            <Path>src\smc_gen\r_flash_rx\src\r_flash_group.h</Path>
+            <Path>src\smc_gen\r_flash_rx\src\r_flash_nofcu.c</Path>
+            <Path>src\smc_gen\r_flash_rx\src\r_flash_nofcu.h</Path>
+            <Path>src\smc_gen\r_flash_rx\src\r_flash_rx.c</Path>
+            <Path>src\smc_gen\r_flash_rx\src\r_flash_rx.h</Path>
+            <Path>src\smc_gen\r_flash_rx\src\r_flash_targets.h</Path>
+            <Category Name="flash_type_1">
+              <Path>src\smc_gen\r_flash_rx\src\flash_type_1\r_flash_type1.c</Path>
+              <Path>src\smc_gen\r_flash_rx\src\flash_type_1\r_flash_type1_if.h</Path>
+            </Category>
+            <Category Name="flash_type_3">
+              <Path>src\smc_gen\r_flash_rx\src\flash_type_3\r_flash_type3.c</Path>
+              <Path>src\smc_gen\r_flash_rx\src\flash_type_3\r_flash_type3_if.h</Path>
+            </Category>
+            <Category Name="flash_type_4">
+              <Path>src\smc_gen\r_flash_rx\src\flash_type_4\r_flash_type4.c</Path>
+              <Path>src\smc_gen\r_flash_rx\src\flash_type_4\r_flash_type4_if.h</Path>
+            </Category>
+            <Category Name="flash_type_5">
+              <Path>src\smc_gen\r_flash_rx\src\flash_type_5\r_flash_type5.c</Path>
+              <Path>src\smc_gen\r_flash_rx\src\flash_type_5\r_flash_type5_if.h</Path>
+            </Category>
+            <Category Name="targets">
+              <Category Name="rx231">
+                <Path>src\smc_gen\r_flash_rx\src\targets\rx231\r_flash_rx231.h</Path>
+              </Category>
+            </Category>
+          </Category>
+        </Category>
+      </Category>
+    </Files>
+    <DebugOptions>
+      <DebugTool>Simulator</DebugTool>
+      <ConnectSettings />
+      <DebugToolSettings />
+    </DebugOptions>
+    <Device Series="RX">R5F52315AxFL</Device>
+    <BuildOptions Name="CC-RX" Version="V3.07.00">
+      <BuildMode Name="DefaultBuild" Active="True">
+        <GeneralOptions>
+          <SimultaneouslyBuild>false</SimultaneouslyBuild>
+        </GeneralOptions>
+        <CompileOptions>
+          <Option>-isa=rxv2</Option>
+          <Option>-fpu</Option>
+          <Option>-endian=big</Option>
+          <Option>-dbl_size=8</Option>
+          <Option>-signed_char</Option>
+          <Option>-lang=c99</Option>
+          <Option>-include=src\smc_gen\r_flash_rx\src\targets\rx231</Option>
+          <Option>-include=src\smc_gen\r_flash_rx\src\flash_type_5</Option>
+          <Option>-include=src\smc_gen\r_flash_rx\src\flash_type_4</Option>
+          <Option>-include=src\smc_gen\r_flash_rx\src\flash_type_3</Option>
+          <Option>-include=src\smc_gen\r_flash_rx\src\flash_type_1</Option>
+          <Option>-include=src\smc_gen\r_flash_rx\src</Option>
+          <Option>-include=src\smc_gen\r_flash_rx</Option>
+          <Option>-include=src\smc_gen\r_datfrx_rx\src\flash_type_common</Option>
+          <Option>-include=src\smc_gen\r_datfrx_rx\src\flash_type_5</Option>
+          <Option>-include=src\smc_gen\r_datfrx_rx\src\flash_type_4</Option>
+          <Option>-include=src\smc_gen\r_datfrx_rx\src\flash_type_3</Option>
+          <Option>-include=src\smc_gen\r_datfrx_rx\src\flash_type_1</Option>
+          <Option>-include=src\smc_gen\r_datfrx_rx\src</Option>
+          <Option>-include=src\smc_gen\r_datfrx_rx</Option>
+          <Option>-include=src\smc_gen\Config_MTU1</Option>
+          <Option>-include=.</Option>
+          <Option>-include=src\smc_gen\r_pincfg</Option>
+          <Option>-include=src\smc_gen\Config_S12AD0</Option>
+          <Option>-include=src\smc_gen\Config_PORT</Option>
+          <Option>-include=src\smc_gen\Config_MTU3</Option>
+          <Option>-include=src\smc_gen\Config_MTU4</Option>
+          <Option>-include=src\smc_gen\Config_MTU0</Option>
+          <Option>-include=src\smc_gen\Config_CMT0</Option>
+          <Option>-include=src\smc_gen\r_config</Option>
+          <Option>-include=src\smc_gen\r_bsp\mcu\rx231\register_access\ccrx</Option>
+          <Option>-include=src\smc_gen\r_bsp\mcu\rx231</Option>
+          <Option>-include=src\smc_gen\r_bsp\mcu\all</Option>
+          <Option>-include=src\smc_gen\r_bsp\board\user</Option>
+          <Option>-include=src\smc_gen\r_bsp\board\generic_rx231</Option>
+          <Option>-include=src\smc_gen\r_bsp</Option>
+          <Option>-include=src\smc_gen\general</Option>
+          <Option>-debug</Option>
+          <Option>-g_line</Option>
+          <Option>-optimize=0</Option>
+          <Option>-nologo</Option>
+          <Option>-output=obj=%BuildModeName%\%FileLeaf%.obj</Option>
+        </CompileOptions>
+        <AssembleOptions>
+          <Option>-isa=rxv2</Option>
+          <Option>-fpu</Option>
+          <Option>-endian=big</Option>
+          <Option>-debug</Option>
+          <Option>-nologo</Option>
+          <Option>-output=%BuildModeName%\%FileLeaf%.obj</Option>
+        </AssembleOptions>
+        <LinkOptions>
+          <Option>-output=%BuildModeName%\%ProjectName%.abs</Option>
+          <Option>-vect=_undefined_interrupt_source_isr</Option>
+          <Option>-list=%BuildModeName%\%ProjectName%.map</Option>
+          <Option>-show=symbol,total_size</Option>
+          <Option>-nooptimize</Option>
+          <Option>-start=SU,SI,B_1,R_1,B_2,R_2,B,R/00000004,PResetPRG,C_1,C_2,C,C$*,D*,W*,L,P/FFFE0000,EXCEPTVECT/FFFFFF80,RESETVECT/FFFFFFFC</Option>
+          <Option>-rom=D=R,D_1=R_1,D_2=R_2</Option>
+          <Option>-nologo</Option>
+          <Option>-end</Option>
+          <Option>-input=%BuildModeName%\%ProjectName%.abs</Option>
+          <Option>-output=%BuildModeName%\%ProjectName%.mot</Option>
+          <Option>-form=stype</Option>
+          <Option>-exit</Option>
+          <PreLinker>Auto</PreLinker>
+        </LinkOptions>
+        <LibraryGenerateOptions>
+          <Option>-isa=rxv2</Option>
+          <Option>-fpu</Option>
+          <Option>-endian=big</Option>
+          <Option>-dbl_size=8</Option>
+          <Option>-signed_char</Option>
+          <Option>-lang=c99</Option>
+          <Option>-head=runtime,stdio,stdlib,string,new</Option>
+          <Option>-output=%BuildModeName%\%ProjectName%.lib</Option>
+          <Option>-nologo</Option>
+          <GenerateMode>BuildOptionChanged</GenerateMode>
+        </LibraryGenerateOptions>
+        <LinkOrder>
+          <Path>DefaultBuild\r_smc_cgc.obj</Path>
+          <Path>DefaultBuild\r_smc_cgc_user.obj</Path>
+          <Path>DefaultBuild\r_cg_hardware_setup.obj</Path>
+          <Path>DefaultBuild\r_smc_interrupt.obj</Path>
+          <Path>DefaultBuild\hwsetup.obj</Path>
+          <Path>DefaultBuild\dbsct.obj</Path>
+          <Path>DefaultBuild\lowlvl.obj</Path>
+          <Path>DefaultBuild\lowsrc.obj</Path>
+          <Path>DefaultBuild\mcu_locks.obj</Path>
+          <Path>DefaultBuild\r_bsp_common.obj</Path>
+          <Path>DefaultBuild\r_bsp_cpu.obj</Path>
+          <Path>DefaultBuild\r_bsp_interrupts.obj</Path>
+          <Path>DefaultBuild\r_bsp_locking.obj</Path>
+          <Path>DefaultBuild\r_bsp_mcu_startup.obj</Path>
+          <Path>DefaultBuild\r_bsp_software_interrupt.obj</Path>
+          <Path>DefaultBuild\r_rx_intrinsic_functions.obj</Path>
+          <Path>DefaultBuild\resetprg.obj</Path>
+          <Path>DefaultBuild\sbrk.obj</Path>
+          <Path>DefaultBuild\mcu_clocks.obj</Path>
+          <Path>DefaultBuild\mcu_init.obj</Path>
+          <Path>DefaultBuild\mcu_interrupts.obj</Path>
+          <Path>DefaultBuild\r_bsp_vbatt.obj</Path>
+          <Path>DefaultBuild\vecttbl.obj</Path>
+          <Path>DefaultBuild\Config_CMT0.obj</Path>
+          <Path>DefaultBuild\Config_CMT0_user.obj</Path>
+          <Path>DefaultBuild\Config_MTU0.obj</Path>
+          <Path>DefaultBuild\Config_MTU0_user.obj</Path>
+          <Path>DefaultBuild\Config_MTU4.obj</Path>
+          <Path>DefaultBuild\Config_MTU4_user.obj</Path>
+          <Path>DefaultBuild\Config_MTU3.obj</Path>
+          <Path>DefaultBuild\Config_MTU3_user.obj</Path>
+          <Path>DefaultBuild\Config_PORT.obj</Path>
+          <Path>DefaultBuild\Config_PORT_user.obj</Path>
+          <Path>DefaultBuild\Config_S12AD0.obj</Path>
+          <Path>DefaultBuild\Config_S12AD0_user.obj</Path>
+          <Path>DefaultBuild\Pin.obj</Path>
+          <Path>DefaultBuild\RX231_Mouse3.obj</Path>
+          <Path>DefaultBuild\Config_MTU1.obj</Path>
+          <Path>DefaultBuild\Config_MTU1_user.obj</Path>
+          <Path>DefaultBuild\r_flash_dm_rx_if.obj</Path>
+          <Path>DefaultBuild\r_dispatch_1.obj</Path>
+          <Path>DefaultBuild\r_dm_1.obj</Path>
+          <Path>DefaultBuild\r_dm_3.obj</Path>
+          <Path>DefaultBuild\r_dm_4.obj</Path>
+          <Path>DefaultBuild\r_dm_5.obj</Path>
+          <Path>DefaultBuild\r_datf_crc.obj</Path>
+          <Path>DefaultBuild\r_dispatch_2.obj</Path>
+          <Path>DefaultBuild\r_flash_fcu.obj</Path>
+          <Path>DefaultBuild\r_flash_group.obj</Path>
+          <Path>DefaultBuild\r_flash_nofcu.obj</Path>
+          <Path>DefaultBuild\r_flash_rx.obj</Path>
+          <Path>DefaultBuild\r_flash_type1.obj</Path>
+          <Path>DefaultBuild\r_flash_type3.obj</Path>
+          <Path>DefaultBuild\r_flash_type4.obj</Path>
+          <Path>DefaultBuild\r_flash_type5.obj</Path>
+        </LinkOrder>
+        <CommonOptions>
+          <IncludePathForC>src\smc_gen\r_flash_rx\src\targets\rx231</IncludePathForC>
+          <IncludePathForC>src\smc_gen\r_flash_rx\src\flash_type_5</IncludePathForC>
+          <IncludePathForC>src\smc_gen\r_flash_rx\src\flash_type_4</IncludePathForC>
+          <IncludePathForC>src\smc_gen\r_flash_rx\src\flash_type_3</IncludePathForC>
+          <IncludePathForC>src\smc_gen\r_flash_rx\src\flash_type_1</IncludePathForC>
+          <IncludePathForC>src\smc_gen\r_flash_rx\src</IncludePathForC>
+          <IncludePathForC>src\smc_gen\r_flash_rx</IncludePathForC>
+          <IncludePathForC>src\smc_gen\r_datfrx_rx\src\flash_type_common</IncludePathForC>
+          <IncludePathForC>src\smc_gen\r_datfrx_rx\src\flash_type_5</IncludePathForC>
+          <IncludePathForC>src\smc_gen\r_datfrx_rx\src\flash_type_4</IncludePathForC>
+          <IncludePathForC>src\smc_gen\r_datfrx_rx\src\flash_type_3</IncludePathForC>
+          <IncludePathForC>src\smc_gen\r_datfrx_rx\src\flash_type_1</IncludePathForC>
+          <IncludePathForC>src\smc_gen\r_datfrx_rx\src</IncludePathForC>
+          <IncludePathForC>src\smc_gen\r_datfrx_rx</IncludePathForC>
+          <IncludePathForC>src\smc_gen\Config_MTU1</IncludePathForC>
+          <IncludePathForC>.</IncludePathForC>
+          <IncludePathForC>src\smc_gen\r_pincfg</IncludePathForC>
+          <IncludePathForC>src\smc_gen\Config_S12AD0</IncludePathForC>
+          <IncludePathForC>src\smc_gen\Config_PORT</IncludePathForC>
+          <IncludePathForC>src\smc_gen\Config_MTU3</IncludePathForC>
+          <IncludePathForC>src\smc_gen\Config_MTU4</IncludePathForC>
+          <IncludePathForC>src\smc_gen\Config_MTU0</IncludePathForC>
+          <IncludePathForC>src\smc_gen\Config_CMT0</IncludePathForC>
+          <IncludePathForC>src\smc_gen\r_config</IncludePathForC>
+          <IncludePathForC>src\smc_gen\r_bsp\mcu\rx231\register_access\ccrx</IncludePathForC>
+          <IncludePathForC>src\smc_gen\r_bsp\mcu\rx231</IncludePathForC>
+          <IncludePathForC>src\smc_gen\r_bsp\mcu\all</IncludePathForC>
+          <IncludePathForC>src\smc_gen\r_bsp\board\user</IncludePathForC>
+          <IncludePathForC>src\smc_gen\r_bsp\board\generic_rx231</IncludePathForC>
+          <IncludePathForC>src\smc_gen\r_bsp</IncludePathForC>
+          <IncludePathForC>src\smc_gen\general</IncludePathForC>
+        </CommonOptions>
+      </BuildMode>
+    </BuildOptions>
+    <Extension_SmcCodePart>
+      <CodeGeneratorData></CodeGeneratorData>
+      <GenerateFileFolder>D:\RX231_Mouse3</GenerateFileFolder>
+      <SCFGFile>RX231_Mouse3.scfg</SCFGFile>
+      <SmcExePath>C:\Program Files (x86)\Renesas Electronics\SmartConfigurator\RX\eclipse\SmartConfigurator.exe</SmcExePath>
+      <CodeGeneratorFilesGuid>4011f001-9c0e-4065-ae94-ddb3c35f232b</CodeGeneratorFilesGuid>
+    </Extension_SmcCodePart>
+  </Project>
+</MicomToolCommonProjectFile>

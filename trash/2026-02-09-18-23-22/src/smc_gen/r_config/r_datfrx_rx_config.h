@@ -1,0 +1,99 @@
+/* Generated configuration header file - do not edit */
+/*
+* Copyright (c) 2018(2025) Renesas Electronics Corporation and/or its affiliates
+*
+* SPDX-License-Identifier: BSD-3-Clause
+*/
+/**********************************************************************************************************************
+* File Name     : r_datfrx_rx_config.h
+* Description   : Configuration options for the r_datfrx_rx module.
+***********************************************************************************************************************
+* History : DD.MM.YYYY Version Description
+*         : 28.09.2018 2.00     First Release
+*         : 21.04.2023 2.10     Removed "FLASH_DM_CFG_CRC_HARDWARE" macro definition.
+*         : 31.08.2023 2.20     Change description of "FLASH_DM_CFG_DF_BLOCK_NUM" and "FLASH_DM_CFG_DF_DATA_NUM".
+*         : 20.03.2025 2.31     Changed the disclaimer.
+**********************************************************************************************************************/
+#ifndef R_DATFRX_CONFIG_H
+#define R_DATFRX_CONFIG_H
+
+/************************************************************************************************
+CODE FLASH AND DATA FLASH : SET FRDYI INTERRUPT PRIORITY
+*************************************************************************************************/
+/* Set interrupt priority if use BGO of the Code Flash or the Data Flash.
+   The settable value is from 1 to 15. */
+#define FLASH_DM_CFG_FRDYI_INT_PRIORITY  (1)
+
+/************************************************************************************************
+DATA FLASH : SET THE BLOCK ADDRESS NUMBER
+*************************************************************************************************/
+/* Please set the block address number to use by the data flash.
+   FLASH_TYPE1a = The settable value is from 3 to 8.
+   FLASH_TYPE1b = The settable value is from 3 to 32.
+   FLASH_TYPE3,4,5 = The settable value is from 3 to 1024.
+   The block address to use is from 0x00100000 to 0x00101FFF. (up to 8 blocks) */
+#define FLASH_DM_CFG_DF_BLOCK_NUM   (8)
+
+/************************************************************************************************
+DATA FLASH : SET THE DATA NUMBER OF THE DATA NUMBER
+*************************************************************************************************/
+/* Please set the data number to use by the data flash.
+   FLASH_TYPE1 = The settable value is from 1 to 255.
+   FLASH_TYPE3,4,5 = The settable value is from 1 to 1024. */
+#define FLASH_DM_CFG_DF_DATA_NUM    (5)
+
+/************************************************************************************************
+DATA FLASH : SET THE DATA LENGTH FOR THE DATA NUMBER
+*************************************************************************************************/
+/* Please set the data size of the data number to use by the data flash.
+   FLASH_TYPE1a = The settable value is from 1 to 256.
+   FLASH_TYPE1b = The settable value is from 1 to 96.
+   FLASH_TYPE3,4,5 = The settable value is from 1 to 1024.
+   The data size of the data number not to use is ignored.
+   This number must be a multiple of the minimum programming size for memory area you are writing to.
+   1 bytes (e.g. RX110, RX111, RX113, RX230, RX231) */
+#define FLASH_DM_CFG_DF_SIZE_NO0    (256)
+#define FLASH_DM_CFG_DF_SIZE_NO1    (256)
+#define FLASH_DM_CFG_DF_SIZE_NO2    (1)
+#define FLASH_DM_CFG_DF_SIZE_NO3    (1)
+#define FLASH_DM_CFG_DF_SIZE_NO4    (1)
+#define FLASH_DM_CFG_DF_SIZE_NO5    (1)
+#define FLASH_DM_CFG_DF_SIZE_NO6    (1)
+#define FLASH_DM_CFG_DF_SIZE_NO7    (1)
+#define FLASH_DM_CFG_DF_SIZE_NO8    (1)
+#define FLASH_DM_CFG_DF_SIZE_NO9    (1)
+#define FLASH_DM_CFG_DF_SIZE_NO10   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO11   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO12   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO13   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO14   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO15   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO16   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO17   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO18   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO19   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO20   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO21   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO22   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO23   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO24   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO25   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO26   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO27   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO28   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO29   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO30   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO31   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO32   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO33   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO34   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO35   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO36   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO37   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO38   (1)
+#define FLASH_DM_CFG_DF_SIZE_NO39   (1)
+
+
+#endif /* R_DATFRX_CONFIG_H */
+
+/* End of File */

@@ -1,0 +1,320 @@
+品質記録情報
+2026年2月9日 19:59:18
+
+------ ビルド開始(RX231_Mouse3, DefaultBuild) ------
+C:\Program Files (x86)\Renesas Electronics\CS+\CC\CC-RX\V3.07.00\Bin\ccrx.exe RX231_Mouse3.c -isa=rxv2 -fpu -endian=big -dbl_size=8 -signed_char -lang=c99 -include=src\smc_gen\r_flash_rx\src\targets\rx231 -include=src\smc_gen\r_flash_rx\src\flash_type_5 -include=src\smc_gen\r_flash_rx\src\flash_type_4 -include=src\smc_gen\r_flash_rx\src\flash_type_3 -include=src\smc_gen\r_flash_rx\src\flash_type_1 -include=src\smc_gen\r_flash_rx\src -include=src\smc_gen\r_flash_rx -include=src\smc_gen\r_datfrx_rx\src\flash_type_common -include=src\smc_gen\r_datfrx_rx\src\flash_type_5 -include=src\smc_gen\r_datfrx_rx\src\flash_type_4 -include=src\smc_gen\r_datfrx_rx\src\flash_type_3 -include=src\smc_gen\r_datfrx_rx\src\flash_type_1 -include=src\smc_gen\r_datfrx_rx\src -include=src\smc_gen\r_datfrx_rx -include=src\smc_gen\Config_MTU1 -include=. -include=src\smc_gen\r_pincfg -include=src\smc_gen\Config_S12AD0 -include=src\smc_gen\Config_PORT -include=src\smc_gen\Config_MTU3 -include=src\smc_gen\Config_MTU4 -include=src\smc_gen\Config_MTU0 -include=src\smc_gen\Config_CMT0 -include=src\smc_gen\r_config -include=src\smc_gen\r_bsp\mcu\rx231\register_access\ccrx -include=src\smc_gen\r_bsp\mcu\rx231 -include=src\smc_gen\r_bsp\mcu\all -include=src\smc_gen\r_bsp\board\user -include=src\smc_gen\r_bsp\board\generic_rx231 -include=src\smc_gen\r_bsp -include=src\smc_gen\general -debug -g_line -optimize=0 -nologo -output=obj=DefaultBuild\RX231_Mouse3.obj
+typedefine.h(21):W0520301:Typedef name has already been declared (with same type)
+typedefine.h(22):W0520301:Typedef name has already been declared (with same type)
+typedefine.h(23):W0520301:Typedef name has already been declared (with same type)
+typedefine.h(24):W0520301:Typedef name has already been declared (with same type)
+typedefine.h(25):W0520301:Typedef name has already been declared (with same type)
+typedefine.h(26):W0520301:Typedef name has already been declared (with same type)
+typedefine.h(27):W0520301:Typedef name has already been declared (with same type)
+typedefine.h(28):W0520301:Typedef name has already been declared (with same type)
+typedefine.h(29):W0520301:Typedef name has already been declared (with same type)
+typedefine.h(30):W0520301:Typedef name has already been declared (with same type)
+typedefine.h(33):W0520301:Typedef name has already been declared (with same type)
+typedefine.h(34):W0520301:Typedef name has already been declared (with same type)
+typedefine.h(35):W0520301:Typedef name has already been declared (with same type)
+RX231_Mouse3.c(280):W0520223:Function "R_Systeminit" declared implicitly
+RX231_Mouse3.c(284):W0520223:Function "R_Config_CMT0_Start" declared implicitly
+RX231_Mouse3.c(321):W0520223:Function "R_Config_MTU3_Start" declared implicitly
+RX231_Mouse3.c(323):W0520223:Function "R_Config_MTU3_Stop" declared implicitly
+RX231_Mouse3.c(333):W0520223:Function "R_Config_MTU4_Start" declared implicitly
+RX231_Mouse3.c(335):W0520223:Function "R_Config_MTU4_Stop" declared implicitly
+RX231_Mouse3.c(485):W0520069:Integer conversion resulted in truncation
+RX231_Mouse3.c(1127):W0520223:Function "R_Config_MTU0_Start" declared implicitly
+RX231_Mouse3.c(1128):W0520223:Function "R_Config_MTU1_Start" declared implicitly
+RX231_Mouse3.c(1144):W0520223:Function "R_Config_MTU0_Stop" declared implicitly
+RX231_Mouse3.c(1145):W0520223:Function "R_Config_MTU1_Stop" declared implicitly
+C:\Program Files (x86)\Renesas Electronics\CS+\CC\CC-RX\V3.07.00\Bin\rlink.exe -subcommand=DefaultBuild\RX231_Mouse3.clnk
+W0561017:Paid license of CC-RX V3 is not found, and the evaluation period has expired. Please consider purchasing the product.
+W0561017:Paid license of CC-RX V3 is not found, and the evaluation period has expired. Please consider purchasing the product.
+Renesas Optimizing Linker Completed
+------ ビルド終了(エラー:0個, 警告:26個)(RX231_Mouse3, DefaultBuild) ------
+
+--- CommandFile 1 ---
+DefaultBuild\RX231_Mouse3.clnk :
+-library=DefaultBuild\RX231_Mouse3.lib
+-input=DefaultBuild\r_smc_cgc.obj
+-input=DefaultBuild\r_smc_cgc_user.obj
+-input=DefaultBuild\r_cg_hardware_setup.obj
+-input=DefaultBuild\r_smc_interrupt.obj
+-input=DefaultBuild\hwsetup.obj
+-input=DefaultBuild\dbsct.obj
+-input=DefaultBuild\lowlvl.obj
+-input=DefaultBuild\lowsrc.obj
+-input=DefaultBuild\mcu_locks.obj
+-input=DefaultBuild\r_bsp_common.obj
+-input=DefaultBuild\r_bsp_cpu.obj
+-input=DefaultBuild\r_bsp_interrupts.obj
+-input=DefaultBuild\r_bsp_locking.obj
+-input=DefaultBuild\r_bsp_mcu_startup.obj
+-input=DefaultBuild\r_bsp_software_interrupt.obj
+-input=DefaultBuild\r_rx_intrinsic_functions.obj
+-input=DefaultBuild\resetprg.obj
+-input=DefaultBuild\sbrk.obj
+-input=DefaultBuild\mcu_clocks.obj
+-input=DefaultBuild\mcu_init.obj
+-input=DefaultBuild\mcu_interrupts.obj
+-input=DefaultBuild\r_bsp_vbatt.obj
+-input=DefaultBuild\vecttbl.obj
+-input=DefaultBuild\Config_CMT0.obj
+-input=DefaultBuild\Config_CMT0_user.obj
+-input=DefaultBuild\Config_MTU0.obj
+-input=DefaultBuild\Config_MTU0_user.obj
+-input=DefaultBuild\Config_MTU4.obj
+-input=DefaultBuild\Config_MTU4_user.obj
+-input=DefaultBuild\Config_MTU3.obj
+-input=DefaultBuild\Config_MTU3_user.obj
+-input=DefaultBuild\Config_PORT.obj
+-input=DefaultBuild\Config_PORT_user.obj
+-input=DefaultBuild\Config_S12AD0.obj
+-input=DefaultBuild\Config_S12AD0_user.obj
+-input=DefaultBuild\Pin.obj
+-input=DefaultBuild\RX231_Mouse3.obj
+-input=DefaultBuild\Config_MTU1.obj
+-input=DefaultBuild\Config_MTU1_user.obj
+-input=DefaultBuild\r_flash_dm_rx_if.obj
+-input=DefaultBuild\r_dispatch_1.obj
+-input=DefaultBuild\r_dm_1.obj
+-input=DefaultBuild\r_dm_3.obj
+-input=DefaultBuild\r_dm_4.obj
+-input=DefaultBuild\r_dm_5.obj
+-input=DefaultBuild\r_datf_crc.obj
+-input=DefaultBuild\r_dispatch_2.obj
+-input=DefaultBuild\r_flash_fcu.obj
+-input=DefaultBuild\r_flash_group.obj
+-input=DefaultBuild\r_flash_nofcu.obj
+-input=DefaultBuild\r_flash_rx.obj
+-input=DefaultBuild\r_flash_type1.obj
+-input=DefaultBuild\r_flash_type3.obj
+-input=DefaultBuild\r_flash_type4.obj
+-input=DefaultBuild\r_flash_type5.obj
+-noprelink
+-output=DefaultBuild\RX231_Mouse3.abs
+-vect=_undefined_interrupt_source_isr
+-list=DefaultBuild\RX231_Mouse3.map
+-show=symbol,total_size
+-nooptimize
+-start=SU,SI,B_1,R_1,B_2,R_2,B,R/00000004,PResetPRG,C_1,C_2,C,C$*,D*,W*,L,P/FFFE0000,EXCEPTVECT/FFFFFF80,RESETVECT/FFFFFFFC
+-rom=D=R,D_1=R_1,D_2=R_2
+-nologo
+-end
+-input=DefaultBuild\RX231_Mouse3.abs
+-output=DefaultBuild\RX231_Mouse3.mot
+-form=stype
+-exit
+
+
+--- SHA1 hash value of output files ---
+D:\RX231_Mouse3\DefaultBuild\RX231_Mouse3.abs: d25617fbdbb162ac9b6e63ba4e716240877f9d33
+D:\RX231_Mouse3\DefaultBuild\RX231_Mouse3.mot: 40994dab12ad305b6e8a863a3644f18986ace2a6
+
+
+--- システム情報 ---
+*OS バージョン
+ Microsoft Windows 11 Pro (-, 10.0.26100, WOW64)
+*言語
+ 日本語 (日本)
+*.NET Framework バージョン
+ Microsoft .NET Framework 4 [.NET 4.8 or later] (533320)
+*WebView2 バージョン
+ 144.0.3719.115
+
+--- アプリケーション情報 ---
+*製品名
+ CS+ for CC
+*パッケージ・バージョン
+ V8.14.00  [02 Jun 2025]
+*バージョン
+ V9.14.00.04 [25 Apr 2025]
+*アセンブリ・バージョン
+ 3.12.10.1
+*製品ライセンス
+ 
+*実行場所
+ C:\Program Files (x86)\Renesas Electronics\CS+\CC
+*メモリ使用量
+ *プライベート・ワーキング・セット
+  398 MB
+ *GDIオブジェクト数
+  2125
+ *USERオブジェクト数
+  1101
+ *開いているファイル
+  10 editors, 10 files, 110 KB
+
+--- ビルド・ツール・プラグイン情報 ---
+RH850ビルド・ツールCC-RH用プラグイン
+ *バージョン
+  V8.14.00.01 [10 Apr 2025]
+ *アセンブリ・バージョン
+  1.1.10.12
+ *DLL ファイル名
+  BuildToolCCRH.dll
+RL78ビルド・ツールCC-RL用プラグイン
+ *バージョン
+  V8.14.00.01 [10 Apr 2025]
+ *アセンブリ・バージョン
+  1.0.0.0
+ *DLL ファイル名
+  BuildToolCCRL.dll
+RXビルド・ツールCC-RX用プラグイン
+ *バージョン
+  V8.14.00.01 [10 Apr 2025]
+ *アセンブリ・バージョン
+  3.12.10.1
+ *DLL ファイル名
+  BuildToolCCRX.dll
+RH850ビルド・ツールGHS CCRH850用プラグイン
+ *バージョン
+  V1.11.00.01 [18 Apr 2025]
+ *アセンブリ・バージョン
+  1.0.0.0
+ *DLL ファイル名
+  BuildToolGHSCCRH850.dll
+
+--- デバッグ・ツール・プラグイン情報 ---
+デバッガ・コレクション・プラグイン
+ *バージョン
+  V8.14.00.02 [08 May 2025]
+ *アセンブリ・バージョン
+  2.12.10.1
+ *DLL ファイル名
+  DebugToolCollection.dll
+
+--- その他のプラグイン情報 ---
+コード生成プラグイン
+ *バージョン
+  V4.08.06.01 [28 Oct 2022]
+ *アセンブリ・バージョン
+  3.0.0.0
+ *DLL ファイル名
+  CodePart.dll
+コード生成／端子図プラグイン
+ *バージョン
+  V2.10.07.02 [08 Nov 2021]
+ *アセンブリ・バージョン
+  1.0.0.0
+ *DLL ファイル名
+  CodePart2.dll
+デバッグ・コンソール・プラグイン
+ *バージョン
+  V8.09.00.03 [24 Nov 2022]
+ *アセンブリ・バージョン
+  8.9.0.0
+ *DLL ファイル名
+  DebugConsole.dll
+Quick and Effective tool solution - QE
+ *バージョン
+  V9.14.00.02 [08 Apr 2025]
+ *アセンブリ・バージョン
+  1.15.10.16
+ *DLL ファイル名
+  InCarTools.dll
+端子配置プラグイン
+ *バージョン
+  V1.54.01.01 [31 Jul 2014]
+ *アセンブリ・バージョン
+  1.6.10.23
+ *DLL ファイル名
+  PinConfig.dll
+プログラム解析プラグイン
+ *バージョン
+  V4.13.00.03 [24 May 2023]
+ *アセンブリ・バージョン
+  3.12.11.9
+ *DLL ファイル名
+  ProgramAnalyzer.dll
+IronPythonコンソール・プラグイン
+ *バージョン
+  V1.49.00.02 [08 Nov 2024]
+ *アセンブリ・バージョン
+  1.6.10.23
+ *DLL ファイル名
+  PythonConsole.dll
+エディタ・パネル
+ *バージョン
+  V1.21.00.01 [09 Apr 2025]
+ *アセンブリ・バージョン
+  1.1.0.0
+ *DLL ファイル名
+  SEditor.dll
+RX用スマート・コンフィグレータ通信プラグイン
+ *バージョン
+  V1.02.28.01 [27 Aug 2025]
+ *アセンブリ・バージョン
+  1.0.0.0
+ *DLL ファイル名
+  SmcCodePartRX.dll
+スタック見積もりツール
+ *バージョン
+  V1.05.00.02 [30 Jul 2014]
+ *アセンブリ・バージョン
+  1.30.11.15
+ *DLL ファイル名
+  Stk.dll
+アップデート・マネージャ・プラグイン
+ *バージョン
+  V2.05.00.04 [30 May 2025]
+ *アセンブリ・バージョン
+  1.25.4.17
+ *DLL ファイル名
+  Update.dll
+
+デバッグ・ツール共通インタフェース
+ *バージョン
+  V8.14.00.02 [08 May 2025]
+ *アセンブリ・バージョン
+  3.12.10.1
+ *DLL ファイル名
+  CommonDebuggerInterface.dll
+デバイス情報共通インタフェース
+ *バージョン
+  V9.14.00.02 [08 Apr 2025]
+ *アセンブリ・バージョン
+  3.0.0.0
+ *DLL ファイル名
+  DeviceInformation.dll
+
+--- メイン・プロジェクト情報 ---
+D:\RX231_Mouse3\RX231_Mouse3.mtpj
+マイクロコントローラ情報
+ *R5F52315AxFL
+  *ファイル名: バージョン
+   RX_Productlist.xml: V3.180000
+   R5F52315AxFL_common.xml: V3.18.00
+   -: -
+   -: -
+   RX231.ddi: 1.00M
+  
+
+ビルド・ツール情報
+ *CC-RX
+   * プラグイン(*.dll)のバージョン
+     V8.14.00.05 [07 May 2025]
+   * コンパイラ・パッケージのバージョン
+     V3.07.00
+  
+
+デバッグ・ツール情報
+ *RX シミュレータ
+  Debugger Library V8.14.00.02 [08 May 2025]
+  
+
+その他のツール情報
+ *なし
+
+ *なし
+
+ *なし
+
+ *プログラム解析
+  *バージョン
+   V4.13.00.03 [24 May 2023]
+
+ *スマート・コンフィグレータ
+ *なし
+
+
