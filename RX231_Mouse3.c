@@ -697,7 +697,8 @@ void mode5( int x ){
   if( x == DISP ){  // DISPモードの場合
     // モード内容表示
     LCD_print( 0, "5:Search" );
-    LCD_print( 8, "Spd  200" );
+    LCD_print( 8, "Spd     " );
+    LCD_dec_out(12, Global_Speed, 4);
     return;                     // 以下の実行処理をしないで戻る
   }
 
@@ -721,7 +722,8 @@ void mode6( int x ){
   {
     // モード内容表示
     LCD_print( 0, "6:Try   " );
-    LCD_print( 8, "Spd  200" );
+    LCD_print( 8, "Spd     " );
+    LCD_dec_out(12, Global_Speed, 4);
     return;                     // 以下の実行処理をしないで戻る
   }
 
