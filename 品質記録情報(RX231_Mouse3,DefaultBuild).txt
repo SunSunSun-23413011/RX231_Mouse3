@@ -1,5 +1,5 @@
 品質記録情報
-2026年2月9日 19:59:18
+2026年2月12日 17:46:30
 
 ------ ビルド開始(RX231_Mouse3, DefaultBuild) ------
 C:\Program Files (x86)\Renesas Electronics\CS+\CC\CC-RX\V3.07.00\Bin\ccrx.exe RX231_Mouse3.c -isa=rxv2 -fpu -endian=big -dbl_size=8 -signed_char -lang=c99 -include=src\smc_gen\r_flash_rx\src\targets\rx231 -include=src\smc_gen\r_flash_rx\src\flash_type_5 -include=src\smc_gen\r_flash_rx\src\flash_type_4 -include=src\smc_gen\r_flash_rx\src\flash_type_3 -include=src\smc_gen\r_flash_rx\src\flash_type_1 -include=src\smc_gen\r_flash_rx\src -include=src\smc_gen\r_flash_rx -include=src\smc_gen\r_datfrx_rx\src\flash_type_common -include=src\smc_gen\r_datfrx_rx\src\flash_type_5 -include=src\smc_gen\r_datfrx_rx\src\flash_type_4 -include=src\smc_gen\r_datfrx_rx\src\flash_type_3 -include=src\smc_gen\r_datfrx_rx\src\flash_type_1 -include=src\smc_gen\r_datfrx_rx\src -include=src\smc_gen\r_datfrx_rx -include=src\smc_gen\Config_MTU1 -include=. -include=src\smc_gen\r_pincfg -include=src\smc_gen\Config_S12AD0 -include=src\smc_gen\Config_PORT -include=src\smc_gen\Config_MTU3 -include=src\smc_gen\Config_MTU4 -include=src\smc_gen\Config_MTU0 -include=src\smc_gen\Config_CMT0 -include=src\smc_gen\r_config -include=src\smc_gen\r_bsp\mcu\rx231\register_access\ccrx -include=src\smc_gen\r_bsp\mcu\rx231 -include=src\smc_gen\r_bsp\mcu\all -include=src\smc_gen\r_bsp\board\user -include=src\smc_gen\r_bsp\board\generic_rx231 -include=src\smc_gen\r_bsp -include=src\smc_gen\general -debug -g_line -optimize=0 -nologo -output=obj=DefaultBuild\RX231_Mouse3.obj
@@ -16,22 +16,25 @@ typedefine.h(30):W0520301:Typedef name has already been declared (with same type
 typedefine.h(33):W0520301:Typedef name has already been declared (with same type)
 typedefine.h(34):W0520301:Typedef name has already been declared (with same type)
 typedefine.h(35):W0520301:Typedef name has already been declared (with same type)
-RX231_Mouse3.c(280):W0520223:Function "R_Systeminit" declared implicitly
-RX231_Mouse3.c(284):W0520223:Function "R_Config_CMT0_Start" declared implicitly
-RX231_Mouse3.c(321):W0520223:Function "R_Config_MTU3_Start" declared implicitly
-RX231_Mouse3.c(323):W0520223:Function "R_Config_MTU3_Stop" declared implicitly
-RX231_Mouse3.c(333):W0520223:Function "R_Config_MTU4_Start" declared implicitly
-RX231_Mouse3.c(335):W0520223:Function "R_Config_MTU4_Stop" declared implicitly
-RX231_Mouse3.c(485):W0520069:Integer conversion resulted in truncation
-RX231_Mouse3.c(1127):W0520223:Function "R_Config_MTU0_Start" declared implicitly
-RX231_Mouse3.c(1128):W0520223:Function "R_Config_MTU1_Start" declared implicitly
-RX231_Mouse3.c(1144):W0520223:Function "R_Config_MTU0_Stop" declared implicitly
-RX231_Mouse3.c(1145):W0520223:Function "R_Config_MTU1_Stop" declared implicitly
+RX231_Mouse3.c(283):W0520223:Function "R_Systeminit" declared implicitly
+RX231_Mouse3.c(287):W0520223:Function "R_Config_CMT0_Start" declared implicitly
+RX231_Mouse3.c(325):W0520223:Function "R_Config_MTU3_Start" declared implicitly
+RX231_Mouse3.c(327):W0520223:Function "R_Config_MTU3_Stop" declared implicitly
+RX231_Mouse3.c(337):W0520223:Function "R_Config_MTU4_Start" declared implicitly
+RX231_Mouse3.c(339):W0520223:Function "R_Config_MTU4_Stop" declared implicitly
+RX231_Mouse3.c(489):W0520069:Integer conversion resulted in truncation
+RX231_Mouse3.c(695):W0520167:Argument of type "short *" is incompatible with parameter of type "int *"
+RX231_Mouse3.c(719):W0520167:Argument of type "short *" is incompatible with parameter of type "int *"
+RX231_Mouse3.c(1133):W0520223:Function "R_Config_MTU0_Start" declared implicitly
+RX231_Mouse3.c(1134):W0520223:Function "R_Config_MTU1_Start" declared implicitly
+RX231_Mouse3.c(1150):W0520223:Function "R_Config_MTU0_Stop" declared implicitly
+RX231_Mouse3.c(1151):W0520223:Function "R_Config_MTU1_Stop" declared implicitly
+RX231_Mouse3.c(1819):W0520147:Declaration is incompatible with "void select_speed(int *)" (declared at line 228)
 C:\Program Files (x86)\Renesas Electronics\CS+\CC\CC-RX\V3.07.00\Bin\rlink.exe -subcommand=DefaultBuild\RX231_Mouse3.clnk
 W0561017:Paid license of CC-RX V3 is not found, and the evaluation period has expired. Please consider purchasing the product.
 W0561017:Paid license of CC-RX V3 is not found, and the evaluation period has expired. Please consider purchasing the product.
 Renesas Optimizing Linker Completed
------- ビルド終了(エラー:0個, 警告:26個)(RX231_Mouse3, DefaultBuild) ------
+------ ビルド終了(エラー:0個, 警告:29個)(RX231_Mouse3, DefaultBuild) ------
 
 --- CommandFile 1 ---
 DefaultBuild\RX231_Mouse3.clnk :
@@ -108,8 +111,8 @@ DefaultBuild\RX231_Mouse3.clnk :
 
 
 --- SHA1 hash value of output files ---
-D:\RX231_Mouse3\DefaultBuild\RX231_Mouse3.abs: d25617fbdbb162ac9b6e63ba4e716240877f9d33
-D:\RX231_Mouse3\DefaultBuild\RX231_Mouse3.mot: 40994dab12ad305b6e8a863a3644f18986ace2a6
+D:\RX231_Mouse3\DefaultBuild\RX231_Mouse3.abs: aacc180a174c850d81f1b8e11e5d0a74e586481f
+D:\RX231_Mouse3\DefaultBuild\RX231_Mouse3.mot: 3b0976e2eb90898d2ca7eb2c28788c76dc2fbacf
 
 
 --- システム情報 ---
@@ -126,9 +129,9 @@ D:\RX231_Mouse3\DefaultBuild\RX231_Mouse3.mot: 40994dab12ad305b6e8a863a3644f1898
 *製品名
  CS+ for CC
 *パッケージ・バージョン
- V8.14.00  [02 Jun 2025]
+ V8.15.00  [28 Nov 2025]
 *バージョン
- V9.14.00.04 [25 Apr 2025]
+ V9.15.00.04 [29 Oct 2025]
 *アセンブリ・バージョン
  3.12.10.1
 *製品ライセンス
@@ -137,13 +140,13 @@ D:\RX231_Mouse3\DefaultBuild\RX231_Mouse3.mot: 40994dab12ad305b6e8a863a3644f1898
  C:\Program Files (x86)\Renesas Electronics\CS+\CC
 *メモリ使用量
  *プライベート・ワーキング・セット
-  398 MB
+  420 MB
  *GDIオブジェクト数
-  2125
+  2127
  *USERオブジェクト数
-  1101
+  1172
  *開いているファイル
-  10 editors, 10 files, 110 KB
+  10 editors, 10 files, 112 KB
 
 --- ビルド・ツール・プラグイン情報 ---
 RH850ビルド・ツールCC-RH用プラグイン
@@ -169,7 +172,7 @@ RXビルド・ツールCC-RX用プラグイン
   BuildToolCCRX.dll
 RH850ビルド・ツールGHS CCRH850用プラグイン
  *バージョン
-  V1.11.00.01 [18 Apr 2025]
+  V1.12.00.02 [14 Oct 2025]
  *アセンブリ・バージョン
   1.0.0.0
  *DLL ファイル名
@@ -178,7 +181,7 @@ RH850ビルド・ツールGHS CCRH850用プラグイン
 --- デバッグ・ツール・プラグイン情報 ---
 デバッガ・コレクション・プラグイン
  *バージョン
-  V8.14.00.02 [08 May 2025]
+  V8.15.00.04 [12 Nov 2025]
  *アセンブリ・バージョン
   2.12.10.1
  *DLL ファイル名
@@ -243,7 +246,7 @@ IronPythonコンソール・プラグイン
   SEditor.dll
 RX用スマート・コンフィグレータ通信プラグイン
  *バージョン
-  V1.02.28.01 [27 Aug 2025]
+  V1.02.29.01 [14 Oct 2025]
  *アセンブリ・バージョン
   1.0.0.0
  *DLL ファイル名
@@ -265,14 +268,14 @@ RX用スマート・コンフィグレータ通信プラグイン
 
 デバッグ・ツール共通インタフェース
  *バージョン
-  V8.14.00.02 [08 May 2025]
+  V8.15.00.04 [12 Nov 2025]
  *アセンブリ・バージョン
   3.12.10.1
  *DLL ファイル名
   CommonDebuggerInterface.dll
 デバイス情報共通インタフェース
  *バージョン
-  V9.14.00.02 [08 Apr 2025]
+  V9.15.00.01 [10 Oct 2025]
  *アセンブリ・バージョン
   3.0.0.0
  *DLL ファイル名
@@ -293,14 +296,14 @@ D:\RX231_Mouse3\RX231_Mouse3.mtpj
 ビルド・ツール情報
  *CC-RX
    * プラグイン(*.dll)のバージョン
-     V8.14.00.05 [07 May 2025]
+     V8.15.00.02 [28 Oct 2025]
    * コンパイラ・パッケージのバージョン
      V3.07.00
   
 
 デバッグ・ツール情報
  *RX シミュレータ
-  Debugger Library V8.14.00.02 [08 May 2025]
+  Debugger Library V8.15.00.04 [12 Nov 2025]
   
 
 その他のツール情報
