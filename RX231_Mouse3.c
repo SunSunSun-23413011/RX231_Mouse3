@@ -46,6 +46,7 @@
 //  2026/02/06  Modified. 03 ：モード分岐を関数ポインタのテーブル化
 //  2026/02/06  Modified. 04 ：地図データ,ゴール座標のDF保存/読出し 追加
 //  2026/02/09  Modified. 05 ：地図データ削除 追加
+//  2026/02/09  Modified. 06 ：速度選択 追加
 //
 //***************************************************************
 #include "typedefine.h"
@@ -158,6 +159,7 @@ short    speed;            // 目標速度
 short    speed_now;        // 現在速度
 short    MotorTimer;       // モータ電源コントロールタイマー
 short    control_mode;     // 姿勢制御モード  0:なし  1:あり
+short    Global_Speed;     // グローバル速度
 // 走行関連
 short    STEP;             // モータのステップ数
 short    GO_STEP;          // 1区間のステップ数
@@ -223,6 +225,7 @@ int goal_writeDF( void );
 int goal_DFread( int *gx, int *gy );
 int goal_find_index( int gx, int gy );
 void select_goal(int *gx, int *gy); // ゴール選択関数プロトタイプ
+void select_speed(int *sp);      // 速度選択関数プロトタイプ
 
 //---------------------------------------------------------------
 //  メインプログラム
@@ -306,6 +309,7 @@ void load_param( void ){
   //走行パラメータ
   GO_STEP = 1630;   // 1区間のステップ数
   TURN_STEP = 550;  // 旋回ステップ数
+  Global_Speed = 900; // グローバル速度
 }
 
 //---------------------------------------------------------------
@@ -688,12 +692,13 @@ void mode5( int x ){
   }
 
   // 実行モードの場合
+  select_speed(&Global_Speed); // 速度選択
   countdown();               // カウントダウン
   pos_x = 0; pos_y = 0; head = 0; // 
   Start_Sound(3);
-  mouse_search( goal[0], goal[1], 200, S_MODE );
+  mouse_search( goal[0], goal[1], Global_Speed, S_MODE );
   (void)map_writeDF(MAP_DATA_NO);
-  mouse_search(0, 0, 200, S_MODE);
+  mouse_search(0, 0, Global_Speed, S_MODE);
   (void)map_writeDF(MAP_DATA_NO);
   Start_Sound(96);
 }
@@ -711,12 +716,13 @@ void mode6( int x ){
   }
 
   // 実行モードの場合
+  select_speed(&Global_Speed); // 速度選択
   // 二次走行
   countdown();           // カウントダウン
   pos_x = 0; pos_y = 0; head = 0;
   Start_Sound(3);
   map_DFread(MAP_DATA_NO);
-  mouse_search( goal[0], goal[1], 200, T_MODE );
+  mouse_search( goal[0], goal[1], Global_Speed, T_MODE );
   Start_Sound(96);
 }
 
@@ -1805,6 +1811,35 @@ void countdown( void ){
   R_SW = LED_ON;         // 右センサON
   L_SW = LED_ON;         // 左センサON
   F_SW = LED_ON;         // 前センサON
+}
+
+//-------------------------------------------------------------------------
+//  速度選択
+//-------------------------------------------------------------------------
+void select_speed(short *speed){
+  short set_speed = *speed;
+  LCD_print(8, "V:      ");
+  while (1) {
+    LCD_dec_out(10, set_speed, 4);
+    if ( PIN_READ(SW_UP) == SW_ON ) { // UPボタン
+      set_speed += 100;
+      if ( set_speed > ACC_TABLE_SIZE ) set_speed = 0;
+      WaitKeyOff(); // チャタリング防止
+    }
+    if ( PIN_READ(SW_DOWN) == SW_ON ) { // DOWNボタン
+      set_speed -= 100;
+      if ( set_speed < 0 ) set_speed = ACC_TABLE_SIZE;
+      WaitKeyOff(); // チャタリング防止
+    }
+    if ( PIN_READ(SW_EXEC) == SW_ON ) { // 決定ボタン
+      *speed = set_speed;
+      break;
+    }
+    if ( PIN_READ(SW_RETURN) == SW_ON ) { // 戻るボタン
+      break;
+    }
+  }
+  return;
 }
 
 //-------------------------------------------------------------------------
