@@ -47,7 +47,8 @@
 //  2026/02/06  Modified. 04 ：地図データ,ゴール座標のDF保存/読出し 追加
 //  2026/02/09  Modified. 05 ：地図データ削除 追加
 //  2026/02/09  Modified. 06 ：速度選択 追加
-//  2026/02/09  Modified. 07 ：速度制限 追加
+//  2026/02/12  Modified. 07 ：速度制限 追加
+//  2026/02/12  Modified. 08 ：後ろ壁当て 追加
 //
 //***************************************************************
 #include "typedefine.h"
@@ -165,6 +166,7 @@ short    Global_Speed;     // グローバル速度
 // 走行関連
 short    STEP;             // モータのステップ数
 short    GO_STEP;          // 1区間のステップ数
+short    HALF_STEP;        // 半区間のステップ数
 short    TURN_STEP;        // 超信旋回ステップ数
 //ステップ数(割り込み内でカウントアップ) 
 volatile unsigned int step_r;		//右モータ用
@@ -212,7 +214,9 @@ void Int_MTU1_TGIA1(void); // MTU1割り込み関数プロトタイプ
 u16 AccTableGet(u16 index); // 加速テーブル取得関数プロトタイプ
 void com_go( int n );
 void com_stop( void );
+void com_back( int n );
 void com_turn( int t_mode );
+void back_wall_set( void );
 void countdown( void );
 int get_wall_data( void );
 void clear_map( void );
@@ -239,7 +243,7 @@ void main(void){
     PIN_WRITE(LED) = LED_OFF;                        // LEDを消灯
     Start_Sound(98); // 起動音再生
     // タイトル表示
-    LCD_print( 0, "Modded07" );
+    LCD_print( 0, "Modded08" );
 
     // 電圧表示
     LCD_print( 8, "   .  v " );
@@ -302,14 +306,16 @@ void IO_init( void ){
 //---------------------------------------------------------------
 void load_param( void ){
   // センサしきい値の決め打ち
-  R_REF   = 410;    // 区画中央での右センサ値
-  L_REF   = 300;    // 区画中央での左センサ値
+  R_REF   = 270;    // 区画中央での右センサ値
+  L_REF   = 380;    // 区画中央での左センサ値
   // 壁の有無判定用しきい値:各センサ壁あり最小値と壁なし値の中間値
   R_LIM   = 150;    // 右
   L_LIM   = 200;    // 左
   F_LIM   = 280;    // 前
+  F_LIM2  = 200;    // 2マス先前
   //走行パラメータ
-  GO_STEP = 1630;   // 1区間のステップ数
+  GO_STEP = 1620;   // 1区間のステップ数
+  HALF_STEP = 600; // 半区間のステップ数
   TURN_STEP = 550;  // 旋回ステップ数
   Global_Speed = 900; // グローバル速度
 }
@@ -815,7 +821,11 @@ void mode9(int x){
 //-------------------------------------------------------------------------
 void mouse_search( int goal_x, int goal_y, int spd, int mode ){
   short x, y, block_count, motion, next_motion;
-
+  int zerozero = 0;
+  if( pos_x == 0 && pos_y == 0 ){
+    back_wall_set();
+    zerozero = 1;
+  }
   while( 1 ){
     // １つのループは区間中心から次の区間中心まで
     // 最初に半区画直進
@@ -835,6 +845,14 @@ void mouse_search( int goal_x, int goal_y, int spd, int mode ){
     next_motion = search_adachi();  // 次の行動予測
     if ( (F_SEN > F_LIM2 || next_motion == 1 || next_motion == 3) && spd > 700 ) speed = 700; // 2マス先に壁がある場合は速度制限
     else  speed = spd;                  // 速度設定
+
+    if( zerozero == 1 ){  // (0,0)スタート時のみ
+      while( STEP < HALF_STEP );  // 半区間進む
+      step_l = 0;                        //左ステップ数をリセット
+      step_r = 0;                        //右ステップ数をリセット
+      STEP = 0;                     // 距離カウンタリセット
+      zerozero = 0;
+    }
     while( STEP < GO_STEP / 2 );  // 半区間進む
 
     // 柱まで進んだら
@@ -947,6 +965,24 @@ void com_stop( void ){
 }
 
 //-------------------------------------------------------------------------
+//  後進モジュール
+//-------------------------------------------------------------------------
+void com_back( int n ){
+  short BACK_STEP = GO_STEP / 2; // 後進ステップ数設定
+  control_mode = 0;
+  rdir = 1; ldir = 1;           // 回転方向を後進
+  STEP = 0;                     // 距離カウンタリセット
+  speed = 100;        // 目標速度設定
+  while( speed > speed_now );                   // 目標速度になるまで加速
+  speed = speed_now;  // 加速後の速度
+  while( STEP < BACK_STEP * n - speed_now * 2 );  // 減速ステップ数を残して定速移動
+                                                // 全体ステップ数-減速用ステップ数
+  // 減速モード
+  speed = 1;          // 最低速度設定
+  while( STEP < BACK_STEP * n );                  // 残りのステップ数で減速
+}
+
+//-------------------------------------------------------------------------
 //  旋回モジュール (0:R90 1:L90 2:R180 3:L180)
 //-------------------------------------------------------------------------
 void com_turn( int t_mode ){
@@ -972,6 +1008,16 @@ void com_turn( int t_mode ){
 }
 
 //-------------------------------------------------------------------------
+//  後ろ壁当て
+//-------------------------------------------------------------------------
+void back_wall_set( void ){
+  control_mode = 0;           // 姿勢制御無し
+  com_stop();
+  com_back( 1 );
+  com_stop();
+}
+
+//-------------------------------------------------------------------------
 //  時報音
 //-------------------------------------------------------------------------
 SOUND_T Chime_1[]={
@@ -992,13 +1038,13 @@ SOUND_T Chime_2[]={
 //  カウントダウン
 //-------------------------------------------------------------------------
 SOUND_T Countdown[]={
-{RA1_, T08_}, /* ラ (A5) */
-{RST_, T16_}, /* 休符 */
-{RA1_, T08_}, /* ラ (A5) */
-{RST_, T16_}, /* 休符 */
-{RA1_, T08_}, /* ラ (A5) */
-{RST_, T16_}, /* 休符 */
-{RA2_, T04_}, /* ラ (A6) */
+{RA1_, T04_}, /* ラ (A5) */
+{RST_, T08_}, /* 休符 */
+{RA1_, T04_}, /* ラ (A5) */
+{RST_, T08_}, /* 休符 */
+{RA1_, T04_}, /* ラ (A5) */
+{RST_, T08_}, /* 休符 */
+{RA2_, T02_}, /* ラ (A6) */
 {STP_, T00_},
 };
 
