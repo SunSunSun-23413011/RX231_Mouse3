@@ -154,6 +154,7 @@ short    R_LIM;            // 右壁有無しきい値
 short    L_LIM;            // 左壁有無しきい値
 short    F_LIM;            // 前壁有無しきい値
 short    F_LIM2;           // 2マス先前壁有無しきい値
+short    F_LIM_SLA;        // スラローム用前壁有無しきい値
 // モータ関連
 ushort   timerL;           // 左タイマー設定値
 ushort   timerR;           // 右タイマー設定値
@@ -164,11 +165,14 @@ short    speed_now;        // 現在速度
 short    MotorTimer;       // モータ電源コントロールタイマー
 short    control_mode;     // 姿勢制御モード  0:なし  1:あり
 short    Global_Speed;     // グローバル速度
+short    SLALOM_INNER_SPEED;  // スラローム内輪速度
 // 走行関連
 short    STEP;             // モータのステップ数
 short    GO_STEP;          // 1区間のステップ数
 short    HALF_STEP;        // 半区間のステップ数
 short    TURN_STEP;        // 超信旋回ステップ数
+short    SLALOM_STEP_FORWARD;   // スラローム旋回ステップ数（内側）
+short    SLALOM_STEP_OUT;  // スラローム旋回ステップ数（外側）
 short    zerozero;         // (0,0)スタートフラグ
 //ステップ数(割り込み内でカウントアップ) 
 volatile unsigned int step_r;		//右モータ用
@@ -212,13 +216,15 @@ void mode7( int x );
 void mode8( int x );
 void mode9( int x );
 void mouse_search( int goal_x, int goal_y, int speed, int mode );
+void slalom_search( int goal_x, int goal_y, int speed, int mode );
 void Int_MTU1_TGIA1(void); // MTU1割り込み関数プロトタイプ
 u16 AccTableGet(u16 index); // 加速テーブル取得関数プロトタイプ
 void com_go( int n );
-void com_go_half( void );
+void com_go_half( int n );
 void com_stop( void );
 void com_back( int n );
 void com_turn( int t_mode );
+void com_slalom_turn( int t_mode );
 void back_wall_set( void );
 void kbat_lf_turn( void );
 void goal_kbat_turn( void );
@@ -236,7 +242,7 @@ int goal_writeDF( void );
 int goal_DFread( int *gx, int *gy );
 int goal_find_index( int gx, int gy );
 void select_goal(int *gx, int *gy); // ゴール選択関数プロトタイプ
-void select_speed(int *sp);      // 速度選択関数プロトタイプ
+void select_speed(short *speed);      // 速度選択関数プロトタイプ
 
 //---------------------------------------------------------------
 //  メインプログラム
@@ -319,10 +325,14 @@ void load_param( void ){
   L_LIM   = 200;    // 左
   F_LIM   = 280;    // 前
   F_LIM2  = 200;    // 2マス先前
+  F_LIM_SLA = 1000;  // スラローム用前壁
   //走行パラメータ
   GO_STEP = 1620;   // 1区間のステップ数
   HALF_STEP = 600; // 半区間のステップ数
   TURN_STEP = 550;  // 旋回ステップ数
+  SLALOM_STEP_FORWARD = 10; // スラローム内側ステップ数
+  SLALOM_STEP_OUT = 500; // スラローム外側ステップ数
+  SLALOM_INNER_SPEED = 10; // スラローム内輪速度
   Global_Speed = 900; // グローバル速度
   zerozero = 0; // (0,0)スタートフラグ初期化
 }
@@ -395,6 +405,12 @@ void int_timerw( void ){
           //偏差を用いて補正
           lspeed = acc_num + err_l;
           rspeed = acc_num + err_r;
+      }else if(control_mode == 2){ // 右旋回スラローム
+          lspeed = acc_num;
+          rspeed = SLALOM_INNER_SPEED;
+      }else if(control_mode == 3){ // 左旋回スラローム
+          lspeed = SLALOM_INNER_SPEED;
+          rspeed = acc_num;
       }else{  // control_mode = 0
           lspeed = acc_num;
           rspeed = acc_num;
@@ -739,8 +755,8 @@ void mode6( int x ){
   pos_x = 0; pos_y = 0; head = 0;
   Start_Sound(3);
   map_DFread(MAP_DATA_NO);
-  mouse_search( goal[0], goal[1], Global_Speed, T_MODE );
-  mouse_search(0, 0, Global_Speed, T_MODE);
+  slalom_search( goal[0], goal[1], Global_Speed, T_MODE );
+  slalom_search( 0, 0, Global_Speed, T_MODE );
   Start_Sound(96);
 }
 
@@ -939,6 +955,104 @@ void mouse_search( int goal_x, int goal_y, int spd, int mode ){
   }
 }
 
+//-------------------------------------------------------------------------
+//  スラローム探索関数
+//-------------------------------------------------------------------------
+void slalom_search( int goal_x, int goal_y, int spd, int mode ){
+  short x, y, block_count, motion, next_motion, prev_motion;
+  prev_motion = 0;
+  if( pos_x == 0 && pos_y == 0 ){
+    back_wall_set();
+    zerozero = 1;
+  }
+  while( 1 ){
+    control_mode = 1;             // 姿勢制御ON
+    rdir = 0; ldir = 0;           // 回転方向を直進
+    STEP = 0;                     // 距離カウンタリセット
+    speed = spd;                  // 速度設定
+
+    // 座標更新
+    if     ( head == 0 ) pos_y++;
+    else if( head == 1 ) pos_x++;
+    else if( head == 2 ) pos_y--;
+    else if( head == 3 ) pos_x--;
+
+    // ポテンシャルMAP計算
+    make_potential( goal_x, goal_y, mode );
+    next_motion = search_adachi();  // 次の行動予測
+
+    if( zerozero == 1 ){
+      while( STEP < HALF_STEP );
+      step_l = 0;
+      step_r = 0;
+      STEP = 0;
+      zerozero = 0;
+    }
+
+    // 旋回前の進入距離をスラローム向けに調整
+    if( prev_motion == 1 || prev_motion == 3 ){
+      while( STEP < GO_STEP / 2 );
+    }else if( (next_motion == 1 || next_motion == 3) && spd >= 600 ){
+      control_mode = 0;
+      while( STEP < 200 );
+    }else{
+      while( STEP < GO_STEP / 2 && F_SEN < F_LIM_SLA );
+    }
+
+    if( mode == S_MODE ) make_map_data();
+
+    motion = search_adachi();
+    if( pos_x == goal_x && pos_y == goal_y )
+      motion = 4;
+
+    switch( motion ){
+      case  0 :
+        while( STEP < GO_STEP );
+        head_change = 0;
+        break;
+      case  1 :
+        com_slalom_turn( 0 );
+        head_change = 1;
+        break;
+      case  2 :
+        while( STEP < GO_STEP - speed_now * speed_now / 300 && F_SEN < F_REF );
+        speed = 1;
+        while( STEP < GO_STEP && F_SEN < F_REF );
+        kbat_lf_turn();
+        head_change = 2;
+        break;
+      case  3 :
+        com_slalom_turn( 1 );
+        head_change = 3;
+        break;
+      case  4 :
+        while( STEP < GO_STEP - speed_now * speed_now / 300 && F_SEN < F_REF );
+        speed = 1;
+        while( STEP < GO_STEP && F_SEN < F_REF );
+        goal_kbat_turn();
+        com_stop();
+        head_change = 2;
+        head = ( head + head_change ) & 0x03;
+        block_count = 0;
+        for( y = 0 ; y < 16 ; y++ ){
+          for( x = 0 ; x < 16 ; x++ ){
+            if( ( map[ x ][ y ] & 0xf0 ) == 0xf0 )
+              block_count++;
+          }
+        }
+        return;
+      default :
+        com_stop();
+        head_change = 0;
+        head = ( head + head_change ) & 0x03;
+        return;
+    }
+
+    prev_motion = motion;
+    head = ( head + head_change ) & 0x03;
+  }
+}
+
 
 //-------------------------------------------------------------------------
 //  直進モジュール (N区間前進)
@@ -1029,6 +1143,41 @@ void com_turn( int t_mode ){
   // 減速モード
   speed = 1;          // 最低速度設定
   while( STEP < T_STEP );                       // 残りのステップ数で減速
+}
+
+//-------------------------------------------------------------------------
+//  スラロームモジュール (0:R90 1:L90 2:R180 3:L180) 
+//-------------------------------------------------------------------------
+void com_slalom_turn( int t_mode ){
+  control_mode = 0;                       // 姿勢制御無し
+  step_r = 0;                               //右ステップ数をリセット
+  step_l = 0;                               //左ステップ数をリセット
+  STEP = 0;                               // 距離カウンタクリア
+  rdir = 0; ldir = 0;                     // 回転方向を直進
+  if( t_mode == 0 ) {
+    speed = Global_Speed;
+    while( speed > speed_now && F_SEN < F_LIM_SLA );
+    speed = speed_now;
+    while( (step_r < SLALOM_STEP_FORWARD) && (F_SEN < F_LIM_SLA || R_SEN > R_LIM) );
+    control_mode = 2;           // スラローム用姿勢制御
+    step_r = 0;                               //右ステップ数をリセット
+    step_l = 0;                               //左ステップ数をリセット
+    STEP = 0;                               // 距離カウンタクリア
+    while( step_l < SLALOM_STEP_OUT );
+  }
+  else if( t_mode == 1 ) {
+    speed = Global_Speed;
+    while( speed > speed_now && F_SEN < F_LIM_SLA );
+    speed = speed_now;
+    while( (step_l < SLALOM_STEP_FORWARD) && (F_SEN < F_LIM_SLA || L_SEN > L_LIM) );
+    control_mode = 3;           // スラローム用姿勢制御
+    step_r = 0;                               //右ステップ数をリセット
+    step_l = 0;                               //左ステップ数をリセット
+    STEP = 0;                               // 距離カウンタクリア
+    while( step_r < SLALOM_STEP_OUT );
+  }
+  //else if( t_mode == 2 ) { T_STEP *= 2; rdir = 1; ldir = 0; }
+  //else if( t_mode == 3 ) { T_STEP *= 2; rdir = 0; ldir = 1; }
 }
 
 //-------------------------------------------------------------------------
