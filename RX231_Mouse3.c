@@ -740,6 +740,7 @@ void mode6( int x ){
   Start_Sound(3);
   map_DFread(MAP_DATA_NO);
   mouse_search( goal[0], goal[1], Global_Speed, T_MODE );
+  mouse_search(0, 0, Global_Speed, T_MODE);
   Start_Sound(96);
 }
 
@@ -830,7 +831,6 @@ void mode9(int x){
 //-------------------------------------------------------------------------
 void mouse_search( int goal_x, int goal_y, int spd, int mode ){
   short x, y, block_count, motion, next_motion;
-  zerozero = 0;
   if( pos_x == 0 && pos_y == 0 ){
     back_wall_set();
     zerozero = 1;
@@ -1767,20 +1767,20 @@ void make_potential( int gx, int gy, int mode )
            // 二次走行(Try Mode)
            // 北側が壁なし＆既探索の場合(壁なしでも未探索はポテンシャル255のまま)
             // 北側のポテンシャルを対象区画のポテンシャルより+1
-            if((( map[ x ][ y ] & 0x11 ) == 0x10 ) && ( y != 15 )){
+            if((( map[ x ][ y ] & 0x11 ) == 0x10 ) && ( y != 15 ) && (( map[ x ][ y + 1 ] & 0xf0 ) == 0xf0 )){
               if( p_map[ x ][ y + 1 ] == 255 ){// まだポテンシャルを書いてなければ
                 p_map[ x ][ y + 1 ] = check_num + 1;
                 flg = 1;  // 変更したのでフラグON
               }
             }
             // 東側の壁も同様に処理
-            if((( map[ x ][ y ] & 0x22 ) == 0x20 ) && ( x != 15 ))
+            if((( map[ x ][ y ] & 0x22 ) == 0x20 ) && ( x != 15 ) && (( map[ x + 1 ][ y ] & 0xf0 ) == 0xf0 ))
               if(p_map[x+1][y]==255){p_map[x+1][y]=check_num+1;flg=1;}
             // 南側の壁も同様に処理
-            if((( map[ x ][ y ] & 0x44 ) == 0x40 ) && ( y != 0 ))
+            if((( map[ x ][ y ] & 0x44 ) == 0x40 ) && ( y != 0 ) && (( map[ x ][ y - 1 ] & 0xf0 ) == 0xf0 ))
               if(p_map[x][y-1]==255){p_map[x][y-1]=check_num+1;flg=1;}
             // 西側の壁も同様に処理
-            if((( map[ x ][ y ] & 0x88 ) == 0x80 ) && ( x != 0 ))
+            if((( map[ x ][ y ] & 0x88 ) == 0x80 ) && ( x != 0 ) && (( map[ x - 1 ][ y ] & 0xf0 ) == 0xf0 ))
               if(p_map[x-1][y]==255){p_map[x-1][y]=check_num+1;flg=1;}
 
           }
