@@ -1,5 +1,5 @@
 品質記録情報
-2026年2月12日 19:42:00
+2026年2月13日 15:31:59
 
 ------ ビルド開始(RX231_Mouse3, DefaultBuild) ------
 C:\Program Files (x86)\Renesas Electronics\CS+\CC\CC-RX\V3.07.00\Bin\ccrx.exe RX231_Mouse3.c -isa=rxv2 -fpu -endian=big -dbl_size=8 -signed_char -lang=c99 -include=src\smc_gen\r_flash_rx\src\targets\rx231 -include=src\smc_gen\r_flash_rx\src\flash_type_5 -include=src\smc_gen\r_flash_rx\src\flash_type_4 -include=src\smc_gen\r_flash_rx\src\flash_type_3 -include=src\smc_gen\r_flash_rx\src\flash_type_1 -include=src\smc_gen\r_flash_rx\src -include=src\smc_gen\r_flash_rx -include=src\smc_gen\r_datfrx_rx\src\flash_type_common -include=src\smc_gen\r_datfrx_rx\src\flash_type_5 -include=src\smc_gen\r_datfrx_rx\src\flash_type_4 -include=src\smc_gen\r_datfrx_rx\src\flash_type_3 -include=src\smc_gen\r_datfrx_rx\src\flash_type_1 -include=src\smc_gen\r_datfrx_rx\src -include=src\smc_gen\r_datfrx_rx -include=src\smc_gen\Config_MTU1 -include=. -include=src\smc_gen\r_pincfg -include=src\smc_gen\Config_S12AD0 -include=src\smc_gen\Config_PORT -include=src\smc_gen\Config_MTU3 -include=src\smc_gen\Config_MTU4 -include=src\smc_gen\Config_MTU0 -include=src\smc_gen\Config_CMT0 -include=src\smc_gen\r_config -include=src\smc_gen\r_bsp\mcu\rx231\register_access\ccrx -include=src\smc_gen\r_bsp\mcu\rx231 -include=src\smc_gen\r_bsp\mcu\all -include=src\smc_gen\r_bsp\board\user -include=src\smc_gen\r_bsp\board\generic_rx231 -include=src\smc_gen\r_bsp -include=src\smc_gen\general -debug -g_line -optimize=0 -nologo -output=obj=DefaultBuild\RX231_Mouse3.obj
@@ -16,25 +16,26 @@ typedefine.h(30):W0520301:Typedef name has already been declared (with same type
 typedefine.h(33):W0520301:Typedef name has already been declared (with same type)
 typedefine.h(34):W0520301:Typedef name has already been declared (with same type)
 typedefine.h(35):W0520301:Typedef name has already been declared (with same type)
-RX231_Mouse3.c(290):W0520223:Function "R_Systeminit" declared implicitly
-RX231_Mouse3.c(294):W0520223:Function "R_Config_CMT0_Start" declared implicitly
-RX231_Mouse3.c(335):W0520223:Function "R_Config_MTU3_Start" declared implicitly
-RX231_Mouse3.c(337):W0520223:Function "R_Config_MTU3_Stop" declared implicitly
-RX231_Mouse3.c(347):W0520223:Function "R_Config_MTU4_Start" declared implicitly
-RX231_Mouse3.c(349):W0520223:Function "R_Config_MTU4_Stop" declared implicitly
-RX231_Mouse3.c(499):W0520069:Integer conversion resulted in truncation
-RX231_Mouse3.c(706):W0520167:Argument of type "short *" is incompatible with parameter of type "int *"
-RX231_Mouse3.c(731):W0520167:Argument of type "short *" is incompatible with parameter of type "int *"
-RX231_Mouse3.c(1187):W0520223:Function "R_Config_MTU0_Start" declared implicitly
-RX231_Mouse3.c(1188):W0520223:Function "R_Config_MTU1_Start" declared implicitly
-RX231_Mouse3.c(1204):W0520223:Function "R_Config_MTU0_Stop" declared implicitly
-RX231_Mouse3.c(1205):W0520223:Function "R_Config_MTU1_Stop" declared implicitly
-RX231_Mouse3.c(1873):W0520147:Declaration is incompatible with "void select_speed(int *)" (declared at line 235)
+RX231_Mouse3.c(293):W0520223:Function "R_Systeminit" declared implicitly
+RX231_Mouse3.c(297):W0520223:Function "R_Config_CMT0_Start" declared implicitly
+RX231_Mouse3.c(339):W0520223:Function "R_Config_MTU3_Start" declared implicitly
+RX231_Mouse3.c(341):W0520223:Function "R_Config_MTU3_Stop" declared implicitly
+RX231_Mouse3.c(351):W0520223:Function "R_Config_MTU4_Start" declared implicitly
+RX231_Mouse3.c(353):W0520223:Function "R_Config_MTU4_Stop" declared implicitly
+RX231_Mouse3.c(503):W0520069:Integer conversion resulted in truncation
+RX231_Mouse3.c(710):W0520167:Argument of type "short *" is incompatible with parameter of type "int *"
+RX231_Mouse3.c(735):W0520167:Argument of type "short *" is incompatible with parameter of type "int *"
+RX231_Mouse3.c(966):W0520147:Declaration is incompatible with "void com_go_half(void)" (declared at line 218)
+RX231_Mouse3.c(1251):W0520223:Function "R_Config_MTU0_Start" declared implicitly
+RX231_Mouse3.c(1252):W0520223:Function "R_Config_MTU1_Start" declared implicitly
+RX231_Mouse3.c(1268):W0520223:Function "R_Config_MTU0_Stop" declared implicitly
+RX231_Mouse3.c(1269):W0520223:Function "R_Config_MTU1_Stop" declared implicitly
+RX231_Mouse3.c(1937):W0520147:Declaration is incompatible with "void select_speed(int *)" (declared at line 238)
 C:\Program Files (x86)\Renesas Electronics\CS+\CC\CC-RX\V3.07.00\Bin\rlink.exe -subcommand=DefaultBuild\RX231_Mouse3.clnk
 W0561017:Paid license of CC-RX V3 is not found, and the evaluation period has expired. Please consider purchasing the product.
 W0561017:Paid license of CC-RX V3 is not found, and the evaluation period has expired. Please consider purchasing the product.
 Renesas Optimizing Linker Completed
------- ビルド終了(エラー:0個, 警告:29個)(RX231_Mouse3, DefaultBuild) ------
+------ ビルド終了(エラー:0個, 警告:30個)(RX231_Mouse3, DefaultBuild) ------
 
 --- CommandFile 1 ---
 DefaultBuild\RX231_Mouse3.clnk :
@@ -111,8 +112,8 @@ DefaultBuild\RX231_Mouse3.clnk :
 
 
 --- SHA1 hash value of output files ---
-D:\RX231_Mouse3\DefaultBuild\RX231_Mouse3.abs: d3262a651570643373cb9a31944b7b1881063c07
-D:\RX231_Mouse3\DefaultBuild\RX231_Mouse3.mot: e41e7103d9d3a565000e94c190bba7ce87be075b
+D:\RX231_Mouse3\DefaultBuild\RX231_Mouse3.abs: 3ed90692eb5c8d7ff09317293738936491981670
+D:\RX231_Mouse3\DefaultBuild\RX231_Mouse3.mot: 64b5c1fa8e500384e1be94e2e88ad16c70569700
 
 
 --- システム情報 ---
@@ -140,13 +141,13 @@ D:\RX231_Mouse3\DefaultBuild\RX231_Mouse3.mot: e41e7103d9d3a565000e94c190bba7ce8
  C:\Program Files (x86)\Renesas Electronics\CS+\CC
 *メモリ使用量
  *プライベート・ワーキング・セット
-  396 MB
+  376 MB
  *GDIオブジェクト数
-  2142
+  2111
  *USERオブジェクト数
-  1176
+  1092
  *開いているファイル
-  10 editors, 10 files, 116 KB
+  10 editors, 10 files, 117 KB
 
 --- ビルド・ツール・プラグイン情報 ---
 RH850ビルド・ツールCC-RH用プラグイン

@@ -169,6 +169,7 @@ short    STEP;             // モータのステップ数
 short    GO_STEP;          // 1区間のステップ数
 short    HALF_STEP;        // 半区間のステップ数
 short    TURN_STEP;        // 超信旋回ステップ数
+short    zerozero;         // (0,0)スタートフラグ
 //ステップ数(割り込み内でカウントアップ) 
 volatile unsigned int step_r;		//右モータ用
 volatile unsigned int step_l;			//左モータ用
@@ -214,10 +215,12 @@ void mouse_search( int goal_x, int goal_y, int speed, int mode );
 void Int_MTU1_TGIA1(void); // MTU1割り込み関数プロトタイプ
 u16 AccTableGet(u16 index); // 加速テーブル取得関数プロトタイプ
 void com_go( int n );
+void com_go_half( void );
 void com_stop( void );
 void com_back( int n );
 void com_turn( int t_mode );
 void back_wall_set( void );
+void kbat_lf_turn( void );
 void countdown( void );
 int get_wall_data( void );
 void clear_map( void );
@@ -320,6 +323,7 @@ void load_param( void ){
   HALF_STEP = 600; // 半区間のステップ数
   TURN_STEP = 550;  // 旋回ステップ数
   Global_Speed = 900; // グローバル速度
+  zerozero = 0; // (0,0)スタートフラグ初期化
 }
 
 //---------------------------------------------------------------
@@ -825,7 +829,7 @@ void mode9(int x){
 //-------------------------------------------------------------------------
 void mouse_search( int goal_x, int goal_y, int spd, int mode ){
   short x, y, block_count, motion, next_motion;
-  int zerozero = 0;
+  zerozero = 0;
   if( pos_x == 0 && pos_y == 0 ){
     back_wall_set();
     zerozero = 1;
@@ -887,7 +891,7 @@ void mouse_search( int goal_x, int goal_y, int spd, int mode ){
       case  2 : while( STEP < GO_STEP - speed_now * 2 && F_SEN < F_REF );  // 減速域を残して直進
                 speed = 1;
                 while( STEP < GO_STEP && F_SEN < F_REF );  // 残りステップ数で減速
-                com_turn( 2 );            // 反転
+                kbat_lf_turn();            // 反転
                 head_change = 2;          // 進行方向更新変数を後に設定
                 break;
       // 左折
@@ -957,6 +961,21 @@ void com_go( int n ){
 }
 
 //-------------------------------------------------------------------------
+//  直進モジュール (四半区間前進)
+//-------------------------------------------------------------------------
+void com_go_half( int n ){
+  control_mode = 0;
+  STEP = 0;
+  rdir = 0; ldir = 0;
+  speed = 100;
+  while( speed > speed_now );
+  speed = speed_now;
+  while( STEP < HALF_STEP * n - speed_now * 2 );
+  speed = 1;
+  while( STEP < HALF_STEP * n );
+}
+
+//-------------------------------------------------------------------------
 //  停止モジュール
 //-------------------------------------------------------------------------
 void com_stop( void ){
@@ -1019,6 +1038,51 @@ void back_wall_set( void ){
   com_stop();
   com_back( 1 );
   com_stop();
+}
+
+//-------------------------------------------------------------------------
+//  壁当てターン
+//-------------------------------------------------------------------------
+void kbat_lf_turn( void ){
+  int kabe;
+  kabe = search_left_hand();
+  switch( kabe ){
+    case 0:
+    case 1:
+      com_stop();
+      com_turn( 0 );
+      com_stop();
+      com_back( 1 );
+      com_stop();
+      com_go_half( 1 );
+      com_stop();
+      com_turn( 0 );
+      break;
+    case 2:
+      com_stop();
+      com_turn( 0 );
+      com_stop();
+      com_back( 1 );
+      com_stop();
+      com_go_half( 1 );
+      com_stop();
+      com_turn( 0 );
+      com_stop();
+      com_back( 1 );
+      com_stop();
+      zerozero = 1;
+      break;
+    default :
+      if( F_SEN > F_LIM ){
+        com_turn( 2 );
+        com_stop();
+        com_back( 1 );
+        com_stop();
+        zerozero = 1;
+      }else{
+        com_turn( 2 );
+      }
+  }
 }
 
 //-------------------------------------------------------------------------
