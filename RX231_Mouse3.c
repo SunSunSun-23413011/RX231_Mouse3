@@ -221,6 +221,7 @@ void com_back( int n );
 void com_turn( int t_mode );
 void back_wall_set( void );
 void kbat_lf_turn( void );
+void goal_kbat_turn( void );
 void countdown( void );
 int get_wall_data( void );
 void clear_map( void );
@@ -905,7 +906,7 @@ void mouse_search( int goal_x, int goal_y, int spd, int mode ){
       case  4 : while( STEP < GO_STEP - speed_now * 2 && F_SEN < F_REF );  // 減速域を残して直進
                 speed = 1;
                 while( STEP < GO_STEP && F_SEN < F_REF );  // 残りステップ数で減速
-                com_turn( 2 );            // 反転
+                goal_kbat_turn();         // 反転(ゴール壁当て)
                 com_stop();               // 停止
                 head_change = 2;          // 進行方向更新変数を後に設定
                 head = ( head + head_change ) & 0x03; // 詳細は下を参照
@@ -1039,6 +1040,69 @@ void back_wall_set( void ){
   com_back( 1 );
   com_stop();
 }
+
+//-------------------------------------------------------------------------
+//  ゴール壁当て
+//-------------------------------------------------------------------------
+void goal_kbat_turn( void ){
+  if( F_SEN > F_LIM ){
+    if( R_SEN > R_LIM){
+      com_stop();
+      com_turn( 1 );
+      com_stop();
+      com_back( 1 );
+      com_stop();
+      com_go_half( 1 );
+      com_stop();
+      com_turn( 1 );
+      com_stop();
+      com_back( 1 );
+      com_stop();
+      zerozero = 1;
+    }else if( L_SEN > L_LIM ){
+      com_stop();
+      com_turn( 0 );
+      com_stop();
+      com_back( 1 );
+      com_stop();
+      com_go_half( 1 );
+      com_stop();
+      com_turn( 0 );
+      com_stop();
+      com_back( 1 );
+      com_stop();
+      zerozero = 1;
+    }else{
+      com_turn( 3 );
+      back_wall_set();
+      zerozero = 1;
+    }
+  }else{
+    if( R_SEN > R_LIM ){
+      com_stop();
+      com_turn( 1 );
+      com_stop();
+      com_back( 1 );
+      com_stop();
+      com_go_half( 1 );
+      com_stop();
+      com_turn( 1 );
+    }else if( L_SEN > L_LIM ){
+      com_stop();
+      com_turn( 0 );
+      com_stop();
+      com_back( 1 );
+      com_stop();
+      com_go_half( 1 );
+      com_stop();
+      com_turn( 0 );
+    }else{
+      com_turn( 3 );
+    }
+  }
+  com_stop();
+}
+
 
 //-------------------------------------------------------------------------
 //  壁当てターン
