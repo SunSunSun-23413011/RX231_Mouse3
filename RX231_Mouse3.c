@@ -47,7 +47,8 @@
 //  2026/02/06  Modified. 04 ：地図データ,ゴール座標のDF保存/読出し 追加
 //  2026/02/09  Modified. 05 ：地図データ削除 追加
 //  2026/02/09  Modified. 06 ：速度選択 追加
-//  2026/02/09  Modified. 07 ：速度制限 追加
+//  2026/02/12  Modified. 07 ：速度制限 追加
+//  2026/02/12  Modified. 08 ：後ろ壁当て, 前壁補正 追加
 //
 //***************************************************************
 #include "typedefine.h"
@@ -147,11 +148,13 @@ short    F_SW;            // 前センサのスイッチ
 // センサのしきい値
 short    R_REF;            // 右センサしきい値
 short    L_REF;            // 左センサしきい値
+short    F_REF;            // 前センサしきい値
 // 壁の有無判定用しきい値
 short    R_LIM;            // 右壁有無しきい値
 short    L_LIM;            // 左壁有無しきい値
 short    F_LIM;            // 前壁有無しきい値
 short    F_LIM2;           // 2マス先前壁有無しきい値
+short    F_LIM_SLA;        // スラローム用前壁有無しきい値
 // モータ関連
 ushort   timerL;           // 左タイマー設定値
 ushort   timerR;           // 右タイマー設定値
@@ -162,10 +165,16 @@ short    speed_now;        // 現在速度
 short    MotorTimer;       // モータ電源コントロールタイマー
 short    control_mode;     // 姿勢制御モード  0:なし  1:あり
 short    Global_Speed;     // グローバル速度
+short    SLALOM_INNER_SPEED;  // スラローム内輪速度
 // 走行関連
 short    STEP;             // モータのステップ数
 short    GO_STEP;          // 1区間のステップ数
+short    SLA_GO_STEP;      //スラローム時1区間ステップ数
+short    HALF_STEP;        // 半区間のステップ数
 short    TURN_STEP;        // 超信旋回ステップ数
+short    SLALOM_STEP_FORWARD;   // スラローム旋回ステップ数（内側）
+short    SLALOM_STEP_OUT;  // スラローム旋回ステップ数（外側）
+short    zerozero;         // (0,0)スタートフラグ
 //ステップ数(割り込み内でカウントアップ) 
 volatile unsigned int step_r;		//右モータ用
 volatile unsigned int step_l;			//左モータ用
@@ -208,11 +217,18 @@ void mode7( int x );
 void mode8( int x );
 void mode9( int x );
 void mouse_search( int goal_x, int goal_y, int speed, int mode );
+void slalom_search( int goal_x, int goal_y, int speed, int mode );
 void Int_MTU1_TGIA1(void); // MTU1割り込み関数プロトタイプ
 u16 AccTableGet(u16 index); // 加速テーブル取得関数プロトタイプ
 void com_go( int n );
+void com_go_half( int n );
 void com_stop( void );
+void com_back( int n );
 void com_turn( int t_mode );
+void com_slalom_turn( int t_mode );
+void back_wall_set( void );
+void kbat_lf_turn( void );
+void goal_kbat_turn( void );
 void countdown( void );
 int get_wall_data( void );
 void clear_map( void );
@@ -227,7 +243,7 @@ int goal_writeDF( void );
 int goal_DFread( int *gx, int *gy );
 int goal_find_index( int gx, int gy );
 void select_goal(int *gx, int *gy); // ゴール選択関数プロトタイプ
-void select_speed(int *sp);      // 速度選択関数プロトタイプ
+void select_speed(short *speed);      // 速度選択関数プロトタイプ
 
 //---------------------------------------------------------------
 //  メインプログラム
@@ -239,7 +255,7 @@ void main(void){
     PIN_WRITE(LED) = LED_OFF;                        // LEDを消灯
     Start_Sound(98); // 起動音再生
     // タイトル表示
-    LCD_print( 0, "Modded07" );
+    LCD_print( 0, "Modded08" );
 
     // 電圧表示
     LCD_print( 8, "   .  v " );
@@ -302,16 +318,25 @@ void IO_init( void ){
 //---------------------------------------------------------------
 void load_param( void ){
   // センサしきい値の決め打ち
-  R_REF   = 410;    // 区画中央での右センサ値
-  L_REF   = 300;    // 区画中央での左センサ値
+  R_REF   = 270;    // 区画中央での右センサ値
+  L_REF   = 380;    // 区画中央での左センサ値
+  F_REF   = 1600;   // 区画中央での前センサ値
   // 壁の有無判定用しきい値:各センサ壁あり最小値と壁なし値の中間値
   R_LIM   = 150;    // 右
   L_LIM   = 200;    // 左
   F_LIM   = 280;    // 前
+  F_LIM2  = 200;    // 2マス先前
+  F_LIM_SLA = 630;  // スラローム用前壁
   //走行パラメータ
-  GO_STEP = 1630;   // 1区間のステップ数
+  GO_STEP = 1600;   // 1区間のステップ数
+  SLA_GO_STEP = 1600; //スラローム時1区間のステップ数
+  HALF_STEP = 600; // 半区間のステップ数
   TURN_STEP = 550;  // 旋回ステップ数
+  SLALOM_STEP_FORWARD = 60; // スラローム内側ステップ数
+  SLALOM_STEP_OUT = 550; // スラローム外側ステップ数
+  SLALOM_INNER_SPEED = 10; // スラローム内輪速度
   Global_Speed = 900; // グローバル速度
+  zerozero = 0; // (0,0)スタートフラグ初期化
 }
 
 //---------------------------------------------------------------
@@ -380,8 +405,18 @@ void int_timerw( void ){
             err_r = 0;
           }
           //偏差を用いて補正
+          if (speed_now > 600){
+            err_l *= 3;
+            err_r *= 3;
+          }
           lspeed = acc_num + err_l;
           rspeed = acc_num + err_r;
+      }else if(control_mode == 2){ // 右旋回スラローム
+          lspeed = acc_num;
+          rspeed = SLALOM_INNER_SPEED;
+      }else if(control_mode == 3){ // 左旋回スラローム
+          lspeed = SLALOM_INNER_SPEED;
+          rspeed = acc_num;
       }else{  // control_mode = 0
           lspeed = acc_num;
           rspeed = acc_num;
@@ -689,7 +724,8 @@ void mode5( int x ){
   if( x == DISP ){  // DISPモードの場合
     // モード内容表示
     LCD_print( 0, "5:Search" );
-    LCD_print( 8, "Spd  200" );
+    LCD_print( 8, "Spd     " );
+    LCD_dec_out(12, Global_Speed, 4);
     return;                     // 以下の実行処理をしないで戻る
   }
 
@@ -713,7 +749,8 @@ void mode6( int x ){
   {
     // モード内容表示
     LCD_print( 0, "6:Try   " );
-    LCD_print( 8, "Spd  200" );
+    LCD_print( 8, "Spd     " );
+    LCD_dec_out(12, Global_Speed, 4);
     return;                     // 以下の実行処理をしないで戻る
   }
 
@@ -724,7 +761,8 @@ void mode6( int x ){
   pos_x = 0; pos_y = 0; head = 0;
   Start_Sound(3);
   map_DFread(MAP_DATA_NO);
-  mouse_search( goal[0], goal[1], Global_Speed, T_MODE );
+  slalom_search( goal[0], goal[1], Global_Speed, T_MODE );
+  slalom_search( 0, 0, Global_Speed, T_MODE );
   Start_Sound(96);
 }
 
@@ -815,7 +853,10 @@ void mode9(int x){
 //-------------------------------------------------------------------------
 void mouse_search( int goal_x, int goal_y, int spd, int mode ){
   short x, y, block_count, motion, next_motion;
-
+  if( pos_x == 0 && pos_y == 0 ){
+    back_wall_set();
+    zerozero = 1;
+  }
   while( 1 ){
     // １つのループは区間中心から次の区間中心まで
     // 最初に半区画直進
@@ -835,6 +876,14 @@ void mouse_search( int goal_x, int goal_y, int spd, int mode ){
     next_motion = search_adachi();  // 次の行動予測
     if ( (F_SEN > F_LIM2 || next_motion == 1 || next_motion == 3) && spd > 700 ) speed = 700; // 2マス先に壁がある場合は速度制限
     else  speed = spd;                  // 速度設定
+
+    if( zerozero == 1 ){  // (0,0)スタート時のみ
+      while( STEP < HALF_STEP );  // 半区間進む
+      step_l = 0;                        //左ステップ数をリセット
+      step_r = 0;                        //右ステップ数をリセット
+      STEP = 0;                     // 距離カウンタリセット
+      zerozero = 0;
+    }
     while( STEP < GO_STEP / 2 );  // 半区間進む
 
     // 柱まで進んだら
@@ -855,31 +904,31 @@ void mouse_search( int goal_x, int goal_y, int spd, int mode ){
                 head_change = 0;          // 進行方向更新変数を前に設定
                 break;
       // 右折
-      case  1 : while( STEP < GO_STEP - speed_now * 2 );  // 減速域を残して直進
+      case  1 : while( STEP < GO_STEP - speed_now * 2 && F_SEN < F_REF );  // 減速域を残して直進
                 speed = 1;
-                while( STEP < GO_STEP );  // 残りステップ数で減速
+                while( STEP < GO_STEP && F_SEN < F_REF );  // 残りステップ数で減速
                 com_turn( 0 );            // 右90度旋回
                 head_change = 1;          // 進行方向更新変数を右に設定
                 break;
       // 反転
-      case  2 : while( STEP < GO_STEP - speed_now * 2 );  // 減速域を残して直進
+      case  2 : while( STEP < GO_STEP - speed_now * 2 && F_SEN < F_REF );  // 減速域を残して直進
                 speed = 1;
-                while( STEP < GO_STEP );  // 残りステップ数で減速
-                com_turn( 2 );            // 反転
+                while( STEP < GO_STEP && F_SEN < F_REF );  // 残りステップ数で減速
+                kbat_lf_turn();            // 反転
                 head_change = 2;          // 進行方向更新変数を後に設定
                 break;
       // 左折
-      case  3 : while( STEP < GO_STEP - speed_now * 2 );  // 減速域を残して直進
+      case  3 : while( STEP < GO_STEP - speed_now * 2 && F_SEN < F_REF );  // 減速域を残して直進
                 speed = 1;
-                while( STEP < GO_STEP );  // 残りステップ数で減速
+                while( STEP < GO_STEP && F_SEN < F_REF );  // 残りステップ数で減速
                 com_turn( 1 );            // 左90度旋回
                 head_change = 3;          // 進行方向更新変数を左に設定
                 break;
       // 反転停止
-      case  4 : while( STEP < GO_STEP - speed_now * 2 );  // 減速域を残して直進
+      case  4 : while( STEP < GO_STEP - speed_now * 2 && F_SEN < F_REF );  // 減速域を残して直進
                 speed = 1;
-                while( STEP < GO_STEP );  // 残りステップ数で減速
-                com_turn( 2 );            // 反転
+                while( STEP < GO_STEP && F_SEN < F_REF );  // 残りステップ数で減速
+                goal_kbat_turn();         // 反転(ゴール壁当て)
                 com_stop();               // 停止
                 head_change = 2;          // 進行方向更新変数を後に設定
                 head = ( head + head_change ) & 0x03; // 詳細は下を参照
@@ -912,6 +961,121 @@ void mouse_search( int goal_x, int goal_y, int spd, int mode ){
   }
 }
 
+//-------------------------------------------------------------------------
+//  スラローム探索関数
+//-------------------------------------------------------------------------
+void slalom_search( int goal_x, int goal_y, int spd, int mode ){
+  short x, y, block_count, motion, next_motion, next_next_motion, prev_motion;
+  uchar save_pos_x, save_pos_y, save_head;
+  prev_motion = 0;
+  if( pos_x == 0 && pos_y == 0 ){
+    back_wall_set();
+    zerozero = 1;
+  }
+  while( 1 ){
+    control_mode = 1;             // 姿勢制御ON
+    rdir = 0; ldir = 0;           // 回転方向を直進
+    STEP = 0;                     // 距離カウンタリセット
+
+    // 座標更新
+    if     ( head == 0 ) pos_y++;
+    else if( head == 1 ) pos_x++;
+    else if( head == 2 ) pos_y--;
+    else if( head == 3 ) pos_x--;
+
+    // ポテンシャルMAP計算
+    make_potential( goal_x, goal_y, mode );
+    next_motion = search_adachi();  // 次の行動予測
+    next_next_motion = 2;           // default: not straight
+    if( mode == T_MODE && next_motion == 0 ){
+      // Predict the motion after next by virtual one-step forward
+      save_pos_x = pos_x;
+      save_pos_y = pos_y;
+      save_head = head;
+
+      if     ( head == 0 ) pos_y++;
+      else if( head == 1 ) pos_x++;
+      else if( head == 2 ) pos_y--;
+      else if( head == 3 ) pos_x--;
+
+      next_next_motion = search_adachi();
+
+      pos_x = save_pos_x;
+      pos_y = save_pos_y;
+      head  = save_head;
+    }
+
+    if( mode == T_MODE && next_motion == 0 && next_next_motion == 0 ) speed = spd; // speed setting
+    else speed = 300;
+    if( zerozero == 1 ){
+      while( STEP < HALF_STEP );
+      step_l = 0;
+      step_r = 0;
+      STEP = 0;
+      zerozero = 0;
+    }
+
+    // 旋回前の進入距離をスラローム向けに調整
+    if( prev_motion == 1 || prev_motion == 3 ){
+      while( STEP < GO_STEP / 2 );
+    }else{
+      while( STEP < GO_STEP / 2 && F_SEN < F_LIM_SLA );
+    }
+
+    if( mode == S_MODE ) make_map_data();
+
+    motion = search_adachi();
+    if( pos_x == goal_x && pos_y == goal_y )
+      motion = 4;
+
+    switch( motion ){
+      case  0 :
+        while( STEP < SLA_GO_STEP );
+        head_change = 0;
+        break;
+      case  1 :
+        com_slalom_turn( 0 );
+        head_change = 1;
+        break;
+      case  2 :
+        while( STEP < GO_STEP - speed_now * speed_now / 300 && F_SEN < F_REF );
+        speed = 1;
+        while( STEP < GO_STEP && F_SEN < F_REF );
+        kbat_lf_turn();
+        head_change = 2;
+        break;
+      case  3 :
+        com_slalom_turn( 1 );
+        head_change = 3;
+        break;
+      case  4 :
+        while( STEP < GO_STEP - speed_now * speed_now / 300 && F_SEN < F_REF );
+        speed = 1;
+        while( STEP < GO_STEP && F_SEN < F_REF );
+        goal_kbat_turn();
+        com_stop();
+        head_change = 2;
+        head = ( head + head_change ) & 0x03;
+        block_count = 0;
+        for( y = 0 ; y < 16 ; y++ ){
+          for( x = 0 ; x < 16 ; x++ ){
+            if( ( map[ x ][ y ] & 0xf0 ) == 0xf0 )
+              block_count++;
+          }
+        }
+        return;
+      default :
+        com_stop();
+        head_change = 0;
+        head = ( head + head_change ) & 0x03;
+        return;
+    }
+
+    prev_motion = motion;
+    head = ( head + head_change ) & 0x03;
+  }
+}
+
 
 //-------------------------------------------------------------------------
 //  直進モジュール (N区間前進)
@@ -935,6 +1099,21 @@ void com_go( int n ){
 }
 
 //-------------------------------------------------------------------------
+//  直進モジュール (四半区間前進)
+//-------------------------------------------------------------------------
+void com_go_half( int n ){
+  control_mode = 0;
+  STEP = 0;
+  rdir = 0; ldir = 0;
+  speed = 100;
+  while( speed > speed_now );
+  speed = speed_now;
+  while( STEP < HALF_STEP * n - speed_now * 2 );
+  speed = 1;
+  while( STEP < HALF_STEP * n );
+}
+
+//-------------------------------------------------------------------------
 //  停止モジュール
 //-------------------------------------------------------------------------
 void com_stop( void ){
@@ -944,6 +1123,24 @@ void com_stop( void ){
   STEP = 0;                   // 距離カウンタをリセット
   speed = 0;  speed_now = 0;  // モータの制御用の変数をリセット
   pause(100);                 // 0.1秒モータを停止
+}
+
+//-------------------------------------------------------------------------
+//  後進モジュール
+//-------------------------------------------------------------------------
+void com_back( int n ){
+  short BACK_STEP = GO_STEP / 2; // 後進ステップ数設定
+  control_mode = 0;
+  rdir = 1; ldir = 1;           // 回転方向を後進
+  STEP = 0;                     // 距離カウンタリセット
+  speed = 100;        // 目標速度設定
+  while( speed > speed_now );                   // 目標速度になるまで加速
+  speed = speed_now;  // 加速後の速度
+  while( STEP < BACK_STEP * n - speed_now * 2 );  // 減速ステップ数を残して定速移動
+                                                // 全体ステップ数-減速用ステップ数
+  // 減速モード
+  speed = 1;          // 最低速度設定
+  while( STEP < BACK_STEP * n );                  // 残りのステップ数で減速
 }
 
 //-------------------------------------------------------------------------
@@ -972,6 +1169,158 @@ void com_turn( int t_mode ){
 }
 
 //-------------------------------------------------------------------------
+//  スラロームモジュール (0:R90 1:L90 2:R180 3:L180) 
+//-------------------------------------------------------------------------
+void com_slalom_turn( int t_mode ){
+  control_mode = 0;                       // 姿勢制御無し
+  step_r = 0;                               //右ステップ数をリセット
+  step_l = 0;                               //左ステップ数をリセット
+  STEP = 0;                               // 距離カウンタクリア
+  rdir = 0; ldir = 0;                     // 回転方向を直進
+  speed = 300;
+  if( t_mode == 0 ) {
+    while( speed > speed_now && F_SEN < F_LIM_SLA );
+    speed = speed_now;
+    while( (step_r < SLALOM_STEP_FORWARD) && (F_SEN < F_LIM_SLA || R_SEN > R_LIM) );
+    control_mode = 2;           // スラローム用姿勢制御
+    step_r = 0;                               //右ステップ数をリセット
+    step_l = 0;                               //左ステップ数をリセット
+    STEP = 0;                               // 距離カウンタクリア
+    while( step_l < SLALOM_STEP_OUT );
+  }
+  else if( t_mode == 1 ) {
+    while( speed > speed_now && F_SEN < F_LIM_SLA );
+    speed = speed_now;
+    while( (step_l < SLALOM_STEP_FORWARD) && (F_SEN < F_LIM_SLA || L_SEN > L_LIM) );
+    control_mode = 3;           // スラローム用姿勢制御
+    step_r = 0;                               //右ステップ数をリセット
+    step_l = 0;                               //左ステップ数をリセット
+    STEP = 0;                               // 距離カウンタクリア
+    while( step_r < SLALOM_STEP_OUT );
+  }
+  //else if( t_mode == 2 ) { T_STEP *= 2; rdir = 1; ldir = 0; }
+  //else if( t_mode == 3 ) { T_STEP *= 2; rdir = 0; ldir = 1; }
+}
+
+//-------------------------------------------------------------------------
+//  後ろ壁当て
+//-------------------------------------------------------------------------
+void back_wall_set( void ){
+  control_mode = 0;           // 姿勢制御無し
+  com_stop();
+  com_back( 1 );
+  com_stop();
+}
+
+//-------------------------------------------------------------------------
+//  ゴール壁当て
+//-------------------------------------------------------------------------
+void goal_kbat_turn( void ){
+  if( F_SEN > F_LIM ){
+    if( R_SEN > R_LIM){
+      com_stop();
+      com_turn( 1 );
+      com_stop();
+      com_back( 1 );
+      com_stop();
+      com_go_half( 1 );
+      com_stop();
+      com_turn( 1 );
+      com_stop();
+      com_back( 1 );
+      com_stop();
+      zerozero = 1;
+    }else if( L_SEN > L_LIM ){
+      com_stop();
+      com_turn( 0 );
+      com_stop();
+      com_back( 1 );
+      com_stop();
+      com_go_half( 1 );
+      com_stop();
+      com_turn( 0 );
+      com_stop();
+      com_back( 1 );
+      com_stop();
+      zerozero = 1;
+    }else{
+      com_turn( 3 );
+      back_wall_set();
+      zerozero = 1;
+    }
+  }else{
+    if( R_SEN > R_LIM ){
+      com_stop();
+      com_turn( 1 );
+      com_stop();
+      com_back( 1 );
+      com_stop();
+      com_go_half( 1 );
+      com_stop();
+      com_turn( 1 );
+    }else if( L_SEN > L_LIM ){
+      com_stop();
+      com_turn( 0 );
+      com_stop();
+      com_back( 1 );
+      com_stop();
+      com_go_half( 1 );
+      com_stop();
+      com_turn( 0 );
+    }else{
+      com_turn( 3 );
+    }
+  }
+  com_stop();
+}
+
+
+//-------------------------------------------------------------------------
+//  壁当てターン
+//-------------------------------------------------------------------------
+void kbat_lf_turn( void ){
+  int kabe;
+  kabe = search_left_hand();
+  switch( kabe ){
+    case 0:
+    case 1:
+      com_stop();
+      com_turn( 0 );
+      com_stop();
+      com_back( 1 );
+      com_stop();
+      com_go_half( 1 );
+      com_stop();
+      com_turn( 0 );
+      break;
+    case 2:
+      com_stop();
+      com_turn( 0 );
+      com_stop();
+      com_back( 1 );
+      com_stop();
+      com_go_half( 1 );
+      com_stop();
+      com_turn( 0 );
+      com_stop();
+      com_back( 1 );
+      com_stop();
+      zerozero = 1;
+      break;
+    default :
+      if( F_SEN > F_LIM ){
+        com_turn( 2 );
+        com_stop();
+        com_back( 1 );
+        com_stop();
+        zerozero = 1;
+      }else{
+        com_turn( 2 );
+      }
+  }
+}
+
+//-------------------------------------------------------------------------
 //  時報音
 //-------------------------------------------------------------------------
 SOUND_T Chime_1[]={
@@ -992,13 +1341,13 @@ SOUND_T Chime_2[]={
 //  カウントダウン
 //-------------------------------------------------------------------------
 SOUND_T Countdown[]={
-{RA1_, T08_}, /* ラ (A5) */
-{RST_, T16_}, /* 休符 */
-{RA1_, T08_}, /* ラ (A5) */
-{RST_, T16_}, /* 休符 */
-{RA1_, T08_}, /* ラ (A5) */
-{RST_, T16_}, /* 休符 */
-{RA2_, T04_}, /* ラ (A6) */
+{RA1_, T04_}, /* ラ (A5) */
+{RST_, T08_}, /* 休符 */
+{RA1_, T04_}, /* ラ (A5) */
+{RST_, T08_}, /* 休符 */
+{RA1_, T04_}, /* ラ (A5) */
+{RST_, T08_}, /* 休符 */
+{RA2_, T02_}, /* ラ (A6) */
 {STP_, T00_},
 };
 
@@ -1589,20 +1938,20 @@ void make_potential( int gx, int gy, int mode )
            // 二次走行(Try Mode)
            // 北側が壁なし＆既探索の場合(壁なしでも未探索はポテンシャル255のまま)
             // 北側のポテンシャルを対象区画のポテンシャルより+1
-            if((( map[ x ][ y ] & 0x11 ) == 0x10 ) && ( y != 15 )){
+            if((( map[ x ][ y ] & 0x11 ) == 0x10 ) && ( y != 15 ) && (( map[ x ][ y + 1 ] & 0xf0 ) == 0xf0 )){
               if( p_map[ x ][ y + 1 ] == 255 ){// まだポテンシャルを書いてなければ
                 p_map[ x ][ y + 1 ] = check_num + 1;
                 flg = 1;  // 変更したのでフラグON
               }
             }
             // 東側の壁も同様に処理
-            if((( map[ x ][ y ] & 0x22 ) == 0x20 ) && ( x != 15 ))
+            if((( map[ x ][ y ] & 0x22 ) == 0x20 ) && ( x != 15 ) && (( map[ x + 1 ][ y ] & 0xf0 ) == 0xf0 ))
               if(p_map[x+1][y]==255){p_map[x+1][y]=check_num+1;flg=1;}
             // 南側の壁も同様に処理
-            if((( map[ x ][ y ] & 0x44 ) == 0x40 ) && ( y != 0 ))
+            if((( map[ x ][ y ] & 0x44 ) == 0x40 ) && ( y != 0 ) && (( map[ x ][ y - 1 ] & 0xf0 ) == 0xf0 ))
               if(p_map[x][y-1]==255){p_map[x][y-1]=check_num+1;flg=1;}
             // 西側の壁も同様に処理
-            if((( map[ x ][ y ] & 0x88 ) == 0x80 ) && ( x != 0 ))
+            if((( map[ x ][ y ] & 0x88 ) == 0x80 ) && ( x != 0 ) && (( map[ x - 1 ][ y ] & 0xf0 ) == 0xf0 ))
               if(p_map[x-1][y]==255){p_map[x-1][y]=check_num+1;flg=1;}
 
           }
