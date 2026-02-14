@@ -329,11 +329,11 @@ void load_param( void ){
   F_LIM_SLA = 630;  // スラローム用前壁
   //走行パラメータ
   GO_STEP = 1600;   // 1区間のステップ数
-  SLA_GO_STEP = 1620; //スラローム時1区間のステップ数
+  SLA_GO_STEP = 1600; //スラローム時1区間のステップ数
   HALF_STEP = 600; // 半区間のステップ数
   TURN_STEP = 550;  // 旋回ステップ数
-  SLALOM_STEP_FORWARD = 50; // スラローム内側ステップ数
-  SLALOM_STEP_OUT = 600; // スラローム外側ステップ数
+  SLALOM_STEP_FORWARD = 60; // スラローム内側ステップ数
+  SLALOM_STEP_OUT = 550; // スラローム外側ステップ数
   SLALOM_INNER_SPEED = 10; // スラローム内輪速度
   Global_Speed = 900; // グローバル速度
   zerozero = 0; // (0,0)スタートフラグ初期化
@@ -405,6 +405,10 @@ void int_timerw( void ){
             err_r = 0;
           }
           //偏差を用いて補正
+          if (speed_now > 600){
+            err_l *= 3;
+            err_r *= 3;
+          }
           lspeed = acc_num + err_l;
           rspeed = acc_num + err_r;
       }else if(control_mode == 2){ // 右旋回スラローム
@@ -1014,9 +1018,6 @@ void slalom_search( int goal_x, int goal_y, int spd, int mode ){
     // 旋回前の進入距離をスラローム向けに調整
     if( prev_motion == 1 || prev_motion == 3 ){
       while( STEP < GO_STEP / 2 );
-    }else if( (next_motion == 1 || next_motion == 3) && spd >= 600 ){
-      control_mode = 0;
-      while( STEP < 200 );
     }else{
       while( STEP < GO_STEP / 2 && F_SEN < F_LIM_SLA );
     }

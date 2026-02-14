@@ -1,5 +1,5 @@
 品質記録情報
-2026年2月14日 15:58:39
+2026年2月14日 17:35:23
 
 ------ ビルド開始(RX231_Mouse3, DefaultBuild) ------
 C:\Program Files (x86)\Renesas Electronics\CS+\CC\CC-RX\V3.07.00\Bin\ccrx.exe RX231_Mouse3.c -isa=rxv2 -fpu -endian=big -dbl_size=8 -signed_char -lang=c99 -include=src\smc_gen\r_flash_rx\src\targets\rx231 -include=src\smc_gen\r_flash_rx\src\flash_type_5 -include=src\smc_gen\r_flash_rx\src\flash_type_4 -include=src\smc_gen\r_flash_rx\src\flash_type_3 -include=src\smc_gen\r_flash_rx\src\flash_type_1 -include=src\smc_gen\r_flash_rx\src -include=src\smc_gen\r_flash_rx -include=src\smc_gen\r_datfrx_rx\src\flash_type_common -include=src\smc_gen\r_datfrx_rx\src\flash_type_5 -include=src\smc_gen\r_datfrx_rx\src\flash_type_4 -include=src\smc_gen\r_datfrx_rx\src\flash_type_3 -include=src\smc_gen\r_datfrx_rx\src\flash_type_1 -include=src\smc_gen\r_datfrx_rx\src -include=src\smc_gen\r_datfrx_rx -include=src\smc_gen\Config_MTU1 -include=. -include=src\smc_gen\r_pincfg -include=src\smc_gen\Config_S12AD0 -include=src\smc_gen\Config_PORT -include=src\smc_gen\Config_MTU3 -include=src\smc_gen\Config_MTU4 -include=src\smc_gen\Config_MTU0 -include=src\smc_gen\Config_CMT0 -include=src\smc_gen\r_config -include=src\smc_gen\r_bsp\mcu\rx231\register_access\ccrx -include=src\smc_gen\r_bsp\mcu\rx231 -include=src\smc_gen\r_bsp\mcu\all -include=src\smc_gen\r_bsp\board\user -include=src\smc_gen\r_bsp\board\generic_rx231 -include=src\smc_gen\r_bsp -include=src\smc_gen\general -debug -g_line -optimize=0 -nologo -output=obj=DefaultBuild\RX231_Mouse3.obj
@@ -22,11 +22,11 @@ RX231_Mouse3.c(352):W0520223:Function "R_Config_MTU3_Start" declared implicitly
 RX231_Mouse3.c(354):W0520223:Function "R_Config_MTU3_Stop" declared implicitly
 RX231_Mouse3.c(364):W0520223:Function "R_Config_MTU4_Start" declared implicitly
 RX231_Mouse3.c(366):W0520223:Function "R_Config_MTU4_Stop" declared implicitly
-RX231_Mouse3.c(522):W0520069:Integer conversion resulted in truncation
-RX231_Mouse3.c(1485):W0520223:Function "R_Config_MTU0_Start" declared implicitly
-RX231_Mouse3.c(1486):W0520223:Function "R_Config_MTU1_Start" declared implicitly
-RX231_Mouse3.c(1502):W0520223:Function "R_Config_MTU0_Stop" declared implicitly
-RX231_Mouse3.c(1503):W0520223:Function "R_Config_MTU1_Stop" declared implicitly
+RX231_Mouse3.c(526):W0520069:Integer conversion resulted in truncation
+RX231_Mouse3.c(1486):W0520223:Function "R_Config_MTU0_Start" declared implicitly
+RX231_Mouse3.c(1487):W0520223:Function "R_Config_MTU1_Start" declared implicitly
+RX231_Mouse3.c(1503):W0520223:Function "R_Config_MTU0_Stop" declared implicitly
+RX231_Mouse3.c(1504):W0520223:Function "R_Config_MTU1_Stop" declared implicitly
 C:\Program Files (x86)\Renesas Electronics\CS+\CC\CC-RX\V3.07.00\Bin\rlink.exe -subcommand=DefaultBuild\RX231_Mouse3.clnk
 W0561017:Paid license of CC-RX V3 is not found, and the evaluation period has expired. Please consider purchasing the product.
 W0561017:Paid license of CC-RX V3 is not found, and the evaluation period has expired. Please consider purchasing the product.
@@ -108,8 +108,8 @@ DefaultBuild\RX231_Mouse3.clnk :
 
 
 --- SHA1 hash value of output files ---
-D:\RX231_Mouse3\DefaultBuild\RX231_Mouse3.abs: a9b51b11b2d89f33dcce09711054b63e7eed9c8a
-D:\RX231_Mouse3\DefaultBuild\RX231_Mouse3.mot: 464a5ec6075f6b0db24eef1a73e171920fce7cff
+D:\RX231_Mouse3\DefaultBuild\RX231_Mouse3.abs: 934ba47dee183da30e4c9f8207131da134abb34a
+D:\RX231_Mouse3\DefaultBuild\RX231_Mouse3.mot: 5eb6202ab27ae7ad27ed8eabf4760a6c79395428
 
 
 --- システム情報 ---
@@ -137,11 +137,11 @@ D:\RX231_Mouse3\DefaultBuild\RX231_Mouse3.mot: 464a5ec6075f6b0db24eef1a73e171920
  C:\Program Files (x86)\Renesas Electronics\CS+\CC
 *メモリ使用量
  *プライベート・ワーキング・セット
-  456 MB
+  487 MB
  *GDIオブジェクト数
-  2126
+  2176
  *USERオブジェクト数
-  1100
+  1126
  *開いているファイル
   10 editors, 10 files, 123 KB
 
