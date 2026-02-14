@@ -169,6 +169,7 @@ short    SLALOM_INNER_SPEED;  // スラローム内輪速度
 // 走行関連
 short    STEP;             // モータのステップ数
 short    GO_STEP;          // 1区間のステップ数
+short    SLA_GO_STEP;      //スラローム時1区間ステップ数
 short    HALF_STEP;        // 半区間のステップ数
 short    TURN_STEP;        // 超信旋回ステップ数
 short    SLALOM_STEP_FORWARD;   // スラローム旋回ステップ数（内側）
@@ -328,9 +329,10 @@ void load_param( void ){
   F_LIM_SLA = 630;  // スラローム用前壁
   //走行パラメータ
   GO_STEP = 1600;   // 1区間のステップ数
+  SLA_GO_STEP = 1620; //スラローム時1区間のステップ数
   HALF_STEP = 600; // 半区間のステップ数
   TURN_STEP = 550;  // 旋回ステップ数
-  SLALOM_STEP_FORWARD = 0; // スラローム内側ステップ数
+  SLALOM_STEP_FORWARD = 50; // スラローム内側ステップ数
   SLALOM_STEP_OUT = 600; // スラローム外側ステップ数
   SLALOM_INNER_SPEED = 10; // スラローム内輪速度
   Global_Speed = 900; // グローバル速度
@@ -1027,7 +1029,7 @@ void slalom_search( int goal_x, int goal_y, int spd, int mode ){
 
     switch( motion ){
       case  0 :
-        while( STEP < GO_STEP );
+        while( STEP < SLA_GO_STEP );
         head_change = 0;
         break;
       case  1 :
@@ -1174,8 +1176,8 @@ void com_slalom_turn( int t_mode ){
   step_l = 0;                               //左ステップ数をリセット
   STEP = 0;                               // 距離カウンタクリア
   rdir = 0; ldir = 0;                     // 回転方向を直進
+  speed = 300;
   if( t_mode == 0 ) {
-    speed = Global_Speed;
     while( speed > speed_now && F_SEN < F_LIM_SLA );
     speed = speed_now;
     while( (step_r < SLALOM_STEP_FORWARD) && (F_SEN < F_LIM_SLA || R_SEN > R_LIM) );
@@ -1186,7 +1188,6 @@ void com_slalom_turn( int t_mode ){
     while( step_l < SLALOM_STEP_OUT );
   }
   else if( t_mode == 1 ) {
-    speed = Global_Speed;
     while( speed > speed_now && F_SEN < F_LIM_SLA );
     speed = speed_now;
     while( (step_l < SLALOM_STEP_FORWARD) && (F_SEN < F_LIM_SLA || L_SEN > L_LIM) );
