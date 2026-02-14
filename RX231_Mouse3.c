@@ -325,13 +325,13 @@ void load_param( void ){
   L_LIM   = 200;    // 左
   F_LIM   = 280;    // 前
   F_LIM2  = 200;    // 2マス先前
-  F_LIM_SLA = 1000;  // スラローム用前壁
+  F_LIM_SLA = 630;  // スラローム用前壁
   //走行パラメータ
-  GO_STEP = 1620;   // 1区間のステップ数
+  GO_STEP = 1600;   // 1区間のステップ数
   HALF_STEP = 600; // 半区間のステップ数
   TURN_STEP = 550;  // 旋回ステップ数
   SLALOM_STEP_FORWARD = 10; // スラローム内側ステップ数
-  SLALOM_STEP_OUT = 500; // スラローム外側ステップ数
+  SLALOM_STEP_OUT = 600; // スラローム外側ステップ数
   SLALOM_INNER_SPEED = 10; // スラローム内輪速度
   Global_Speed = 900; // グローバル速度
   zerozero = 0; // (0,0)スタートフラグ初期化
