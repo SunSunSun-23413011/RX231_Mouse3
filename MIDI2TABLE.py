@@ -8,8 +8,9 @@
 # - Notes that do not exist in Sound.h are treated as REST (RST_) (no numeric tone counts are output)
 # - Polyphonic reduction: highest/lowest among notes that exist in Sound.h (after transpose)
 # - Two parts (instrument/hand) can be merged into one speaker:
-#     * part1 is primary
-#     * when part1 is REST, part2 (next priority) is used
+#     * If hands are explicitly left/right, left is primary and right is fallback
+#     * (left rest -> right note)
+#     * Otherwise part1 is primary and part2 is fallback
 #     * --prefer is used only to choose one note inside each part when polyphonic
 # - "Hand split" inside the same channel: left/right decided by pitch threshold (--hand-split)
 # - REST-only time processing:
@@ -253,6 +254,17 @@ def merge_primary_with_fallback(primary: Optional[int], fallback: Optional[int])
     # Keep part1 while it has a note; use part2 only during part1 rests.
     return primary if primary is not None else fallback
 
+def merge_left_priority(
+    part1: PartCfg, n1: Optional[int],
+    part2: PartCfg, n2: Optional[int]
+) -> Optional[int]:
+    # If two hands are explicitly split, always prefer left; use right only on left rests.
+    if part1.hand == "left" and part2.hand == "right":
+        return n1 if n1 is not None else n2
+    if part1.hand == "right" and part2.hand == "left":
+        return n2 if n2 is not None else n1
+    return merge_primary_with_fallback(n1, n2)
+
 def first_tempo_bpm(mid: mido.MidiFile) -> Optional[float]:
     for tr in mid.tracks:
         for msg in tr:
@@ -305,7 +317,7 @@ def extract_segments(
             cur_note = n1
             return
         n2 = pick_note_from_active(info, active2, prefer, part2.transpose)
-        cur_note = merge_primary_with_fallback(n1, n2)
+        cur_note = merge_left_priority(part1, n1, part2, n2)
 
     # Initial note is REST
     recompute_current()
@@ -358,7 +370,7 @@ def main() -> None:
     ap.add_argument("--transpose", type=int, default=0, help="part1 transpose (semitones)")
 
     ap.add_argument("--channel2", type=int, default=None,
-                    help="part2 MIDI channel 0-15 (used when part1 is REST; omit = disabled)")
+                    help="part2 MIDI channel 0-15 (fallback source; omit = disabled)")
     ap.add_argument("--hand2", choices=["all", "left", "right"], default="all", help="part2 hand filter")
     ap.add_argument("--transpose2", type=int, default=0, help="part2 transpose (semitones)")
 
