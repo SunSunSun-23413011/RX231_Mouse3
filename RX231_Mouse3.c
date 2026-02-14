@@ -330,7 +330,7 @@ void load_param( void ){
   GO_STEP = 1600;   // 1区間のステップ数
   HALF_STEP = 600; // 半区間のステップ数
   TURN_STEP = 550;  // 旋回ステップ数
-  SLALOM_STEP_FORWARD = 10; // スラローム内側ステップ数
+  SLALOM_STEP_FORWARD = 0; // スラローム内側ステップ数
   SLALOM_STEP_OUT = 600; // スラローム外側ステップ数
   SLALOM_INNER_SPEED = 10; // スラローム内輪速度
   Global_Speed = 900; // グローバル速度
@@ -959,7 +959,8 @@ void mouse_search( int goal_x, int goal_y, int spd, int mode ){
 //  スラローム探索関数
 //-------------------------------------------------------------------------
 void slalom_search( int goal_x, int goal_y, int spd, int mode ){
-  short x, y, block_count, motion, next_motion, prev_motion;
+  short x, y, block_count, motion, next_motion, next_next_motion, prev_motion;
+  uchar save_pos_x, save_pos_y, save_head;
   prev_motion = 0;
   if( pos_x == 0 && pos_y == 0 ){
     back_wall_set();
@@ -979,7 +980,26 @@ void slalom_search( int goal_x, int goal_y, int spd, int mode ){
     // ポテンシャルMAP計算
     make_potential( goal_x, goal_y, mode );
     next_motion = search_adachi();  // 次の行動予測
-    if (mode == T_MODE && next_motion == 0 )     speed = spd;                  // 速度設定
+    next_next_motion = 2;           // default: not straight
+    if( mode == T_MODE && next_motion == 0 ){
+      // Predict the motion after next by virtual one-step forward
+      save_pos_x = pos_x;
+      save_pos_y = pos_y;
+      save_head = head;
+
+      if     ( head == 0 ) pos_y++;
+      else if( head == 1 ) pos_x++;
+      else if( head == 2 ) pos_y--;
+      else if( head == 3 ) pos_x--;
+
+      next_next_motion = search_adachi();
+
+      pos_x = save_pos_x;
+      pos_y = save_pos_y;
+      head  = save_head;
+    }
+
+    if( mode == T_MODE && next_motion == 0 && next_next_motion == 0 ) speed = spd; // speed setting
     else speed = 300;
     if( zerozero == 1 ){
       while( STEP < HALF_STEP );
