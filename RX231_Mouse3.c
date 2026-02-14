@@ -969,7 +969,6 @@ void slalom_search( int goal_x, int goal_y, int spd, int mode ){
     control_mode = 1;             // 姿勢制御ON
     rdir = 0; ldir = 0;           // 回転方向を直進
     STEP = 0;                     // 距離カウンタリセット
-    speed = spd;                  // 速度設定
 
     // 座標更新
     if     ( head == 0 ) pos_y++;
@@ -980,7 +979,8 @@ void slalom_search( int goal_x, int goal_y, int spd, int mode ){
     // ポテンシャルMAP計算
     make_potential( goal_x, goal_y, mode );
     next_motion = search_adachi();  // 次の行動予測
-
+    if (mode == T_MODE && next_motion == 0 )     speed = spd;                  // 速度設定
+    else speed = 300;
     if( zerozero == 1 ){
       while( STEP < HALF_STEP );
       step_l = 0;
