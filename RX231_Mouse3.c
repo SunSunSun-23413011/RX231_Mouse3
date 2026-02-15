@@ -49,6 +49,7 @@
 //  2026/02/09  Modified. 06 ：速度選択 追加
 //  2026/02/12  Modified. 07 ：速度制限 追加
 //  2026/02/12  Modified. 08 ：後ろ壁当て, 前壁補正 追加
+//  2026/02/15  Modified. 09 ：スラローム探索 追加
 //
 //***************************************************************
 #include "typedefine.h"
@@ -259,7 +260,7 @@ void main(void){
     PIN_WRITE(LED) = LED_OFF;                        // LEDを消灯
     Start_Sound(98); // 起動音再生
     // タイトル表示
-    LCD_print( 0, "Modded08" );
+    LCD_print( 0, "Modded09" );
 
     // 電圧表示
     LCD_print( 8, "   .  v " );
