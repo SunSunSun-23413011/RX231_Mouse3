@@ -97,7 +97,7 @@ typedef void (*search_func_t)(int, int, int, int);
 #define   ModeMax     ( g_mode_table_count ) // 動作モード数
 // センサ関連
 #define   LED_ON      1    // センサ用LED点燈
-#define   LED_OFF     0    // センサ用LED消灯
+#define   LED_OFF     0    // センサ用LED消灯bd
 // モータ関連
 #define   LeftGo      1    // 左モータ前進
 #define   LeftBack    0    // 左モータ後進
@@ -247,6 +247,7 @@ int goal_DFread( int *gx, int *gy );
 int goal_find_index( int gx, int gy );
 void select_goal(int *gx, int *gy); // ゴール選択関数プロトタイプ
 void select_speed(short *speed);      // 速度選択関数プロトタイプ
+void select_search( short *select);   // 探索方法選択関数プロトタイプ
 
 //---------------------------------------------------------------
 //  メインプログラム
@@ -321,22 +322,22 @@ void IO_init( void ){
 //---------------------------------------------------------------
 void load_param( void ){
   // センサしきい値の決め打ち
-  R_REF   = 270;    // 区画中央での右センサ値
-  L_REF   = 380;    // 区画中央での左センサ値
+  R_REF   = 350;    // 区画中央での右センサ値
+  L_REF   = 300;    // 区画中央での左センサ値
   F_REF   = 1600;   // 区画中央での前センサ値
   // 壁の有無判定用しきい値:各センサ壁あり最小値と壁なし値の中間値
-  R_LIM   = 150;    // 右
-  L_LIM   = 200;    // 左
+  R_LIM   = 170;    // 右
+  L_LIM   = 150;    // 左
   F_LIM   = 280;    // 前
   F_LIM2  = 200;    // 2マス先前
-  F_LIM_SLA = 630;  // スラローム用前壁
+  F_LIM_SLA = 600;  // スラローム用前壁
   //走行パラメータ
   GO_STEP = 1600;   // 1区間のステップ数
-  SLA_GO_STEP = 1600; //スラローム時1区間のステップ数
+  SLA_GO_STEP = 1580; //スラローム時1区間のステップ数
   HALF_STEP = 600; // 半区間のステップ数
   TURN_STEP = 550;  // 旋回ステップ数
   SLALOM_STEP_FORWARD = 60; // スラローム内側ステップ数
-  SLALOM_STEP_OUT = 550; // スラローム外側ステップ数
+  SLALOM_STEP_OUT = 570; // スラローム外側ステップ数
   SLALOM_INNER_SPEED = 10; // スラローム内輪速度
   Global_Speed = 900; // グローバル速度
   zerozero = 0; // (0,0)スタートフラグ初期化
@@ -728,6 +729,7 @@ void mode4( int x ){
 //-------------------------------------------------------------------------
 void mode5( int x ){
   search_func_t search;
+  short select;
   if( x == DISP ){  // DISPモードの場合
     // モード内容表示
     LCD_print( 0, "5:Search" );
@@ -737,10 +739,11 @@ void mode5( int x ){
   }
 
   // 実行モードの場合
+  select_search(&select);
   select_speed(&Global_Speed); // 速度選択
   countdown();               // カウントダウン
   pos_x = 0; pos_y = 0; head = 0; // 
-  search = g_search_table[SEARCH_MOUSE];
+  search = g_search_table[select];
   Start_Sound(3);
   search( goal[0], goal[1], Global_Speed, S_MODE );
   (void)map_writeDF(MAP_DATA_NO);
@@ -2194,7 +2197,39 @@ void select_speed(short *speed){
       WaitKeyOff(); // チャタリング防止
     }
     if ( PIN_READ(SW_EXEC) == SW_ON ) { // 決定ボタン
+      WaitKeyOff(); // チャタリング防止
+      Start_Sound(99); // 決定音開始
       *speed = set_speed;
+      break;
+    }
+    if ( PIN_READ(SW_RETURN) == SW_ON ) { // 戻るボタン
+      break;
+    }
+  }
+  return;
+}
+
+//-------------------------------------------------------------------------
+//  スラローム選択
+//-------------------------------------------------------------------------
+void select_search(short *select){
+  short set_select = *select;
+  LCD_print(8, "        ");
+  while (1) {
+    if ( PIN_READ(SW_UP) == SW_ON ) { // UPボタン
+      set_select = SEARCH_MOUSE;
+      LCD_print(8, " NORMAL ");
+      WaitKeyOff(); // チャタリング防止
+    }
+    if ( PIN_READ(SW_DOWN) == SW_ON ) { // DOWNボタン
+      set_select = SEARCH_SLALOM;
+      LCD_print(8, " SLALOM ");
+      WaitKeyOff(); // チャタリング防止
+    }
+    if ( PIN_READ(SW_EXEC) == SW_ON ) { // 決定ボタン
+      WaitKeyOff(); // チャタリング防止
+      Start_Sound(99); // 決定音開始
+      *select = set_select;
       break;
     }
     if ( PIN_READ(SW_RETURN) == SW_ON ) { // 戻るボタン
@@ -2226,8 +2261,10 @@ void select_goal(int *gx, int *gy){
       WaitKeyOff(); // チャタリング防止
     }
     if ( PIN_READ(SW_EXEC) == SW_ON ) { // 決定ボタン
+      WaitKeyOff(); // チャタリング防止
       *gx = goals[goal_num][0];
       *gy = goals[goal_num][1];
+      Start_Sound(99); // 決定音開始
       break;
     }
     if ( PIN_READ(SW_RETURN) == SW_ON ) { // 戻るボタン
