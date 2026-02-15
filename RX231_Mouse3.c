@@ -220,6 +220,7 @@ void mode6( int x );
 void mode7( int x );
 void mode8( int x );
 void mode9( int x );
+void modeA( int x );
 void mouse_search( int goal_x, int goal_y, int speed, int mode );
 void slalom_search( int goal_x, int goal_y, int speed, int mode );
 void Int_MTU1_TGIA1(void); // MTU1割り込み関数プロトタイプ
@@ -574,7 +575,7 @@ void WaitKeyOff( void ){
 //-------------------------------------------------------------------------
 //  モードテーブル
 static const mode_func_t g_mode_table[] = {
-  mode0, mode1, mode2, mode3, mode4, mode5, mode6, mode7, mode8, mode9
+  mode0, mode1, mode2, mode3, mode4, mode5, mode6, mode7, mode8, mode9, modeA
 };
 static const int g_mode_table_count = (int)(sizeof(g_mode_table) / sizeof(g_mode_table[0]));
 static const search_func_t g_search_table[] = {
@@ -860,6 +861,40 @@ void mode9(int x){
   pause(800);
   return;
 }
+
+//-------------------------------------------------------------------------
+//  ModeA : 自立走行
+//-------------------------------------------------------------------------
+void modeA( int x ){
+  search_func_t search;
+  short select;
+  if( x == DISP ){  // DISPモードの場合
+    // モード内容表示
+    LCD_print( 0, "A:Search" );
+    LCD_print( 8, "Spd     " );
+    LCD_dec_out(12, Global_Speed, 4);
+    return;                     // 以下の実行処理をしないで戻る
+  }
+
+  // 実行モードの場合
+  select_search(&select);
+  select_speed(&Global_Speed); // 速度選択
+  countdown();               // カウントダウン
+  pos_x = 0; pos_y = 0; head = 0; // 
+  search = g_search_table[select];
+  Start_Sound(3);
+  search( goal[0], goal[1], 300, S_MODE );
+  (void)map_writeDF(MAP_DATA_NO);
+  search(0, 0, 300, S_MODE);
+  (void)map_writeDF(MAP_DATA_NO);
+  for(int i = 0; i < 4; i++){
+    pos_x = 0; pos_y = 0; head = 0;
+    search( goal[0], goal[1], Global_Speed, T_MODE );
+    search( 0, 0, Global_Speed, T_MODE );
+  }
+  Start_Sound(96);
+}
+
 
 //-------------------------------------------------------------------------
 //  探索関数
