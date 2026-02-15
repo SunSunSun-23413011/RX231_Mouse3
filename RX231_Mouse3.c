@@ -324,13 +324,13 @@ void load_param( void ){
   // センサしきい値の決め打ち
   R_REF   = 350;    // 区画中央での右センサ値
   L_REF   = 300;    // 区画中央での左センサ値
-  F_REF   = 1600;   // 区画中央での前センサ値
+  F_REF   = 1500;   // 区画中央での前センサ値
   // 壁の有無判定用しきい値:各センサ壁あり最小値と壁なし値の中間値
-  R_LIM   = 170;    // 右
+  R_LIM   = 150;    // 右
   L_LIM   = 150;    // 左
   F_LIM   = 280;    // 前
   F_LIM2  = 200;    // 2マス先前
-  F_LIM_SLA = 600;  // スラローム用前壁
+  F_LIM_SLA = 550;  // スラローム用前壁
   //走行パラメータ
   GO_STEP = 1600;   // 1区間のステップ数
   SLA_GO_STEP = 1580; //スラローム時1区間のステップ数
@@ -1193,7 +1193,14 @@ void com_slalom_turn( int t_mode ){
   if( t_mode == 0 ) {
     while( speed > speed_now && F_SEN < F_LIM_SLA );
     speed = speed_now;
-    while( (step_r < SLALOM_STEP_FORWARD) && (F_SEN < F_LIM_SLA || R_SEN > R_LIM) );
+    while( (step_r < SLALOM_STEP_FORWARD) && (F_SEN < F_LIM_SLA) );
+    if ( R_SEN > R_LIM){
+      while( R_SEN > R_LIM );
+      step_r = 0;                               //右ステップ数をリセット
+      step_l = 0;                               //左ステップ数をリセット
+      STEP = 0;                               // 距離カウンタクリア
+      while( STEP < HALF_STEP && F_SEN < F_LIM_SLA );
+    }
     control_mode = 2;           // スラローム用姿勢制御
     step_r = 0;                               //右ステップ数をリセット
     step_l = 0;                               //左ステップ数をリセット
@@ -1203,7 +1210,14 @@ void com_slalom_turn( int t_mode ){
   else if( t_mode == 1 ) {
     while( speed > speed_now && F_SEN < F_LIM_SLA );
     speed = speed_now;
-    while( (step_l < SLALOM_STEP_FORWARD) && (F_SEN < F_LIM_SLA || L_SEN > L_LIM) );
+    while( (step_l < SLALOM_STEP_FORWARD) && (F_SEN < F_LIM_SLA) );
+    if ( L_SEN > L_LIM){
+      while( L_SEN > L_LIM );
+      step_r = 0;                               //右ステップ数をリセット
+      step_l = 0;                               //左ステップ数をリセット
+      STEP = 0;                               // 距離カウンタクリア
+      while( STEP < HALF_STEP && F_SEN < F_LIM_SLA );
+    }
     control_mode = 3;           // スラローム用姿勢制御
     step_r = 0;                               //右ステップ数をリセット
     step_l = 0;                               //左ステップ数をリセット
@@ -1229,7 +1243,7 @@ void back_wall_set( void ){
 //-------------------------------------------------------------------------
 void goal_kbat_turn( void ){
   if( F_SEN > F_LIM ){
-    if( R_SEN > R_LIM){
+    if( R_SEN > R_LIM + 100){
       com_stop();
       com_turn( 1 );
       com_stop();
