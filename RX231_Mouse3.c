@@ -82,6 +82,7 @@ void abort(void);
 typedef uint16_t u16;
 typedef uint32_t u32;
 typedef void (*mode_func_t)(int);
+typedef void (*search_func_t)(int, int, int, int);
 
 //-------------------------------------------------------------------------
 //  マクロ定義
@@ -96,7 +97,7 @@ typedef void (*mode_func_t)(int);
 #define   ModeMax     ( g_mode_table_count ) // 動作モード数
 // センサ関連
 #define   LED_ON      1    // センサ用LED点燈
-#define   LED_OFF     0    // センサ用LED消灯
+#define   LED_OFF     0    // センサ用LED消灯bd
 // モータ関連
 #define   LeftGo      1    // 左モータ前進
 #define   LeftBack    0    // 左モータ後進
@@ -110,6 +111,8 @@ typedef void (*mode_func_t)(int);
 // 探索関連
 #define   S_MODE      0    // Search Mode : 未探索区間は壁無しとして扱う
 #define   T_MODE      1    // Try Mode    : 未探索区間は壁有りとして扱う
+#define   SEARCH_MOUSE   0
+#define   SEARCH_SLALOM  1
 #define MAP_DATA_NO (0)
 #define GOAL_DATA_NO (1)
 #define MAP_DATA_SLOTS (1u)
@@ -244,6 +247,7 @@ int goal_DFread( int *gx, int *gy );
 int goal_find_index( int gx, int gy );
 void select_goal(int *gx, int *gy); // ゴール選択関数プロトタイプ
 void select_speed(short *speed);      // 速度選択関数プロトタイプ
+void select_search( short *select);   // 探索方法選択関数プロトタイプ
 
 //---------------------------------------------------------------
 //  メインプログラム
@@ -318,22 +322,22 @@ void IO_init( void ){
 //---------------------------------------------------------------
 void load_param( void ){
   // センサしきい値の決め打ち
-  R_REF   = 270;    // 区画中央での右センサ値
-  L_REF   = 380;    // 区画中央での左センサ値
-  F_REF   = 1600;   // 区画中央での前センサ値
+  R_REF   = 350;    // 区画中央での右センサ値
+  L_REF   = 300;    // 区画中央での左センサ値
+  F_REF   = 1500;   // 区画中央での前センサ値
   // 壁の有無判定用しきい値:各センサ壁あり最小値と壁なし値の中間値
   R_LIM   = 150;    // 右
-  L_LIM   = 200;    // 左
+  L_LIM   = 150;    // 左
   F_LIM   = 280;    // 前
   F_LIM2  = 200;    // 2マス先前
-  F_LIM_SLA = 630;  // スラローム用前壁
+  F_LIM_SLA = 550;  // スラローム用前壁
   //走行パラメータ
   GO_STEP = 1600;   // 1区間のステップ数
-  SLA_GO_STEP = 1600; //スラローム時1区間のステップ数
+  SLA_GO_STEP = 1580; //スラローム時1区間のステップ数
   HALF_STEP = 600; // 半区間のステップ数
   TURN_STEP = 550;  // 旋回ステップ数
   SLALOM_STEP_FORWARD = 60; // スラローム内側ステップ数
-  SLALOM_STEP_OUT = 550; // スラローム外側ステップ数
+  SLALOM_STEP_OUT = 570; // スラローム外側ステップ数
   SLALOM_INNER_SPEED = 10; // スラローム内輪速度
   Global_Speed = 900; // グローバル速度
   zerozero = 0; // (0,0)スタートフラグ初期化
@@ -572,6 +576,9 @@ static const mode_func_t g_mode_table[] = {
   mode0, mode1, mode2, mode3, mode4, mode5, mode6, mode7, mode8, mode9
 };
 static const int g_mode_table_count = (int)(sizeof(g_mode_table) / sizeof(g_mode_table[0]));
+static const search_func_t g_search_table[] = {
+  mouse_search, slalom_search
+};
 
 void change_mode( int x ){
   MODE += x;                            // モード更新
@@ -721,6 +728,8 @@ void mode4( int x ){
 //  Mode5 : 探索走行
 //-------------------------------------------------------------------------
 void mode5( int x ){
+  search_func_t search;
+  short select;
   if( x == DISP ){  // DISPモードの場合
     // モード内容表示
     LCD_print( 0, "5:Search" );
@@ -730,13 +739,15 @@ void mode5( int x ){
   }
 
   // 実行モードの場合
+  select_search(&select);
   select_speed(&Global_Speed); // 速度選択
   countdown();               // カウントダウン
   pos_x = 0; pos_y = 0; head = 0; // 
+  search = g_search_table[select];
   Start_Sound(3);
-  mouse_search( goal[0], goal[1], Global_Speed, S_MODE );
+  search( goal[0], goal[1], Global_Speed, S_MODE );
   (void)map_writeDF(MAP_DATA_NO);
-  mouse_search(0, 0, Global_Speed, S_MODE);
+  search(0, 0, Global_Speed, S_MODE);
   (void)map_writeDF(MAP_DATA_NO);
   Start_Sound(96);
 }
@@ -745,8 +756,8 @@ void mode5( int x ){
 //  Mode6 : 二次走行
 //-------------------------------------------------------------------------
 void mode6( int x ){
-  if( x == DISP )  // DISPモードの場合
-  {
+  search_func_t search;
+  if( x == DISP ){  // DISPモードの場合
     // モード内容表示
     LCD_print( 0, "6:Try   " );
     LCD_print( 8, "Spd     " );
@@ -759,10 +770,11 @@ void mode6( int x ){
   // 二次走行
   countdown();           // カウントダウン
   pos_x = 0; pos_y = 0; head = 0;
+  search = g_search_table[SEARCH_SLALOM];
   Start_Sound(3);
   map_DFread(MAP_DATA_NO);
-  slalom_search( goal[0], goal[1], Global_Speed, T_MODE );
-  slalom_search( 0, 0, Global_Speed, T_MODE );
+  search( goal[0], goal[1], Global_Speed, T_MODE );
+  search( 0, 0, Global_Speed, T_MODE );
   Start_Sound(96);
 }
 
@@ -1181,7 +1193,14 @@ void com_slalom_turn( int t_mode ){
   if( t_mode == 0 ) {
     while( speed > speed_now && F_SEN < F_LIM_SLA );
     speed = speed_now;
-    while( (step_r < SLALOM_STEP_FORWARD) && (F_SEN < F_LIM_SLA || R_SEN > R_LIM) );
+    while( (step_r < SLALOM_STEP_FORWARD) && (F_SEN < F_LIM_SLA) );
+    if ( R_SEN > R_LIM){
+      while( R_SEN > R_LIM );
+      step_r = 0;                               //右ステップ数をリセット
+      step_l = 0;                               //左ステップ数をリセット
+      STEP = 0;                               // 距離カウンタクリア
+      while( STEP < HALF_STEP && F_SEN < F_LIM_SLA );
+    }
     control_mode = 2;           // スラローム用姿勢制御
     step_r = 0;                               //右ステップ数をリセット
     step_l = 0;                               //左ステップ数をリセット
@@ -1191,7 +1210,14 @@ void com_slalom_turn( int t_mode ){
   else if( t_mode == 1 ) {
     while( speed > speed_now && F_SEN < F_LIM_SLA );
     speed = speed_now;
-    while( (step_l < SLALOM_STEP_FORWARD) && (F_SEN < F_LIM_SLA || L_SEN > L_LIM) );
+    while( (step_l < SLALOM_STEP_FORWARD) && (F_SEN < F_LIM_SLA) );
+    if ( L_SEN > L_LIM){
+      while( L_SEN > L_LIM );
+      step_r = 0;                               //右ステップ数をリセット
+      step_l = 0;                               //左ステップ数をリセット
+      STEP = 0;                               // 距離カウンタクリア
+      while( STEP < HALF_STEP && F_SEN < F_LIM_SLA );
+    }
     control_mode = 3;           // スラローム用姿勢制御
     step_r = 0;                               //右ステップ数をリセット
     step_l = 0;                               //左ステップ数をリセット
@@ -1217,7 +1243,7 @@ void back_wall_set( void ){
 //-------------------------------------------------------------------------
 void goal_kbat_turn( void ){
   if( F_SEN > F_LIM ){
-    if( R_SEN > R_LIM){
+    if( R_SEN > R_LIM + 100){
       com_stop();
       com_turn( 1 );
       com_stop();
@@ -2185,7 +2211,39 @@ void select_speed(short *speed){
       WaitKeyOff(); // チャタリング防止
     }
     if ( PIN_READ(SW_EXEC) == SW_ON ) { // 決定ボタン
+      WaitKeyOff(); // チャタリング防止
+      Start_Sound(99); // 決定音開始
       *speed = set_speed;
+      break;
+    }
+    if ( PIN_READ(SW_RETURN) == SW_ON ) { // 戻るボタン
+      break;
+    }
+  }
+  return;
+}
+
+//-------------------------------------------------------------------------
+//  スラローム選択
+//-------------------------------------------------------------------------
+void select_search(short *select){
+  short set_select = *select;
+  LCD_print(8, "        ");
+  while (1) {
+    if ( PIN_READ(SW_UP) == SW_ON ) { // UPボタン
+      set_select = SEARCH_MOUSE;
+      LCD_print(8, " NORMAL ");
+      WaitKeyOff(); // チャタリング防止
+    }
+    if ( PIN_READ(SW_DOWN) == SW_ON ) { // DOWNボタン
+      set_select = SEARCH_SLALOM;
+      LCD_print(8, " SLALOM ");
+      WaitKeyOff(); // チャタリング防止
+    }
+    if ( PIN_READ(SW_EXEC) == SW_ON ) { // 決定ボタン
+      WaitKeyOff(); // チャタリング防止
+      Start_Sound(99); // 決定音開始
+      *select = set_select;
       break;
     }
     if ( PIN_READ(SW_RETURN) == SW_ON ) { // 戻るボタン
@@ -2217,8 +2275,10 @@ void select_goal(int *gx, int *gy){
       WaitKeyOff(); // チャタリング防止
     }
     if ( PIN_READ(SW_EXEC) == SW_ON ) { // 決定ボタン
+      WaitKeyOff(); // チャタリング防止
       *gx = goals[goal_num][0];
       *gy = goals[goal_num][1];
+      Start_Sound(99); // 決定音開始
       break;
     }
     if ( PIN_READ(SW_RETURN) == SW_ON ) { // 戻るボタン
