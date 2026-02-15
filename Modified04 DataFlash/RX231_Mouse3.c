@@ -16,35 +16,35 @@
 /*                                                                     */
 /***********************************************************************/
 //***************************************************************
-//  ���j�o�[�T���L�b�g 3.0.1 ���C���v���O���� RX231��
-//                                          2016/09/26 H. Suzuki   H8��
-//                                          2022/09/23 H. Ito      RX220�ڐA
-//                                          2026/02/03 T. Kawabata RX231�ڐA
+//  ユニバーサルキット 3.0.1 メインプログラム RX231版
+//                                          2016/09/26 H. Suzuki   H8版
+//                                          2022/09/23 H. Ito      RX220移植
+//                                          2026/02/03 T. Kawabata RX231移植
 //
-//  2026/01/25  Sample. 02 �FLED�_��
-//  2026/01/25  Sample. 03 �FLCD�\��
-//  2026/01/25  Sample. 04 �FTimer W - D�̂�
-//  2026/01/25  Sample. 05 �FSW �ǉ�
-//  2026/01/25  Sample. 06 �FMode System �ǉ�
-//  2026/01/25  Sample. 07 �FA/D �ǉ�
-//  2026/01/28  Sample. 08 �FSound �ǉ�
-//  2026/01/28  Sample. 09 �FSensor �ǉ�
-//  2026/01/28  Sample. 10 �FMotor1(�蓮�쓮) �ǉ�
-//  2026/01/28  Sample. 11 �FMotor2(���荞�݋쓮) �ǉ�
-//  2026/01/29  Sample. 12 �FMotor3(�p������), MotorTest �ǉ�
-//  2026/01/30  Sample. 13 �FSTEP, 1&N��ԑO�i �ǉ�
-//  2026/01/31  Sample. 14 �FTURN �ǉ�
-//  2026/01/31  Sample. 15 �F���H����(�T���֐�) �ǉ�
-//  2026/01/31  Sample. 16 �F����@ �ǉ�
-//  2026/01/31  Sample. 17 �F���W�X�V �ǉ�
-//  2026/01/31  Sample. 18 �F�}�b�s���O �ǉ��C�T���@�֐���
-//  2026/02/02  Sample. 19 �F�g������@ �ǉ�
-//  2026/02/02  Sample. 20 �F�����@ �ǉ� A/D �C��
-//  2026/02/02  Sample. 21 �F�񎟑��s �ǉ�
-//  2026/02/04  Modified. 01 �F�S�[���I�� �ǉ�
-//  2026/02/06  Modified. 02 �FSound �C��
-//  2026/02/06  Modified. 03 �F���[�h������֐��|�C���^�̃e�[�u����
-//  2026/02/06  Modified. 04 �F�n�}�f�[�^,�S�[�����W��DF�ۑ�/�Ǐo�� �ǉ�
+//  2026/01/25  Sample. 02 ：LED点滅
+//  2026/01/25  Sample. 03 ：LCD表示
+//  2026/01/25  Sample. 04 ：Timer W - Dのみ
+//  2026/01/25  Sample. 05 ：SW 追加
+//  2026/01/25  Sample. 06 ：Mode System 追加
+//  2026/01/25  Sample. 07 ：A/D 追加
+//  2026/01/28  Sample. 08 ：Sound 追加
+//  2026/01/28  Sample. 09 ：Sensor 追加
+//  2026/01/28  Sample. 10 ：Motor1(手動駆動) 追加
+//  2026/01/28  Sample. 11 ：Motor2(割り込み駆動) 追加
+//  2026/01/29  Sample. 12 ：Motor3(姿勢制御), MotorTest 追加
+//  2026/01/30  Sample. 13 ：STEP, 1&N区間前進 追加
+//  2026/01/31  Sample. 14 ：TURN 追加
+//  2026/01/31  Sample. 15 ：迷路周回(探索関数) 追加
+//  2026/01/31  Sample. 16 ：左手法 追加
+//  2026/01/31  Sample. 17 ：座標更新 追加
+//  2026/01/31  Sample. 18 ：マッピング 追加，探索法関数化
+//  2026/02/02  Sample. 19 ：拡張左手法 追加
+//  2026/02/02  Sample. 20 ：足立法 追加 A/D 修正
+//  2026/02/02  Sample. 21 ：二次走行 追加
+//  2026/02/04  Modified. 01 ：ゴール選択 追加
+//  2026/02/06  Modified. 02 ：Sound 修正
+//  2026/02/06  Modified. 03 ：モード分岐を関数ポインタのテーブル化
+//  2026/02/06  Modified. 04 ：地図データ,ゴール座標のDF保存/読出し 追加
 //
 //***************************************************************
 #include "typedefine.h"
@@ -69,7 +69,7 @@ void abort(void);
 #endif
 
 //---------------------------------------------------------------
-//  �^�錾
+//  型宣言
 //---------------------------------------------------------------
 #define  uchar    unsigned char
 #define  ushort   unsigned short
@@ -80,32 +80,32 @@ typedef uint32_t u32;
 typedef void (*mode_func_t)(int);
 
 //-------------------------------------------------------------------------
-//  �}�N����`
+//  マクロ定義
 //-------------------------------------------------------------------------
-// �X�C�b�`�֘A
-#define   SW_ON       0    // �X�C�b�`ON (Active Low)
-#define   SW_OFF      1    // �X�C�b�`OFF
-#define   KEY_OFF   200    // �X�C�b�`�p�`���^�����O�L�����Z������
-// ���[�h�֘A
-#define   DISP        0    // ���[�h�\��
-#define   EXEC        1    // ���[�h���s
-#define   ModeMax     ( g_mode_table_count ) // ���샂�[�h��
-// �Z���T�֘A
-#define   LED_ON      1    // �Z���T�pLED�_��
-#define   LED_OFF     0    // �Z���T�pLED����
-// ���[�^�֘A
-#define   LeftGo      1    // �����[�^�O�i
-#define   LeftBack    0    // �����[�^��i
-#define   RightGo     0    // �E���[�^�O�i
-#define   RightBack   1    // �E���[�^��i
+// スイッチ関連
+#define   SW_ON       0    // スイッチON (Active Low)
+#define   SW_OFF      1    // スイッチOFF
+#define   KEY_OFF   200    // スイッチ用チャタリングキャンセル時間
+// モード関連
+#define   DISP        0    // モード表示
+#define   EXEC        1    // モード実行
+#define   ModeMax     ( g_mode_table_count ) // 動作モード数
+// センサ関連
+#define   LED_ON      1    // センサ用LED点燈
+#define   LED_OFF     0    // センサ用LED消灯
+// モータ関連
+#define   LeftGo      1    // 左モータ前進
+#define   LeftBack    0    // 左モータ後進
+#define   RightGo     0    // 右モータ前進
+#define   RightBack   1    // 右モータ後進
 #define ACC_TABLE_SIZE   (2000u)
 #define ACC_TABLE_BASE   (300u)
 #define ACC_TABLE_STEP   (4u)
 #define ACC_TABLE_MIN    (ACC_TABLE_BASE)
 #define ACC_TABLE_MAX    (ACC_TABLE_BASE + (ACC_TABLE_SIZE - 1u) * ACC_TABLE_STEP)
-// �T���֘A
-#define   S_MODE      0    // Search Mode : ���T����Ԃ͕ǖ����Ƃ��Ĉ���
-#define   T_MODE      1    // Try Mode    : ���T����Ԃ͕ǗL��Ƃ��Ĉ���
+// 探索関連
+#define   S_MODE      0    // Search Mode : 未探索区間は壁無しとして扱う
+#define   T_MODE      1    // Try Mode    : 未探索区間は壁有りとして扱う
 #define MAP_DATA_NO (0)
 #define GOAL_DATA_NO (1)
 #define MAP_DATA_SLOTS (1u)
@@ -116,72 +116,72 @@ typedef void (*mode_func_t)(int);
 #define FLASH_DM_WORK_WORDS (64u)
 
 //---------------------------------------------------------------
-//  �O���[�o���ϐ���`
+//  グローバル変数定義
 //---------------------------------------------------------------
-vushort  wait_timer = 0;   // �������v( msec ) : wait�֐��p�J�E���^
-ushort   SENSOR_PT;        // ���荞�݉񐔃J�E���g�p�|�C���^
-int      MODE = 0;         // ���݃��[�h�i�[�p
+vushort  wait_timer = 0;   // 内部時計( msec ) : wait関数用カウンタ
+ushort   SENSOR_PT;        // 割り込み回数カウント用ポインタ
+int      MODE = 0;         // 現在モード格納用
 volatile uint16_t g_s12ad0_ch000_value;
 volatile uint16_t g_s12ad0_ch001_value;
 volatile uint16_t g_s12ad0_ch002_value;
 volatile uint16_t g_s12ad0_ch017_value;
-vshort   Batt;             // �d�r�̓d��
+vshort   Batt;             // 電池の電圧
 static int st_nSoundRPos;
 static SOUND_T* st_pSound;
 static SOUNDSTAT_T SoundStatus;
-// �Z���T�̎��O�l�i�[�p
-int16_t  R_PRE;           // �E�Z���T�̒l
-int16_t  L_PRE;           // ���Z���T�̒l
-int16_t  F_PRE;           // �O�Z���T�̒l
-// �Z���T�̌��ݒl�i�[�p
-int16_t  R_SEN;           // �E�Z���T�̒l
-int16_t  L_SEN;           // ���Z���T�̒l
-int16_t  F_SEN;           // �O�Z���T�̒l
-// �Z���T��ON/OFF�p
-short    R_SW;            // �E�Z���T�̃X�C�b�`
-short    L_SW;            // ���Z���T�̃X�C�b�`
-short    F_SW;            // �O�Z���T�̃X�C�b�`
-// �Z���T�̂������l
-short    R_REF;            // �E�Z���T�������l
-short    L_REF;            // ���Z���T�������l
-// �ǂ̗L������p�������l
-short    R_LIM;            // �E�ǗL���������l
-short    L_LIM;            // ���ǗL���������l
-short    F_LIM;            // �O�ǗL���������l
-// ���[�^�֘A
-ushort   timerL;           // ���^�C�}�[�ݒ�l
-ushort   timerR;           // �E�^�C�}�[�ݒ�l
-short    ldir;             // �����[�^��]����
-short    rdir;             // �E���[�^��]����
-short    speed;            // �ڕW���x
-short    speed_now;        // ���ݑ��x
-short    MotorTimer;       // ���[�^�d���R���g���[���^�C�}�[
-short    control_mode;     // �p�����䃂�[�h  0:�Ȃ�  1:����
-// ���s�֘A
-short    STEP;             // ���[�^�̃X�e�b�v��
-short    GO_STEP;          // 1��Ԃ̃X�e�b�v��
-short    TURN_STEP;        // ���M����X�e�b�v��
-//�X�e�b�v��(���荞�ݓ��ŃJ�E���g�A�b�v) 
-volatile unsigned int step_r;		//�E���[�^�p
-volatile unsigned int step_l;			//�����[�^�p
+// センサの事前値格納用
+int16_t  R_PRE;           // 右センサの値
+int16_t  L_PRE;           // 左センサの値
+int16_t  F_PRE;           // 前センサの値
+// センサの現在値格納用
+int16_t  R_SEN;           // 右センサの値
+int16_t  L_SEN;           // 左センサの値
+int16_t  F_SEN;           // 前センサの値
+// センサのON/OFF用
+short    R_SW;            // 右センサのスイッチ
+short    L_SW;            // 左センサのスイッチ
+short    F_SW;            // 前センサのスイッチ
+// センサのしきい値
+short    R_REF;            // 右センサしきい値
+short    L_REF;            // 左センサしきい値
+// 壁の有無判定用しきい値
+short    R_LIM;            // 右壁有無しきい値
+short    L_LIM;            // 左壁有無しきい値
+short    F_LIM;            // 前壁有無しきい値
+// モータ関連
+ushort   timerL;           // 左タイマー設定値
+ushort   timerR;           // 右タイマー設定値
+short    ldir;             // 左モータ回転方向
+short    rdir;             // 右モータ回転方向
+short    speed;            // 目標速度
+short    speed_now;        // 現在速度
+short    MotorTimer;       // モータ電源コントロールタイマー
+short    control_mode;     // 姿勢制御モード  0:なし  1:あり
+// 走行関連
+short    STEP;             // モータのステップ数
+short    GO_STEP;          // 1区間のステップ数
+short    TURN_STEP;        // 超信旋回ステップ数
+//ステップ数(割り込み内でカウントアップ) 
+volatile unsigned int step_r;		//右モータ用
+volatile unsigned int step_l;			//左モータ用
 short stepf_r = 1;
 short stepf_l = 1;
-// �T���֘A
-uchar    head;             // �}�E�X�̐i�s���� 0:�k 1:�� 2:�� 3:��
-uchar    head_change;      // �i�s�����X�V�p�ϐ� 0:�O 1:�E 2:�� 3:��
-uchar    pos_x;            // �}�E�X�̌��ݍ��W x
-uchar    pos_y;            // �}�E�X�̌��ݍ��W y
-uchar    map[16][16];      // MAP�f�[�^
-uchar    p_map[16][16];    // �|�e���V����MAP�f�[�^
-int      goal[2] = {8,8}; // �S�[�����W
-int      goals[][2] = { {3,3}, {7,7}, {7,8}, {8,7}, {8,8} }; // �S�[�����W���X�g
-int      GOAL_NUM = sizeof(goals) / (sizeof(goals[0])); // �S�[����
+// 探索関連
+uchar    head;             // マウスの進行方向 0:北 1:東 2:南 3:西
+uchar    head_change;      // 進行方向更新用変数 0:前 1:右 2:後 3:左
+uchar    pos_x;            // マウスの現在座標 x
+uchar    pos_y;            // マウスの現在座標 y
+uchar    map[16][16];      // MAPデータ
+uchar    p_map[16][16];    // ポテンシャルMAPデータ
+int      goal[2] = {8,8}; // ゴール座標
+int      goals[][2] = { {3,3}, {7,7}, {7,8}, {8,7}, {8,8} }; // ゴール座標リスト
+int      GOAL_NUM = sizeof(goals) / (sizeof(goals[0])); // ゴール数
 static	volatile	e_flash_dm_status_t	g_flash_dm_last	=	FLASH_DM_SUCCESS;
 static	volatile	uint8_t	g_flash_dm_done	=	0;
 static	uint8_t	g_flash_dm_ready	=	0;
 static	uint32_t	g_flash_dm_work[FLASH_DM_WORK_WORDS];
 //---------------------------------------------------------------
-//  �֐��v���g�^�C�v�錾
+//  関数プロトタイプ宣言
 //---------------------------------------------------------------
 void IO_init( void );
 void load_param( void );
@@ -202,8 +202,10 @@ void mode6( int x );
 void mode7( int x );
 void mode8( int x );
 void mouse_search( int goal_x, int goal_y, int speed, int mode );
-void Int_MTU1_TGIA1(void); // MTU1���荞�݊֐��v���g�^�C�v
-u16 AccTableGet(u16 index); // �����e�[�u���擾�֐��v���g�^�C�v
+int is_center_goal_cell( int x, int y );
+int has_two_or_more_walls( uchar wall_data );
+void Int_MTU1_TGIA1(void); // MTU1割り込み関数プロトタイプ
+u16 AccTableGet(u16 index); // 加速テーブル取得関数プロトタイプ
 void com_go( int n );
 void com_stop( void );
 void com_turn( int t_mode );
@@ -220,185 +222,185 @@ void map_DFread( short no );
 int goal_writeDF( void );
 int goal_DFread( int *gx, int *gy );
 int goal_find_index( int gx, int gy );
-void select_goal(int *gx, int *gy); // �S�[���I���֐��v���g�^�C�v
+void select_goal(int *gx, int *gy); // ゴール選択関数プロトタイプ
 
 //---------------------------------------------------------------
-//  ���C���v���O����
+//  メインプログラム
 //---------------------------------------------------------------
 void main(void){
-    IO_init();      // RX231������
-    LCD_init();    // LCD������
-    PIN_WRITE(CPU_LED) = 1;    // LED����
-    PIN_WRITE(LED) = LED_OFF;                        // LED������
-    Start_Sound(98); // �N�����Đ�
-    // �^�C�g���\��
+    IO_init();      // RX231初期化
+    LCD_init();    // LCD初期化
+    PIN_WRITE(CPU_LED) = 1;    // LED消灯
+    PIN_WRITE(LED) = LED_OFF;                        // LEDを消灯
+    Start_Sound(98); // 起動音再生
+    // タイトル表示
     LCD_print( 0, "Modded04" );
 
-    // �d���\��
+    // 電圧表示
     LCD_print( 8, "   .  v " );
-    LCD_dec_out( 9, Batt/100, 1);    // �\�̈ʂ�\��
-    Batt %= 100;                     // �\�̈ʂ��폜
-    LCD_dec_out(10, Batt/10 , 1);    // ��̈ʂ�\��
-    Batt %= 10;                      // ��̈ʂ��폜
-    LCD_dec_out(12, Batt    , 1);    // �c���������l��\��
+    LCD_dec_out( 9, Batt/100, 1);    // 十の位を表示
+    Batt %= 100;                     // 十の位を削除
+    LCD_dec_out(10, Batt/10 , 1);    // 一の位を表示
+    Batt %= 10;                      // 一の位を削除
+    LCD_dec_out(12, Batt    , 1);    // 残った小数値を表示
     pause( 2000 );
-    clear_map();                     // MAP�f�[�^������
+    clear_map();                     // MAPデータ初期化
     load_param();                    // load parameters
     if(!goal_DFread(&goal[0], &goal[1])){ (void)goal_writeDF(); } // load goal from DF
-    change_mode( 0 );                // �܂�������ʂɂ��� = Mode0
+    change_mode( 0 );                // まず初期画面にする = Mode0
     
-    // ���C�����[�v
+    // メインループ
     while( 1 ){
-      if( PIN_READ( SW_UP ) == SW_ON ){          // ��SW��������Ă���ꍇ
-        WaitKeyOff();                // �`���^�����O�h�~����
-        change_mode(+1);             // ���[�h+1
-      }else if( PIN_READ( SW_DOWN ) == SW_ON ){  // ��SW��������Ă���ꍇ
-        WaitKeyOff();                // �`���^�����O�h�~����
-        change_mode(-1);             // ���[�h-1
-      }else if( PIN_READ( SW_EXEC ) == SW_ON ){  // ���sSW��������Ă���ꍇ
-        WaitKeyOff();                // �`���^�����O�h�~����
-        Start_Sound(99); // ���s���Đ�
-        exec_mode();                 // ���[�h���s
+      if( PIN_READ( SW_UP ) == SW_ON ){          // 上SWが押されている場合
+        WaitKeyOff();                // チャタリング防止処理
+        change_mode(+1);             // モード+1
+      }else if( PIN_READ( SW_DOWN ) == SW_ON ){  // 下SWが押されている場合
+        WaitKeyOff();                // チャタリング防止処理
+        change_mode(-1);             // モード-1
+      }else if( PIN_READ( SW_EXEC ) == SW_ON ){  // 実行SWが押されている場合
+        WaitKeyOff();                // チャタリング防止処理
+        Start_Sound(99); // 実行音再生
+        exec_mode();                 // モード実行
         MODE = 0;
-        change_mode( 0 );            // ���s��͏�����ʂɖ߂�
+        change_mode( 0 );            // 実行後は初期画面に戻す
       }
-      // ���[�h��0�Ȃ�Z���T�f�[�^��LCD�\��
+      // モードが0ならセンサデータをLCD表示
       if( MODE == 0 ){
-        LCD_dec_out(  2, F_SEN, 4 ); // �O�Z���T�l��LCD�㒆���ɕ\��
-        LCD_dec_out(  9, L_SEN, 3 ); // ���Z���T�l��LCD�����ɕ\��
-        LCD_dec_out( 13, R_SEN, 3 ); // �E�Z���T�l��LCD�E���ɕ\��
+        LCD_dec_out(  2, F_SEN, 4 ); // 前センサ値をLCD上中央に表示
+        LCD_dec_out(  9, L_SEN, 3 ); // 左センサ値をLCD左下に表示
+        LCD_dec_out( 13, R_SEN, 3 ); // 右センサ値をLCD右下に表示
       }
     }
 }
 
 //---------------------------------------------------------------
-//  RX231������
+//  RX231初期化
 //---------------------------------------------------------------
 void IO_init( void ){
     R_Systeminit();
     R_Pins_Create();
-    PIN_WRITE(CPU_LED) = 0;    // LED�_��
-    PIN_WRITE(MOTOR_EN) = 0; // ���[�^OFF
-    R_Config_CMT0_Start(); // CMT0�J�n
+    PIN_WRITE(CPU_LED) = 0;    // LED点灯
+    PIN_WRITE(MOTOR_EN) = 0; // モータOFF
+    R_Config_CMT0_Start(); // CMT0開始
 
-    R_Config_S12AD0_Start(); // ADC�J�n
-    while (S12AD.ADCSR.BIT.ADST); // AD�ϊ������҂�
+    R_Config_S12AD0_Start(); // ADC開始
+    while (S12AD.ADCSR.BIT.ADST); // AD変換完了待ち
     R_Config_S12AD0_Get_ValueResult(ADCHANNEL17, (uint16_t *)&g_s12ad0_ch017_value);
-    Batt = g_s12ad0_ch017_value / 8.4; // �d�r�d���l�擾
-    R_SW = LED_ON;             // �E�Z���TON
-    L_SW = LED_ON;             // ���Z���TON
-    F_SW = LED_ON;             // �O�Z���TON
+    Batt = g_s12ad0_ch017_value / 8.4; // 電池電圧値取得
+    R_SW = LED_ON;             // 右センサON
+    L_SW = LED_ON;             // 左センサON
+    F_SW = LED_ON;             // 前センサON
 }
 
 //---------------------------------------------------------------
-//  �p�����[�^�ǂݍ���
+//  パラメータ読み込み
 //---------------------------------------------------------------
 void load_param( void ){
-  // �Z���T�������l�̌��ߑł�
-  R_REF   = 410;    // ��撆���ł̉E�Z���T�l
-  L_REF   = 300;    // ��撆���ł̍��Z���T�l
-  // �ǂ̗L������p�������l:�e�Z���T�ǂ���ŏ��l�ƕǂȂ��l�̒��Ԓl
-  R_LIM   = 150;    // �E
-  L_LIM   = 200;    // ��
-  F_LIM   = 280;    // �O
-  //���s�p�����[�^
-  GO_STEP = 1630;   // 1��Ԃ̃X�e�b�v��
-  TURN_STEP = 550;  // ����X�e�b�v��
+  // センサしきい値の決め打ち
+  R_REF   = 410;    // 区画中央での右センサ値
+  L_REF   = 300;    // 区画中央での左センサ値
+  // 壁の有無判定用しきい値:各センサ壁あり最小値と壁なし値の中間値
+  R_LIM   = 150;    // 右
+  L_LIM   = 200;    // 左
+  F_LIM   = 280;    // 前
+  //走行パラメータ
+  GO_STEP = 1630;   // 1区間のステップ数
+  TURN_STEP = 550;  // 旋回ステップ数
 }
 
 //---------------------------------------------------------------
-//  Timer W ���荞��(200us���ɂ��̊֐�������ɗD�悵�Ď��s�����)
+//  Timer W 割り込み(200us毎にこの関数が勝手に優先して実行される)
 //---------------------------------------------------------------
-//Config_CMT0_user.c����Ăяo�����
+//Config_CMT0_user.cから呼び出される
 void int_timerw( void ){
     int err_l, err_r;
     ushort acc_num, lspeed, rspeed;
-    //�����[�^�[���荞��
-    MTU3.TGRC = timerL; //���̑��x�ݒ�
+    //左モーター割り込み
+    MTU3.TGRC = timerL; //次の速度設定
     if(speed){
-      R_Config_MTU3_Start(); // �J�E���g�J�n
-    }else{ //��~��
-      R_Config_MTU3_Stop(); // �J�E���g��~
+      R_Config_MTU3_Start(); // カウント開始
+    }else{ //停止時
+      R_Config_MTU3_Stop(); // カウント停止
     }
     if(ldir == 0){
-      PIN_WRITE(L_MOT_MODE) = LeftGo; //���]
+      PIN_WRITE(L_MOT_MODE) = LeftGo; //正転
     }else{
-      PIN_WRITE(L_MOT_MODE) = LeftBack; //���]
+      PIN_WRITE(L_MOT_MODE) = LeftBack; //反転
     }
-    //�E���[�^�[���荞��
-    MTU4.TGRC = timerR; //���̑��x�ݒ�
+    //右モーター割り込み
+    MTU4.TGRC = timerR; //次の速度設定
     if(speed){
-      R_Config_MTU4_Start(); // �J�E���g�J�n
-    }else{ //��~��
-      R_Config_MTU4_Stop(); // �J�E���g��~
+      R_Config_MTU4_Start(); // カウント開始
+    }else{ //停止時
+      R_Config_MTU4_Stop(); // カウント停止
     }
     if(rdir == 0){
-      PIN_WRITE(R_MOT_MODE) = RightGo; //���]
+      PIN_WRITE(R_MOT_MODE) = RightGo; //正転
     }else{
-      PIN_WRITE(R_MOT_MODE) = RightBack; //���]
+      PIN_WRITE(R_MOT_MODE) = RightBack; //反転
     }
-    //���[�^�X�s�[�h���荞��
+    //モータスピード割り込み
     if((stepf_r == 1) || (stepf_l == 1)){
       stepf_l = 0;
       stepf_r = 0;
-      //���[�^�̉�������
-      if(speed == 0){ //���[�^��~���̏���
-        speed_now = 0; //���x��0�ɂ���
-        timerL = 2500; //�� ���荞�ݎ���2ms 1/(0.8e-6x2500) = 500Hz
+      //モータの加速処理
+      if(speed == 0){ //モータ停止中の処理
+        speed_now = 0; //速度を0にする
+        timerL = 2500; //左 割り込み周期2ms 1/(0.8e-6x2500) = 500Hz
         MTU3.TGRC = timerL;
-        timerR = 2500; //�E
+        timerR = 2500; //右
         MTU4.TGRC = timerR;
       }else{
-        if(speed > speed_now) speed_now++; //����
-        else if(speed < speed_now) speed_now--; //����
-        if(speed_now >= 2000) speed_now = 1999; //�ō����x
-        if(speed_now < 0) speed_now = 0; //�Œᑬ�x
-        acc_num = AccTableGet((u16)speed_now); //�����x�e�[�u������l�擾
-        //�p������
+        if(speed > speed_now) speed_now++; //加速
+        else if(speed < speed_now) speed_now--; //減速
+        if(speed_now >= 2000) speed_now = 1999; //最高速度
+        if(speed_now < 0) speed_now = 0; //最低速度
+        acc_num = AccTableGet((u16)speed_now); //加速度テーブルから値取得
+        //姿勢制御
         if(control_mode == 1){
-          //�΍����v�Z
-          err_l = L_SEN - L_REF; //���΍����v�Z
-          err_r = R_SEN - R_REF; //�E�΍����v�Z
-          //�Ǐ�񂩂�΍������H
+          //偏差を計算
+          err_l = L_SEN - L_REF; //左偏差を計算
+          err_r = R_SEN - R_REF; //右偏差を計算
+          //壁情報から偏差を加工
           if(L_SEN > L_LIM || R_SEN > R_LIM){
-            //�ǂ��炩�ɕǂ�����:�΍����傫������D�悵�ĕ␳
+            //どちらかに壁がある:偏差が大きい側を優先して補正
             if(err_l > err_r)
               err_r = -1 * err_l;
             else
               err_l = -1 * err_r;
           }else{
-            //�����ǂȂ�:�␳�Ȃ�
+            //両方壁なし:補正なし
             err_l = 0;
             err_r = 0;
           }
-          //�΍���p���ĕ␳
+          //偏差を用いて補正
           lspeed = acc_num + err_l;
           rspeed = acc_num + err_r;
       }else{  // control_mode = 0
           lspeed = acc_num;
           rspeed = acc_num;
       }
-      //�^�C�}�[�ݒ�l�v�Z
-      timerL =  1500000L / lspeed; // lspeed���傫�����������Z���Ȃ�
-      timerR =  1500000L / rspeed; // rspeed���傫�����������Z���Ȃ�
+      //タイマー設定値計算
+      timerL =  1500000L / lspeed; // lspeedが大きい程周期が短くなる
+      timerR =  1500000L / rspeed; // rspeedが大きい程周期が短くなる
       }
     }
-    // �Z���T����
+    // センサ処理
 
-    SENSOR_PT++;                 // �^�X�N�|�C���^�̍X�V
-    if( SENSOR_PT == 5 ) SENSOR_PT = 0;  // 0-4��5�J�E���g:200us*5=1ms
-                               // �e������1ms�����Ŏ��s�����
-    switch( SENSOR_PT ){          // �^�X�N�|�C���^�ɏ]���ď������s��
-      case 0:  // 1msec�^�C�}�[&LCD�̍X�V
-              wait_timer++;     // wait�֐��p�J�E���^
-              LCD();            // LCD�X�V����
+    SENSOR_PT++;                 // タスクポインタの更新
+    if( SENSOR_PT == 5 ) SENSOR_PT = 0;  // 0-4の5カウント:200us*5=1ms
+                               // 各処理は1ms周期で実行される
+    switch( SENSOR_PT ){          // タスクポインタに従って処理を行う
+      case 0:  // 1msecタイマー&LCDの更新
+              wait_timer++;     // wait関数用カウンタ
+              LCD();            // LCD更新処理
               break;
       case 1: break;
       case 2: break;
       case 3: if ( (R_SW == LED_OFF) && (L_SW == LED_OFF) && (F_SW == LED_OFF) ) break;
-               // �Z���T�l�擾����
-              R_Config_S12AD0_Start(); // ADC�J�n
-               while (S12AD.ADCSR.BIT.ADST); // AD�ϊ������҂�
+               // センサ値取得処理
+              R_Config_S12AD0_Start(); // ADC開始
+               while (S12AD.ADCSR.BIT.ADST); // AD変換完了待ち
                if(R_SW == LED_ON){
                 R_Config_S12AD0_Get_ValueResult(ADCHANNEL0, (uint16_t *)&g_s12ad0_ch000_value);
                 R_PRE = g_s12ad0_ch000_value;
@@ -411,38 +413,38 @@ void int_timerw( void ){
                 R_Config_S12AD0_Get_ValueResult(ADCHANNEL2, (uint16_t *)&g_s12ad0_ch002_value);
                 F_PRE = g_s12ad0_ch002_value;
                 }
-                PIN_WRITE(LED) = LED_ON;                         // LED��_��
-                LCD_wait(20);                         // ���΂炭�҂�
-              R_Config_S12AD0_Start(); // ADC�J�n
-               while (S12AD.ADCSR.BIT.ADST); // AD�ϊ������҂�
+                PIN_WRITE(LED) = LED_ON;                         // LEDを点灯
+                LCD_wait(20);                         // しばらく待つ
+              R_Config_S12AD0_Start(); // ADC開始
+               while (S12AD.ADCSR.BIT.ADST); // AD変換完了待ち
                if(R_SW == LED_ON){
                 R_Config_S12AD0_Get_ValueResult(ADCHANNEL0, (uint16_t *)&g_s12ad0_ch000_value);
-                R_PRE = ((g_s12ad0_ch000_value) - R_PRE) / 2;     //11bit��
-                if( R_PRE < 0 )        R_SEN = 0;    // �\���������
+                R_PRE = ((g_s12ad0_ch000_value) - R_PRE) / 2;     //11bit化
+                if( R_PRE < 0 )        R_SEN = 0;    // 表示上限処理
                 else if( R_PRE <= 999 ) R_SEN = R_PRE;
                 else                R_SEN = 999;
                 }
                if(L_SW == LED_ON){
                 R_Config_S12AD0_Get_ValueResult(ADCHANNEL1, (uint16_t *)&g_s12ad0_ch001_value);
-                L_PRE = ((g_s12ad0_ch001_value) - L_PRE) / 4;   //10bit�� �� ���Z���T�O�a�������߁B�@�̂ɍ��킹�ėv�ύX�B
-                if( L_PRE < 0 )        L_SEN = 0;    // �\���������
+                L_PRE = ((g_s12ad0_ch001_value) - L_PRE) / 4;   //10bit化 ← 左センサ飽和したため。機体に合わせて要変更。
+                if( L_PRE < 0 )        L_SEN = 0;    // 表示上限処理
                 else if( L_PRE <= 999 ) L_SEN = L_PRE;
                 else                L_SEN = 999;
                 }
                if(F_SW == LED_ON){
                 R_Config_S12AD0_Get_ValueResult(ADCHANNEL2, (uint16_t *)&g_s12ad0_ch002_value);
-                F_PRE = ((g_s12ad0_ch002_value) - F_PRE) / 2;  //11bit��
+                F_PRE = ((g_s12ad0_ch002_value) - F_PRE) / 2;  //11bit化
                 if( F_PRE < 0 )         F_SEN = 0;
                 else if( F_PRE <= 9999 ) F_SEN = F_PRE;
-                else                F_SEN = 9999;        // �\���������
+                else                F_SEN = 9999;        // 表示上限処理
                 }
-                PIN_WRITE(LED) = LED_OFF;                        // LED������
+                PIN_WRITE(LED) = LED_OFF;                        // LEDを消灯
                break;
-      case 4:  // ���[�^�p�d���R���g���[��
-               if( speed != 0 ) MotorTimer = 3000;   // ���[�^���쎞�̓^�C�}�[�Z�b�g
-               else             MotorTimer--;        // ���[�^��~���̓J�E���g�_�E��
+      case 4:  // モータ用電源コントロール
+               if( speed != 0 ) MotorTimer = 3000;   // モータ動作時はタイマーセット
+               else             MotorTimer--;        // モータ停止時はカウントダウン
                if( MotorTimer < 0 )  MotorTimer =  0;
-               // ���[�^�𓮂����Ȃ����͓d����OFF(���[�^��~����3�b��)
+               // モータを動かさない時は電源をOFF(モータ停止から3秒後)
                if( MotorTimer == 0 )  PIN_WRITE(MOTOR_EN)   =  0;  // OFF
                else                   PIN_WRITE(MOTOR_EN)   =  1;  // ON
                break;
@@ -451,149 +453,149 @@ void int_timerw( void ){
 }
 
 //---------------------------------------------------------------
-//  ���[�^�X�e�b�v���J�E���g�֐�
+//  モータステップ数カウント関数
 //---------------------------------------------------------------
-void int_mot_r(void){	//�E���[�^���P�X�e�b�v�i�ޖ��̊��荞��
-	step_r++;			//�X�e�b�v�����J�E���g
+void int_mot_r(void){	//右モータが１ステップ進む毎の割り込み
+	step_r++;			//ステップ数をカウント
   stepf_r = 1;			// 
-  STEP++;                     // �����J�E���^�X�V 
+  STEP++;                     // 距離カウンタ更新 
 }
 
-void int_mot_l(void){	//�����[�^���P�X�e�b�v�i�ޖ��̊��荞��
-	step_l++;			//�X�e�b�v�����J�E���g
+void int_mot_l(void){	//左モータが１ステップ進む毎の割り込み
+	step_l++;			//ステップ数をカウント
   stepf_l = 1;			//  
-  STEP++;                    // �����J�E���^�X�V 
+  STEP++;                    // 距離カウンタ更新 
 }
 
 //---------------------------------------------------------------
-//  MTU1 ���荞��(38us���ɂ��̊֐�������ɗD�悵�Ď��s�����)
+//  MTU1 割り込み(38us毎にこの関数が勝手に優先して実行される)
 //---------------------------------------------------------------
-//config_MTU1_user.c����Ăяo�����
+//config_MTU1_user.cから呼び出される
 void Int_MTU1_TGIA1(void){
   if(SoundStatus.BIT.SOUND_SP == 1){
     SoundStatus.BIT.SOUND_SP = 0;
     SoundStatus.BIT.SOUND_IT = 0;
     st_nSoundRPos = 0;
   }
-  if(st_pSound[st_nSoundRPos].NOTES == STP_){//�I�[�}�[�N�ŏI��
+  if(st_pSound[st_nSoundRPos].NOTES == STP_){//終端マークで終了
     Stop_Sound();
-  }else if (st_pSound[st_nSoundRPos].NOTES == RPT_){//�J��Ԃ��}�[�N��SPACE�t���O�Z�b�g
+  }else if (st_pSound[st_nSoundRPos].NOTES == RPT_){//繰り返しマークでSPACEフラグセット
     SoundStatus.BIT.SOUND_SP = 1;
-    MTU0.TIORH.BIT.IOB = 0; // MTIOC0B�[�q���o�͋֎~�ɂ���iHi-Z�ɂȂ�j
-    MTU1.TGRA = T02_; // �P�b�̖�������
+    MTU0.TIORH.BIT.IOB = 0; // MTIOC0B端子を出力禁止にする（Hi-Zになる）
+    MTU1.TGRA = T02_; // １秒の無音時間
   }else {
-    if(SoundStatus.BIT.SOUND_IT == 0){//�������̏ꍇ
+    if(SoundStatus.BIT.SOUND_IT == 0){//発音中の場合
       SoundStatus.BIT.SOUND_IT = 1;
-      if(st_pSound[st_nSoundRPos].NOTES == RST_){//�x���Ȃ�MTIOC0B�[�q�̏o�͋֎~
-        MTU0.TIORH.BIT.IOB = 0; // MTIOC0B�[�q���o�͋֎~�ɂ���iHi-Z�ɂȂ�j
-      }else{//�����Ȃ�w��̉��K���o��
+      if(st_pSound[st_nSoundRPos].NOTES == RST_){//休符ならMTIOC0B端子の出力禁止
+        MTU0.TIORH.BIT.IOB = 0; // MTIOC0B端子を出力禁止にする（Hi-Zになる）
+      }else{//音符なら指定の音階を出力
         uint16_t note = (uint16_t)st_pSound[st_nSoundRPos].NOTES;
-        /* TGRA�������ATGRB��50%�f���[�e�B�ɐݒ� */
+        /* TGRAを周期、TGRBを50%デューティに設定 */
         MTU0.TGRA = note;
         MTU0.TGRB = (uint16_t)(note / 2U);
-        MTU0.TIORH.BIT.IOB = 3; // MTIOC0B�[�q���g�O���o�͂ɂ���
+        MTU0.TIORH.BIT.IOB = 3; // MTIOC0B端子をトグル出力にする
       }
-      MTU1.TGRA = (uint16_t)(st_pSound[st_nSoundRPos].TIME - TIT_); // ���̎��ԁi�����j���Z�b�g
+      MTU1.TGRA = (uint16_t)(st_pSound[st_nSoundRPos].TIME - TIT_); // 音の時間（長さ）をセット
       st_nSoundRPos++;
-    }else{//��؂�
+    }else{//区切り
       SoundStatus.BIT.SOUND_IT = 0;
-      MTU0.TIORH.BIT.IOB = 0; // MTIOC0B�[�q���o�͋֎~�ɂ���iHi-Z�ɂȂ�j
+      MTU0.TIORH.BIT.IOB = 0; // MTIOC0B端子を出力禁止にする（Hi-Zになる）
       MTU1.TGRA = TIT_;
     }
   }
 }
 
 //---------------------------------------------------------------
-//  wait�֐�(1ms�^�C�}�[)
+//  wait関数(1msタイマー)
 //---------------------------------------------------------------
 void pause( int x ){
   wait_timer = 0;
-  while( wait_timer != x ); // �I�����Ԃ܂ő҂�
+  while( wait_timer != x ); // 終了時間まで待つ
 }
 
 //-------------------------------------------------------------------------
-//  �L�[�I�t����
+//  キーオフ処理
 //-------------------------------------------------------------------------
 void WaitKeyOff( void ){
-  // �`���^�����O�h�~����
-  pause( KEY_OFF );             // �ݒ肵������([ms])�҂�
-  // �S�ẴX�C�b�`��OFF�ɂȂ�܂Ń��[�v���đ҂�
+  // チャタリング防止処理
+  pause( KEY_OFF );             // 設定した時間([ms])待つ
+  // 全てのスイッチがOFFになるまでループして待つ
   while((  PIN_READ( SW_UP ) == SW_ON )||( PIN_READ( SW_DOWN ) == SW_ON )||( PIN_READ( SW_EXEC ) == SW_ON )||( PIN_READ( SW_RETURN ) == SW_ON ));
 }
 
 //-------------------------------------------------------------------------
-//  ���[�h�\��
+//  モード表示
 //-------------------------------------------------------------------------
-//  ���[�h�e�[�u��
+//  モードテーブル
 static const mode_func_t g_mode_table[] = {
   mode0, mode1, mode2, mode3, mode4, mode5, mode6, mode7, mode8
 };
 static const int g_mode_table_count = (int)(sizeof(g_mode_table) / sizeof(g_mode_table[0]));
 
 void change_mode( int x ){
-  MODE += x;                            // ���[�h�X�V
-  if( MODE >= ModeMax ) MODE = 0;       // ���[�h�������Ă���ꍇ��0�ɖ߂�
-  if( MODE < 0 )  MODE = ModeMax - 1;   // ���[�h�����̏ꍇ�̓��[�h���ő�l�ɐݒ�
+  MODE += x;                            // モード更新
+  if( MODE >= ModeMax ) MODE = 0;       // モードが超えている場合は0に戻す
+  if( MODE < 0 )  MODE = ModeMax - 1;   // モードが負の場合はモードを最大値に設定
 
   g_mode_table[ MODE ]( DISP );
 }
 
 //-------------------------------------------------------------------------
-//  ���[�h����
+//  モード処理
 //-------------------------------------------------------------------------
 void exec_mode( void ){
   g_mode_table[ MODE ]( EXEC );
 }
 
 //-------------------------------------------------------------------------
-//  Mode0 : �Z���T�`�F�b�N
+//  Mode0 : センサチェック
 //-------------------------------------------------------------------------
 void mode0( int x ){
-  if( x == DISP ){  // DISP���[�h�̏ꍇ
-    // ���[�h���e�\��
+  if( x == DISP ){  // DISPモードの場合
+    // モード内容表示
     LCD_print( 0, "0:Sensor" );
     LCD_print( 8, "        " );
     pause(1000);
     LCD_print( 0, " F      " );
     LCD_print( 8, "L   R   " );
-    return;                     // �ȉ��̎��s���������Ȃ��Ŗ߂�
+    return;                     // 以下の実行処理をしないで戻る
   }
 
-  // ���s���[�h�̏ꍇ
-  L_REF = 0; R_REF = 0;         // �f�[�^������
+  // 実行モードの場合
+  L_REF = 0; R_REF = 0;         // データ初期化
 
-  for( x = 0; x < 32; x++ ){     // �f�[�^����(64�|�C���g)
+  for( x = 0; x < 32; x++ ){     // データ測定(64ポイント)
     L_REF += L_SEN;
     R_REF += R_SEN;
     pause(1);
   }
 
-  R_REF = R_REF / 32;           // ����f�[�^�𕽋ω�
+  R_REF = R_REF / 32;           // 測定データを平均化
   L_REF = L_REF / 32;
 
   LCD_print( 0, " L    R " );
   LCD_print( 8, "        " );
-  LCD_dec_out(  8, L_REF, 3 );  // ���Z���T�l��LCD�ɕ\��
-  LCD_dec_out( 13, R_REF, 3 );  // �E�Z���T�l��LCD�ɕ\��
+  LCD_dec_out(  8, L_REF, 3 );  // 左センサ値をLCDに表示
+  LCD_dec_out( 13, R_REF, 3 );  // 右センサ値をLCDに表示
 
-  pause( 2000 );                // 2�b�ԕ\��
+  pause( 2000 );                // 2秒間表示
 }
 
 //-------------------------------------------------------------------------
 //  Mode1 : 
 //-------------------------------------------------------------------------
 void mode1(int x){
-  if( x == DISP ){  // DISP���[�h�̏ꍇ
-    // ���[�h���e�\��
+  if( x == DISP ){  // DISPモードの場合
+    // モード内容表示
     LCD_print( 0, "1:M-TEST" );
     LCD_print( 8, "        " );
-    return;                     // �ȉ��̎��s���������Ȃ��Ŗ߂�
+    return;                     // 以下の実行処理をしないで戻る
   }
 
-  // ���s���[�h�̏ꍇ
+  // 実行モードの場合
   LCD_print( 8,"SPD=     ");
-  rdir = 0; ldir = 0;           // ��]�����𒼐i
-  control_mode = 1;             // �������s�p�p�����䂠��
+  rdir = 0; ldir = 0;           // 回転方向を直進
+  control_mode = 1;             // 直線走行用姿勢制御あり
   while(1){
     LCD_dec_out( 12, speed, 4 );
     if( PIN_READ(SW_UP)   == 0 ) { speed += 100; WaitKeyOff(); }
@@ -609,14 +611,14 @@ void mode1(int x){
 //  Mode2 : 
 //-------------------------------------------------------------------------
 void mode2(int x){
-  if( x == DISP ){  // DISP���[�h�̏ꍇ
-    // ���[�h���e�\��
+  if( x == DISP ){  // DISPモードの場合
+    // モード内容表示
     LCD_print( 0, "2: 1 GO " );
     LCD_print( 8, "STEP    " );
-    return;                     // �ȉ��̎��s���������Ȃ��Ŗ߂�
+    return;                     // 以下の実行処理をしないで戻る
   }
 
-  // ���s���[�h�̏ꍇ
+  // 実行モードの場合
   while(1){
     LCD_dec_out( 12, GO_STEP, 4 );
     if( PIN_READ(SW_UP)   == 0 ) { GO_STEP += 10; WaitKeyOff(); }
@@ -628,18 +630,18 @@ void mode2(int x){
 }
 
 //-------------------------------------------------------------------------
-//  Mode3 : N��ԑO�i
+//  Mode3 : N区間前進
 //-------------------------------------------------------------------------
 void mode3(int x){
-  int n = 5;                    // �O�i��Ԑ��F�����l 5
-  if( x == DISP ){  // DISP���[�h�̏ꍇ
-    // ���[�h���e�\��
+  int n = 5;                    // 前進区間数：初期値 5
+  if( x == DISP ){  // DISPモードの場合
+    // モード内容表示
     LCD_print( 0, "3: N GO " );
     LCD_print( 8, "     N  " );
-    return;                     // �ȉ��̎��s���������Ȃ��Ŗ߂�
+    return;                     // 以下の実行処理をしないで戻る
   }
 
-  // ���s���[�h�̏ꍇ
+  // 実行モードの場合
   LCD_dec_out( 8, GO_STEP, 4 );
   while(1){
     LCD_dec_out( 14, n, 2 );
@@ -652,18 +654,18 @@ void mode3(int x){
 }
 
 //-------------------------------------------------------------------------
-//  Mode4 : 180�^�[��R
+//  Mode4 : 180ターンR
 //-------------------------------------------------------------------------
 void mode4( int x ){
-  if( x == DISP )  // DISP���[�h�̏ꍇ
+  if( x == DISP )  // DISPモードの場合
   {
-    // ���[�h���e�\��
+    // モード内容表示
     LCD_print( 0, "4: TURN " );
     LCD_print( 8, "        " );
-    return;                     // �ȉ��̎��s���������Ȃ��Ŗ߂�
+    return;                     // 以下の実行処理をしないで戻る
   }
 
-  // ���s���[�h�̏ꍇ
+  // 実行モードの場合
   while(1){
     LCD_dec_out( 10, TURN_STEP, 4 );
     if( PIN_READ(SW_UP)   == 0 ) { TURN_STEP += 10; WaitKeyOff(); }
@@ -675,18 +677,18 @@ void mode4( int x ){
 }
 
 //-------------------------------------------------------------------------
-//  Mode5 : �T�����s
+//  Mode5 : 探索走行
 //-------------------------------------------------------------------------
 void mode5( int x ){
-  if( x == DISP ){  // DISP���[�h�̏ꍇ
-    // ���[�h���e�\��
+  if( x == DISP ){  // DISPモードの場合
+    // モード内容表示
     LCD_print( 0, "5:Search" );
     LCD_print( 8, "Spd  200" );
-    return;                     // �ȉ��̎��s���������Ȃ��Ŗ߂�
+    return;                     // 以下の実行処理をしないで戻る
   }
 
-  // ���s���[�h�̏ꍇ
-  countdown();               // �J�E���g�_�E��
+  // 実行モードの場合
+  countdown();               // カウントダウン
   pos_x = 0; pos_y = 0; head = 0; // 
   Start_Sound(3);
   mouse_search( goal[0], goal[1], 200, S_MODE );
@@ -697,20 +699,20 @@ void mode5( int x ){
 }
 
 //-------------------------------------------------------------------------
-//  Mode6 : �񎟑��s
+//  Mode6 : 二次走行
 //-------------------------------------------------------------------------
 void mode6( int x ){
-  if( x == DISP )  // DISP���[�h�̏ꍇ
+  if( x == DISP )  // DISPモードの場合
   {
-    // ���[�h���e�\��
+    // モード内容表示
     LCD_print( 0, "6:Try   " );
     LCD_print( 8, "Spd  200" );
-    return;                     // �ȉ��̎��s���������Ȃ��Ŗ߂�
+    return;                     // 以下の実行処理をしないで戻る
   }
 
-  // ���s���[�h�̏ꍇ
-  // �񎟑��s
-  countdown();           // �J�E���g�_�E��
+  // 実行モードの場合
+  // 二次走行
+  countdown();           // カウントダウン
   pos_x = 0; pos_y = 0; head = 0;
   Start_Sound(3);
   map_DFread(MAP_DATA_NO);
@@ -720,18 +722,18 @@ void mode6( int x ){
 
 
 //-------------------------------------------------------------------------
-//  Mode7 : Sound�Đ�
+//  Mode7 : Sound再生
 //-------------------------------------------------------------------------
 void mode7(int x){
-  int sound_no = 1;          // �Đ��T�E���h�ԍ��F�����l 1
-  if( x == DISP ){  // DISP���[�h�̏ꍇ
-    // ���[�h���e�\��
+  int sound_no = 1;          // 再生サウンド番号：初期値 1
+  if( x == DISP ){  // DISPモードの場合
+    // モード内容表示
     LCD_print( 0, "7: Sound" );
     LCD_print( 8, "No.     " );
-    return;                     // �ȉ��̎��s���������Ȃ��Ŗ߂�
+    return;                     // 以下の実行処理をしないで戻る
   }
 
-  // ���s���[�h�̏ꍇ
+  // 実行モードの場合
   while(1){
     LCD_dec_out( 12, sound_no, 4 );
     if( PIN_READ(SW_UP)   == 0 ) {
@@ -751,21 +753,21 @@ void mode7(int x){
 }
 
 //-------------------------------------------------------------------------
-//  Mode8 : �S�[���I��
+//  Mode8 : ゴール選択
 //-------------------------------------------------------------------------
 void mode8(int x){
   int old_goal_x;
   int old_goal_y;
-  if( x == DISP ){  // DISP���[�h�̏ꍇ
-    // ���[�h���e�\��
+  if( x == DISP ){  // DISPモードの場合
+    // モード内容表示
     LCD_print( 0, "8: Goal " );
     LCD_print(8, "x:  y:  ");
     LCD_dec_out(10, goal[0], 1);
     LCD_dec_out(14, goal[1], 1);
-    return;                     // �ȉ��̎��s���������Ȃ��Ŗ߂�
+    return;                     // 以下の実行処理をしないで戻る
   }
 
-  // ���s���[�h�̏ꍇ
+  // 実行モードの場合
   old_goal_x = goal[0];
   old_goal_y = goal[1];
   select_goal(&goal[0], &goal[1]);
@@ -778,77 +780,78 @@ void mode8(int x){
 }
 
 //-------------------------------------------------------------------------
-//  �T���֐�
+//  探索関数
 //-------------------------------------------------------------------------
 void mouse_search( int goal_x, int goal_y, int spd, int mode ){
   short x,y,block_count,motion;
 
   while( 1 ){
-    // �P�̃��[�v�͋�Ԓ��S���玟�̋�Ԓ��S�܂�
-    // �ŏ��ɔ���撼�i
-    control_mode = 1;             // �p������ON
-    rdir = 0; ldir = 0;           // ��]�����𒼐i
-    STEP = 0;                     // �����J�E���^���Z�b�g
-    speed = spd;                  // ���x�ݒ�
+    // 7x7-8x8͈͓̔2ȏ̕ǂ}XŒ~
+    // |eVvZɎgS[W͑Il̂܂܎g
+    if( is_center_goal_cell( pos_x, pos_y ) && has_two_or_more_walls( map[ pos_x ][ pos_y ] ) )
+    control_mode = 1;             // 姿勢制御ON
+    rdir = 0; ldir = 0;           // 回転方向を直進
+    STEP = 0;                     // 距離カウンタリセット
+    speed = spd;                  // 速度設定
 
-    // ���W�X�V
-    if     ( head == 0 ) pos_y++; // �k���� y+1
-    else if( head == 1 ) pos_x++; // ������ x+1
-    else if( head == 2 ) pos_y--; // ����� y-1
-    else if( head == 3 ) pos_x--; // ������ x-1
+    // 座標更新
+    if     ( head == 0 ) pos_y++; // 北向き y+1
+    else if( head == 1 ) pos_x++; // 東向き x+1
+    else if( head == 2 ) pos_y--; // 南向き y-1
+    else if( head == 3 ) pos_x--; // 西向き x-1
 
-        // �|�e���V����MAP�v�Z
+        // ポテンシャルMAP計算
     make_potential( goal_x, goal_y, mode );
 
-    while( STEP < GO_STEP / 2 );  // ����Ԑi��
+    while( STEP < GO_STEP / 2 );  // 半区間進む
 
-    // ���܂Ői�񂾂�
-    // �Ǐ��擾��MAP�f�[�^�㏑��
+    // 柱まで進んだら
+    // 壁情報取得＆MAPデータ上書き
     if(mode == S_MODE) make_map_data();
 
-    // ����@�ŒT�����čs������
+    // 左手法で探索して行動決定
     motion = search_adachi();
 
-    // �S�[�����̗�O�����i��Ō��߂��s�����㏑�������j
+    // ゴール時の例外処理（上で決めた行動が上書きされる）
     if( pos_x == goal_x && pos_y == goal_y )
-      motion = 4;                       // �S�[�����B�F���]��~
+      motion = 4;                       // ゴール到達：反転停止
 
-    // �s�������s
+    // 行動を実行
     switch( motion ){
-      // ���i
-      case  0 : while( STEP < GO_STEP );  // �c�蔼��Ԑi��
-                head_change = 0;          // �i�s�����X�V�ϐ���O�ɐݒ�
+      // 直進
+      case  0 : while( STEP < GO_STEP );  // 残り半区間進む
+                head_change = 0;          // 進行方向更新変数を前に設定
                 break;
-      // �E��
-      case  1 : while( STEP < GO_STEP - speed_now * 2 );  // ��������c���Ē��i
+      // 右折
+      case  1 : while( STEP < GO_STEP - speed_now * 2 );  // 減速域を残して直進
                 speed = 1;
-                while( STEP < GO_STEP );  // �c��X�e�b�v���Ō���
-                com_turn( 0 );            // �E90�x����
-                head_change = 1;          // �i�s�����X�V�ϐ����E�ɐݒ�
+                while( STEP < GO_STEP );  // 残りステップ数で減速
+                com_turn( 0 );            // 右90度旋回
+                head_change = 1;          // 進行方向更新変数を右に設定
                 break;
-      // ���]
-      case  2 : while( STEP < GO_STEP - speed_now * 2 );  // ��������c���Ē��i
+      // 反転
+      case  2 : while( STEP < GO_STEP - speed_now * 2 );  // 減速域を残して直進
                 speed = 1;
-                while( STEP < GO_STEP );  // �c��X�e�b�v���Ō���
-                com_turn( 2 );            // ���]
-                head_change = 2;          // �i�s�����X�V�ϐ�����ɐݒ�
+                while( STEP < GO_STEP );  // 残りステップ数で減速
+                com_turn( 2 );            // 反転
+                head_change = 2;          // 進行方向更新変数を後に設定
                 break;
-      // ����
-      case  3 : while( STEP < GO_STEP - speed_now * 2 );  // ��������c���Ē��i
+      // 左折
+      case  3 : while( STEP < GO_STEP - speed_now * 2 );  // 減速域を残して直進
                 speed = 1;
-                while( STEP < GO_STEP );  // �c��X�e�b�v���Ō���
-                com_turn( 1 );            // ��90�x����
-                head_change = 3;          // �i�s�����X�V�ϐ������ɐݒ�
+                while( STEP < GO_STEP );  // 残りステップ数で減速
+                com_turn( 1 );            // 左90度旋回
+                head_change = 3;          // 進行方向更新変数を左に設定
                 break;
-      // ���]��~
-      case  4 : while( STEP < GO_STEP - speed_now * 2 );  // ��������c���Ē��i
+      // 反転停止
+      case  4 : while( STEP < GO_STEP - speed_now * 2 );  // 減速域を残して直進
                 speed = 1;
-                while( STEP < GO_STEP );  // �c��X�e�b�v���Ō���
-                com_turn( 2 );            // ���]
-                com_stop();               // ��~
-                head_change = 2;          // �i�s�����X�V�ϐ�����ɐݒ�
-                head = ( head + head_change ) & 0x03; // �ڍׂ͉����Q��
-                // MAP�f�[�^�m�F�i���T���̋�搔��\�����Ă݂�j
+                while( STEP < GO_STEP );  // 残りステップ数で減速
+                com_turn( 2 );            // 反転
+                com_stop();               // 停止
+                head_change = 2;          // 進行方向更新変数を後に設定
+                head = ( head + head_change ) & 0x03; // 詳細は下を参照
+                // MAPデータ確認（既探索の区画数を表示してみる）
                 block_count = 0;
                 for( y = 0 ; y < 16 ; y++ ){
                   for( x = 0 ; x < 16 ; x++ ){
@@ -858,128 +861,128 @@ void mouse_search( int goal_x, int goal_y, int spd, int mode ){
                 }
                 // LCD_print( 0, "        " );
                 // LCD_print( 8, "  Blocks" );
-                // LCD_dec_out(  2, block_count, 3 );  // ���T������\��
+                // LCD_dec_out(  2, block_count, 3 );  // 既探索数を表示
                 // pause( 3000 );
 
-                return;                   // ���[�v�I��
+                return;                   // ループ終了
                 break;
-      // ���̑�
-      default : com_stop();               // ��~
-                head_change = 0;          // �i�s�����X�V�ϐ���O�ɐݒ�
-                head = ( head + head_change ) & 0x03; // �ڍׂ͉����Q��
-                return;                   // ���[�v�I��
+      // その他
+      default : com_stop();               // 停止
+                head_change = 0;          // 進行方向更新変数を前に設定
+                head = ( head + head_change ) & 0x03; // 詳細は下を参照
+                return;                   // ループ終了
                 break;
     }
     
-    // �i�s�����X�V�ϐ�head_change��p���Č��݂̐i�s����head���X�V
-    head = ( head + head_change ) & 0x03; // �X�V���l�����Z����2�i����2���Ń}�X�N
-                                          // 00 -> 01 -> 10 -> 11 -(�}�X�N)-> 00
+    // 進行方向更新変数head_changeを用いて現在の進行方向headを更新
+    head = ( head + head_change ) & 0x03; // 更新数値を加算して2進数下2桁でマスク
+                                          // 00 -> 01 -> 10 -> 11 -(マスク)-> 00
   }
 }
 
 
 //-------------------------------------------------------------------------
-//  ���i���W���[�� (N��ԑO�i)
+//  直進モジュール (N区間前進)
 //-------------------------------------------------------------------------
 void com_go( int n ){
-  control_mode = 1;                       // �������s�p�p������
-  step_l = 0; step_r = 0;               // ���[�^�X�e�b�v���J�E���^�N���A
-  STEP = 0;                               // �����J�E���^�N���A
-  rdir = 0; ldir = 0;                     // ��]�����𒼐i
+  control_mode = 1;                       // 直線走行用姿勢制御
+  step_l = 0; step_r = 0;               // モータステップ数カウンタクリア
+  STEP = 0;                               // 距離カウンタクリア
+  rdir = 0; ldir = 0;                     // 回転方向を直進
 
-  // �������[�h
-  speed = 200;        // �ڕW���x�ݒ�
-  while( speed > speed_now );                   // �ڕW���x�ɂȂ�܂ŉ���
-  // �葬���[�h
-  speed = speed_now;  // ������̑��x
-  while( STEP < GO_STEP * n - speed_now * 2 );  // �����X�e�b�v�����c���Ē葬�ړ�
-                                                // �S�̃X�e�b�v��-�����p�X�e�b�v��
-  // �������[�h
-  speed = 1;          // �Œᑬ�x�ݒ�
-  while( STEP < GO_STEP * n );                  // �c��̃X�e�b�v���Ō���
+  // 加速モード
+  speed = 200;        // 目標速度設定
+  while( speed > speed_now );                   // 目標速度になるまで加速
+  // 定速モード
+  speed = speed_now;  // 加速後の速度
+  while( STEP < GO_STEP * n - speed_now * 2 );  // 減速ステップ数を残して定速移動
+                                                // 全体ステップ数-減速用ステップ数
+  // 減速モード
+  speed = 1;          // 最低速度設定
+  while( STEP < GO_STEP * n );                  // 残りのステップ数で減速
 }
 
 //-------------------------------------------------------------------------
-//  ��~���W���[��
+//  停止モジュール
 //-------------------------------------------------------------------------
 void com_stop( void ){
-  control_mode = 0;           // �p�����䖳��
-  rdir = 0; ldir = 0;         // ���[�^�̉�]������O�i
-  step_l = 0; step_r = 0; // ���[�^�X�e�b�v���J�E���^�����Z�b�g
-  STEP = 0;                   // �����J�E���^�����Z�b�g
-  speed = 0;  speed_now = 0;  // ���[�^�̐���p�̕ϐ������Z�b�g
-  pause(100);                 // 0.1�b���[�^���~
+  control_mode = 0;           // 姿勢制御無し
+  rdir = 0; ldir = 0;         // モータの回転方向を前進
+  step_l = 0; step_r = 0; // モータステップ数カウンタをリセット
+  STEP = 0;                   // 距離カウンタをリセット
+  speed = 0;  speed_now = 0;  // モータの制御用の変数をリセット
+  pause(100);                 // 0.1秒モータを停止
 }
 
 //-------------------------------------------------------------------------
-//  ���񃂃W���[�� (0:R90 1:L90 2:R180 3:L180)
+//  旋回モジュール (0:R90 1:L90 2:R180 3:L180)
 //-------------------------------------------------------------------------
 void com_turn( int t_mode ){
   short T_STEP;
 
-  com_stop();                                             // ��~
-  control_mode = 0;                                       // �p������Ȃ�
-  if     ( t_mode == 0 ) { T_STEP = TURN_STEP; rdir = 1; ldir = 0; } // �E�X�O�x
-  else if( t_mode == 1 ) { T_STEP = TURN_STEP; rdir = 0; ldir = 1; } // ���X�O�x
-  else if( t_mode == 2 ) { T_STEP = TURN_STEP * 2; rdir = 1; ldir = 0; } // �E���]
-  else if( t_mode == 3 ) { T_STEP = TURN_STEP * 2; rdir = 0; ldir = 1; } // �����]
+  com_stop();                                             // 停止
+  control_mode = 0;                                       // 姿勢制御なし
+  if     ( t_mode == 0 ) { T_STEP = TURN_STEP; rdir = 1; ldir = 0; } // 右９０度
+  else if( t_mode == 1 ) { T_STEP = TURN_STEP; rdir = 0; ldir = 1; } // 左９０度
+  else if( t_mode == 2 ) { T_STEP = TURN_STEP * 2; rdir = 1; ldir = 0; } // 右反転
+  else if( t_mode == 3 ) { T_STEP = TURN_STEP * 2; rdir = 0; ldir = 1; } // 左反転
 
-  // �������[�h
-  speed = 100;        // �ڕW���x�ݒ�
-  while( speed > speed_now );                   // �ڕW���x�ɂȂ�܂ŉ���
-  // �葬���[�h
-  speed = speed_now;  // ������̑��x
-  while( STEP < T_STEP - speed_now * 2 );       // �����X�e�b�v�����c���Ē葬�ړ�
-                                                // �S�̃X�e�b�v��-�����p�X�e�b�v��
-  // �������[�h
-  speed = 1;          // �Œᑬ�x�ݒ�
-  while( STEP < T_STEP );                       // �c��̃X�e�b�v���Ō���
+  // 加速モード
+  speed = 100;        // 目標速度設定
+  while( speed > speed_now );                   // 目標速度になるまで加速
+  // 定速モード
+  speed = speed_now;  // 加速後の速度
+  while( STEP < T_STEP - speed_now * 2 );       // 減速ステップ数を残して定速移動
+                                                // 全体ステップ数-減速用ステップ数
+  // 減速モード
+  speed = 1;          // 最低速度設定
+  while( STEP < T_STEP );                       // 残りのステップ数で減速
 }
 
 //-------------------------------------------------------------------------
-//  ����
+//  時報音
 //-------------------------------------------------------------------------
 SOUND_T Chime_1[]={
-{RA3_, T16_}, /* �� (A7) */
+{RA3_, T16_}, /* ラ (A7) */
 {STP_, T00_},
 };
 
 //-------------------------------------------------------------------------
-//  �N����
+//  起動音
 //-------------------------------------------------------------------------
 SOUND_T Chime_2[]={
-{RE2_, T16_}, /* �� (D6) */
-{SO2_, T16_}, /* �\ (A6) */
+{RE2_, T16_}, /* レ (D6) */
+{SO2_, T16_}, /* ソ (A6) */
 {STP_, T00_},
 };
 
 //-------------------------------------------------------------------------
-//  �J�E���g�_�E��
+//  カウントダウン
 //-------------------------------------------------------------------------
 SOUND_T Countdown[]={
-{RA1_, T08_}, /* �� (A5) */
-{RST_, T16_}, /* �x�� */
-{RA1_, T08_}, /* �� (A5) */
-{RST_, T16_}, /* �x�� */
-{RA1_, T08_}, /* �� (A5) */
-{RST_, T16_}, /* �x�� */
-{RA2_, T04_}, /* �� (A6) */
+{RA1_, T08_}, /* ラ (A5) */
+{RST_, T16_}, /* 休符 */
+{RA1_, T08_}, /* ラ (A5) */
+{RST_, T16_}, /* 休符 */
+{RA1_, T08_}, /* ラ (A5) */
+{RST_, T16_}, /* 休符 */
+{RA2_, T04_}, /* ラ (A6) */
 {STP_, T00_},
 };
 
 //-------------------------------------------------------------------------
-// �S�[��
+// ゴール
 //-------------------------------------------------------------------------
 SOUND_T Goal[]={
-{SO2_, T32_}, /* �\ (G6) */
-{RST_, T32_}, /* �x�� */
-{SO2_, T32_}, /* �\ (G6) */
-{RST_, TIT_}, /* �x�� */
-{DO3_, T16_}, /* �h (C7) */
+{SO2_, T32_}, /* ソ (G6) */
+{RST_, T32_}, /* 休符 */
+{SO2_, T32_}, /* ソ (G6) */
+{RST_, TIT_}, /* 休符 */
+{DO3_, T16_}, /* ド (C7) */
 {STP_, T00_},
 };
 //-------------------------------------------------------------------------
-//  �r�[�v�� 
+//  ビープ音 
 //-------------------------------------------------------------------------
 SOUND_T Melody_1[]={
 {DO3_, T16_},
@@ -998,7 +1001,7 @@ SOUND_T Melody_1[]={
 };
  
 //-------------------------------------------------------------------------
-//  �����h����
+//  ロンドン橋
 //-------------------------------------------------------------------------
 SOUND_T Melody_2[]={
 {SO1_, T08_ + (T08_/2)},
@@ -1054,77 +1057,77 @@ SOUND_T Melody_2[]={
 };
 
 //-------------------------------------------------------------------------
-//  �T�E���h�����J�n
+//  サウンド発音開始
 //-------------------------------------------------------------------------
-/* ���� : nMelodyNum = �T�E���h�E�����f�B�ԍ��i1,2,99�j */
-/* �ߒl : Start_Sound() == TRUE : �T�E���h�����J�n */
-/* : == FALSE : �T�E���h�����Ȃ� */
+/* 引数 : nMelodyNum = サウンド・メロディ番号（1,2,99） */
+/* 戻値 : Start_Sound() == TRUE : サウンド発生開始 */
+/* : == FALSE : サウンド発生なし */
 
 BOOL Start_Sound(int nMelodyNum){
-/* �T�E���h�o�͒��Ȃ��~���� */
+/* サウンド出力中なら停止する */
 if(SoundStatus.BIT.SOUND_ON == 1){
   Stop_Sound();
   }
   if(nMelodyNum == 1){
-  st_pSound = &Melody_1[0]; /* �r�[�v�� */
+  st_pSound = &Melody_1[0]; /* ビープ音 */
   }
   else if(nMelodyNum == 2){
-  st_pSound = &Melody_2[0]; /* �����h���� */
+  st_pSound = &Melody_2[0]; /* ロンドン橋 */
   }else if(nMelodyNum == 3){
-  st_pSound = &ccnt2[0]; /* �R�R�i�b�c���[�� */
+  st_pSound = &ccnt2[0]; /* ココナッツモール */
   }else if(nMelodyNum == 96){
-  st_pSound = &Goal[0]; /* �S�[�� */
+  st_pSound = &Goal[0]; /* ゴール */
   }else if(nMelodyNum == 97){
-  st_pSound = &Countdown[0]; /* �J�E���g�_�E�� */
+  st_pSound = &Countdown[0]; /* カウントダウン */
   }else if(nMelodyNum == 98){
-  st_pSound = &Chime_2[0]; /* �N���� */
+  st_pSound = &Chime_2[0]; /* 起動音 */
   }else if(nMelodyNum == 99){
-  st_pSound = &Chime_1[0]; /* ���� */
+  st_pSound = &Chime_1[0]; /* 時報音 */
   }
   else{
   return FALSE;
   }
   st_nSoundRPos = 0;
-  /* �ŏ�����I�[�}�[�N�܂��͌J��Ԃ��}�[�N�������牽�����Ȃ� */
+  /* 最初から終端マークまたは繰り返しマークだったら何もしない */
   if((st_pSound[st_nSoundRPos].NOTES == RPT_) || (st_pSound[st_nSoundRPos].NOTES == STP_)){
   return FALSE;
   }
-  /* �T�E���h�o�͒������� */
+  /* サウンド出力中を示す */
   SoundStatus.BIT.SOUND_ON = 1;
   SoundStatus.BIT.SOUND_SP = 0;
   SoundStatus.BIT.SOUND_IT = 0;
-  /* �^�C�}���[�h���C�g�����W�X�^�iMTU3,MTU4�ɕK�v�j */
+  /* タイマリードライト許可レジスタ（MTU3,MTU4に必要） */
   // MTU.TRWER.BYTE = 0x01;
-  /* ���̎��ԁi�����j���Z�b�g */
+  /* 音の時間（長さ）をセット */
   MTU1.TCNT = 0x0000;
-  MTU1.TGRA = T16_; /* 0.125�b��ɔ����J�n */
-  /* MTU0,MTU1�J�E���g�X�^�[�g */
+  MTU1.TGRA = T16_; /* 0.125秒後に発音開始 */
+  /* MTU0,MTU1カウントスタート */
   R_Config_MTU0_Start();
   R_Config_MTU1_Start();
-  /* MTU1�R���y�A�}�b�`A���荞�݋��� */
+  /* MTU1コンペアマッチA割り込み許可 */
   IEN(MTU1, TGIA1) = 1;
  
  return TRUE;
  }
  
 //-------------------------------------------------------------------------
-//  �T�E���h��~
+//  サウンド停止
 //-------------------------------------------------------------------------
 void Stop_Sound(void){
- /* MTU1�R���y�A�}�b�`A���荞�݋֎~ */
+ /* MTU1コンペアマッチA割り込み禁止 */
   IEN(MTU1, TGIA1) = 0;
-  /* MTIOC0B�[�q���o�͋֎~�ɂ���iHi-Z�ɂȂ�j */
+  /* MTIOC0B端子を出力禁止にする（Hi-Zになる） */
   MTU0.TIORH.BIT.IOB = 0;
-  /* MTU0,MTU1�J�E���g��~ */
+  /* MTU0,MTU1カウント停止 */
   R_Config_MTU0_Stop();
   R_Config_MTU1_Stop();
-  /* ������~�������� */
+  /* 発音停止中を示す */
   SoundStatus.BIT.SOUND_ON = 0;
   SoundStatus.BIT.SOUND_SP = 0;
 }
 
 //-------------------------------------------------------------------------
-//  �����e�[�u���擾
+//  加速テーブル取得
 //-------------------------------------------------------------------------
 u16 AccTableGet(u16 index){
     u32 v;
@@ -1134,7 +1137,7 @@ u16 AccTableGet(u16 index){
     }
 
     v = (u32)ACC_TABLE_BASE + (u32)index * (u32)ACC_TABLE_STEP;
-    return (u16)v; /* 300..8296�Ȃ̂�u16�Ɏ��܂� */
+    return (u16)v; /* 300..8296なのでu16に収まる */
 }
 
 //-------------------------------------------------------------------------
@@ -1306,7 +1309,22 @@ void	map_DFread(short	no){
 }
 
 //-------------------------------------------------------------------------
-//  �ǂ̃Z���V���O
+int is_center_goal_cell( int x, int y ){
+  return ( x >= 7 && x <= 8 && y >= 7 && y <= 8 );
+}
+
+int has_two_or_more_walls( uchar wall_data ){
+  int wall_count = 0;
+
+  if( wall_data & 0x01 ) wall_count++;
+  if( wall_data & 0x02 ) wall_count++;
+  if( wall_data & 0x04 ) wall_count++;
+  if( wall_data & 0x08 ) wall_count++;
+
+  return ( wall_count >= 2 );
+}
+
+//  壁のセンシング
 //-------------------------------------------------------------------------
 int goal_find_index( int gx, int gy ){
   int i;
@@ -1367,158 +1385,158 @@ int goal_DFread( int *gx, int *gy ){
 int get_wall_data( void ){
   short wall;
 
-  // �Z���T�f�[�^����́C臒l�Ɣ�r���ĕǂ̗L���𔻒�
+  // センサデータを入力，閾値と比較して壁の有無を判定
   wall = 0;
-  if( F_SEN > F_LIM )  wall |= 0x01; // �O�ǂ���
-  if( R_SEN > R_LIM )  wall |= 0x02; // �E�ǂ���
-  if( L_SEN > L_LIM )  wall |= 0x08; // ���ǂ���
-  // ��ǂ͂���킯�Ȃ��̂Ō��Ȃ�
+  if( F_SEN > F_LIM )  wall |= 0x01; // 前壁あり
+  if( R_SEN > R_LIM )  wall |= 0x02; // 右壁あり
+  if( L_SEN > L_LIM )  wall |= 0x08; // 左壁あり
+  // 後壁はあるわけないので見ない
 
   return( wall );
 }
 
 //-------------------------------------------------------------------------
-// MAP�f�[�^�̌���
-// �T���L�^ bit 7 6 5 4 = �� �� �� �k / �l = 1:���T�� 0:���T��
-// �Ǐ��   bit 3 2 1 0 = �� �� �� �k / �l = 1:�ǗL�� 0:�ǖ���
+// MAPデータの見方
+// 探索記録 bit 7 6 5 4 = 西 南 東 北 / 値 = 1:既探索 0:未探索
+// 壁情報   bit 3 2 1 0 = 西 南 東 北 / 値 = 1:壁有り 0:壁無し
 //-------------------------------------------------------------------------
 
 //-------------------------------------------------------------------------
-//  MAP�f�[�^������
+//  MAPデータ初期化
 //-------------------------------------------------------------------------
 void clear_map( void ){
   int x, y;
-  // �S�Ă̋�Ԃ�ǂȂ������T���ɏ�����
+  // 全ての区間を壁なし＆未探索に初期化
   for( y = 0 ; y < 16 ; y++ )
     for( x = 0 ; x < 16 ; x++ )
       map[ x ][ y ] = 0x00;
 
-  // �����̊O�ǁix=0�Cy=0�`15�j���㏑��
+  // 西側の外壁（x=0，y=0～15）を上書き
   for( y = 0 ; y < 16 ; y++ )
-    map[ 0 ][ y ] = 0x88;  // ���̂݊��T��(8)�����̂ݕǂ���(8)
-  // �쑤�̊O�ǁix=0�`15�Cy=0�j���㏑��
+    map[ 0 ][ y ] = 0x88;  // 西のみ既探索(8)＆西のみ壁あり(8)
+  // 南側の外壁（x=0～15，y=0）を上書き
   for( x = 0 ; x < 16 ; x++ )
-    map[ x ][ 0 ] = 0x44;  // ��̂݊��T��(4)����̂ݕǂ���(4)
-  // �����̊O�ǁix=15�Cy=0�`15�j���㏑��
+    map[ x ][ 0 ] = 0x44;  // 南のみ既探索(4)＆南のみ壁あり(4)
+  // 東側の外壁（x=15，y=0～15）を上書き
   for( y = 0 ; y < 16 ; y++ )
-    map[ 15 ][ y ] = 0x22; // ���̂݊��T��(2)�����̂ݕǂ���(2)
-  // �k���̊O�ǁix=0�`15�Cy=15�j���㏑��
+    map[ 15 ][ y ] = 0x22; // 東のみ既探索(2)＆東のみ壁あり(2)
+  // 北側の外壁（x=0～15，y=15）を上書き
   for( x = 0 ; x < 16 ; x++ )
-    map[ x ][ 15 ] = 0x11; // �k�̂݊��T��(1)���k�̂ݕǂ���(1)
+    map[ x ][ 15 ] = 0x11; // 北のみ既探索(1)＆北のみ壁あり(1)
 
-  // �X�^�[�g��ԁix=0�Cy=0�j�̏㏑��
-  map[ 0 ][ 0 ] = 0xfe;  // ���쓌�k���T��(8+4+2+1=f)�����쓌�ǂ���(8+4+2=e)
-  // �X�^�[�g���1�E�ix=1�Cy=0�j�̏㏑��
-  map[ 1 ][ 0 ] = 0xcc;  // ������T��(8+4=c)������ǂ���(8+4=c)
+  // スタート区間（x=0，y=0）の上書き
+  map[ 0 ][ 0 ] = 0xfe;  // 西南東北既探索(8+4+2+1=f)＆西南東壁あり(8+4+2=e)
+  // スタート区間1つ右（x=1，y=0）の上書き
+  map[ 1 ][ 0 ] = 0xcc;  // 西南既探索(8+4=c)＆西南壁あり(8+4=c)
 
-  // ����p�ix=0�Cy=15�j�̏㏑��
-  map[ 0 ][ 15 ] = 0x99; // ���k���T��(8+1=9)�����k�ǂ���(8+1=9)
-  // �E���p�ix=15�Cy=0�j�̏㏑��
-  map[ 15 ][ 0 ] = 0x66; // �쓌���T��(4+2=6)���쓌�ǂ���(4+2=6)
-  // �E��p�ix=15�Cy=15�j�̏㏑��
-  map[ 15 ][ 15 ] = 0x33;// ���k���T��(2+1=3)�����k�ǂ���(2+1=3)
+  // 左上角（x=0，y=15）の上書き
+  map[ 0 ][ 15 ] = 0x99; // 西北既探索(8+1=9)＆西北壁あり(8+1=9)
+  // 右下角（x=15，y=0）の上書き
+  map[ 15 ][ 0 ] = 0x66; // 南東既探索(4+2=6)＆南東壁あり(4+2=6)
+  // 右上角（x=15，y=15）の上書き
+  map[ 15 ][ 15 ] = 0x33;// 東北既探索(2+1=3)＆東北壁あり(2+1=3)
 }
 
 //-------------------------------------------------------------------------
-//  �Z���T��񂩂�T���L�^���Ǐ���MAP�f�[�^�ɍX�V
+//  センサ情報から探索記録＆壁情報をMAPデータに更新
 //-------------------------------------------------------------------------
 void make_map_data( void ){
   uchar wall;
 
-  // �Ǐ��擾
+  // 壁情報取得
   wall = get_wall_data();
-  // �������킹�����̂��߂ɏ��4bit�ɉ���4bit�̕Ǐ����R�s�[
+  // 方向合わせ処理のために上位4bitに下位4bitの壁情報をコピー
   wall = ( wall & 0x0f ) | ( wall << 4 );
-  // �}�E�X�̐i�s�����ɂ��킹�ĕǃf�[�^�����H
-  if     ( head == 1 ) wall = wall >> 3; // �k���O�̏��𓌂��O�ɉ��H
-  else if( head == 2 ) wall = wall >> 2; // �k���O�̏���삪�O�ɉ��H
-  else if( head == 3 ) wall = wall >> 1; // �k���O�̏��𐼂��O�ɉ��H
-  // ���쓌�k��T���ς݂ɂ���
+  // マウスの進行方向にあわせて壁データを加工
+  if     ( head == 1 ) wall = wall >> 3; // 北が前の情報を東が前に加工
+  else if( head == 2 ) wall = wall >> 2; // 北が前の情報を南が前に加工
+  else if( head == 3 ) wall = wall >> 1; // 北が前の情報を西が前に加工
+  // 西南東北を探索済みにする
   wall |= 0xf0;
-  // �Ǐ���MAP�f�[�^�ɏ㏑��
+  // 壁情報をMAPデータに上書き
   map[ pos_x ][ pos_y ] = wall;
 
-  // ���쓌�k�̗׋���MAP�f�[�^���㏑��
+  // 西南東北の隣区画のMAPデータを上書き
 
-  // ���݋��̓��Ǐ���1�E���̐��Ǐ��Ƃ��ď㏑�����鏈��
-  // ���������ڍׂɐ����D�c��3�i���C���C��j�͂܂Ƃ߂ċL�q
-  if( pos_x != 15 ){  // ��ԓ����̋��̎��ȊO
-    // �E���̐������i�T���L�^���Ǐ��j������
+  // 現在区画の東壁情報を1つ右区画の西壁情報として上書きする処理
+  // ここだけ詳細に説明．残り3つ（下，左，上）はまとめて記述
+  if( pos_x != 15 ){  // 一番東側の区画の時以外
+    // 右区画の西側情報（探索記録＆壁情報）を消去
     map[ pos_x + 1 ][ pos_y ] &= 0x77;
-    // �E���̐����T���L�^�����T���Ƃ���
+    // 右区画の西側探索記録を既探索とする
     map[ pos_x + 1 ][ pos_y ] |= 0x80;
-    // ���݋��̓������𐼑����ɕϊ����ĉE���̐����Ǐ��ɏ㏑��
+    // 現在区画の東側情報を西側情報に変換して右区画の西側壁情報に上書き
     map[ pos_x + 1 ][ pos_y ] |= ( map[ pos_x ][ pos_y ] << 2 ) & 0x08;
   }
   
-  // ���݋��̓�Ǐ���1�����̖k�Ǐ��Ƃ��ď㏑�����鏈��
+  // 現在区画の南壁情報を1つ下区画の北壁情報として上書きする処理
   if(pos_y!=0) map[pos_x][pos_y-1]=(map[pos_x][pos_y-1]&0xee)|0x10|((wall>>2)&0x01);
-  // ���݋��̐��Ǐ���1�����̓��Ǐ��Ƃ��ď㏑�����鏈��
+  // 現在区画の西壁情報を1つ左区画の東壁情報として上書きする処理
   if(pos_x!=0) map[pos_x-1][pos_y]=(map[pos_x-1][pos_y]&0xdd)|0x20|((wall>>2)&0x02);
-  // ���݋��̖k�Ǐ���1����̓�Ǐ��Ƃ��ď㏑�����鏈��
+  // 現在区画の北壁情報を1つ上区画の南壁情報として上書きする処理
   if(pos_y!=15)map[pos_x][pos_y+1]=(map[pos_x][pos_y+1]&0xbb)|0x40|((wall<<2)&0x04);
 }
 
 //-------------------------------------------------------------------------
-//  �������i�|�e���V������j�쐬
+//  等高線（ポテンシャル場）作成
 //-------------------------------------------------------------------------
 void make_potential( int gx, int gy, int mode )
 {
   uchar check_num, flg;
   uchar x,y;
 
-  // �|�e���V����MAP������(�S�čő�l255�ɂ���)
+  // ポテンシャルMAP初期化(全て最大値255にする)
   for( y = 0 ; y < 16 ; y++ )
     for( x = 0 ; x < 16 ; x++ )
       p_map[ x ][ y ] = 255;
 
-  // �S�[�����W�Ƀ|�e���V����0����������
+  // ゴール座標にポテンシャル0を書き込む
   p_map[ gx ][ gy ] = 0;
 
   check_num = 0;
   do{
-    flg = 0;  // �ύX�t���O������
+    flg = 0;  // 変更フラグ初期化
     for( y = 0 ; y < 16 ; y++ ){
       for( x = 0 ; x < 16 ; x++ ){
-        if( p_map[ x ][ y ] == check_num ){  // ����Ώۋ��Ƃ���|�e���V����
+        if( p_map[ x ][ y ] == check_num ){  // 今回対象区画とするポテンシャル
           if( mode == S_MODE ){
 
-            // �T�����s(Search Mode)
-            // �k���̕ǂ��Ȃ��ꍇ�F�k���̃|�e���V������Ώۋ��̃|�e���V�������+1
+            // 探索走行(Search Mode)
+            // 北側の壁がない場合：北側のポテンシャルを対象区画のポテンシャルより+1
             if((( map[ x ][ y ] & 0x01 ) == 0 ) && ( y != 15 )){
-              if( p_map[ x ][ y + 1 ] == 255 ){// �܂��|�e���V�����������ĂȂ����
+              if( p_map[ x ][ y + 1 ] == 255 ){// まだポテンシャルを書いてなければ
                 p_map[ x ][ y + 1 ] = check_num + 1;
-                flg = 1;  // �ύX�����̂Ńt���OON
+                flg = 1;  // 変更したのでフラグON
               }
             }
-            // �����̕ǂ����l�ɏ���
+            // 東側の壁も同様に処理
             if((( map[ x ][ y ] & 0x02 ) == 0 ) && ( x != 15 ))
               if(p_map[x+1][y]==255){p_map[x+1][y]=check_num+1;flg=1;}
-            // �쑤�̕ǂ����l�ɏ���
+            // 南側の壁も同様に処理
             if((( map[ x ][ y ] & 0x04 ) == 0 ) && ( y != 0 ))
               if(p_map[x][y-1]==255){p_map[x][y-1]=check_num+1;flg=1;}
-            // �����̕ǂ����l�ɏ���
+            // 西側の壁も同様に処理
             if((( map[ x ][ y ] & 0x08 ) == 0 ) && ( x != 0 ))
               if(p_map[x-1][y]==255){p_map[x-1][y]=check_num+1;flg=1;}
 
           }else{
 
-           // �񎟑��s(Try Mode)
-           // �k�����ǂȂ������T���̏ꍇ(�ǂȂ��ł����T���̓|�e���V����255�̂܂�)
-            // �k���̃|�e���V������Ώۋ��̃|�e���V�������+1
+           // 二次走行(Try Mode)
+           // 北側が壁なし＆既探索の場合(壁なしでも未探索はポテンシャル255のまま)
+            // 北側のポテンシャルを対象区画のポテンシャルより+1
             if((( map[ x ][ y ] & 0x11 ) == 0x10 ) && ( y != 15 )){
-              if( p_map[ x ][ y + 1 ] == 255 ){// �܂��|�e���V�����������ĂȂ����
+              if( p_map[ x ][ y + 1 ] == 255 ){// まだポテンシャルを書いてなければ
                 p_map[ x ][ y + 1 ] = check_num + 1;
-                flg = 1;  // �ύX�����̂Ńt���OON
+                flg = 1;  // 変更したのでフラグON
               }
             }
-            // �����̕ǂ����l�ɏ���
+            // 東側の壁も同様に処理
             if((( map[ x ][ y ] & 0x22 ) == 0x20 ) && ( x != 15 ))
               if(p_map[x+1][y]==255){p_map[x+1][y]=check_num+1;flg=1;}
-            // �쑤�̕ǂ����l�ɏ���
+            // 南側の壁も同様に処理
             if((( map[ x ][ y ] & 0x44 ) == 0x40 ) && ( y != 0 ))
               if(p_map[x][y-1]==255){p_map[x][y-1]=check_num+1;flg=1;}
-            // �����̕ǂ����l�ɏ���
+            // 西側の壁も同様に処理
             if((( map[ x ][ y ] & 0x88 ) == 0x80 ) && ( x != 0 ))
               if(p_map[x-1][y]==255){p_map[x-1][y]=check_num+1;flg=1;}
 
@@ -1526,112 +1544,112 @@ void make_potential( int gx, int gy, int mode )
         }
       }
     }
-    check_num++;      // ���̃��[�v�̂��߂ɑΏۃ|�e���V������+1
-  }while( flg != 0 ); // ����̃��[�v�ŕύX�ӏ���������΍쐬����
+    check_num++;      // 次のループのために対象ポテンシャルを+1
+  }while( flg != 0 ); // 今回のループで変更箇所が無ければ作成完了
 }
 
 //-------------------------------------------------------------------------
-//  �T���F����@
+//  探索：左手法
 //-------------------------------------------------------------------------
 int search_left_hand( void ){
   short wall_data, motion;
 
-  wall_data = get_wall_data();  // �Ǐ��擾
+  wall_data = get_wall_data();  // 壁情報取得
 
-  // �Ǐ���p���Ď��̍s��������i����@�j
-    // motion = 0:���i / 1:�E�� / 2:���] / 3:���� / 4:���]��~
+  // 壁情報を用いて次の行動を決定（左手法）
+    // motion = 0:直進 / 1:右折 / 2:反転 / 3:左折 / 4:反転停止
     switch( wall_data ){
-      case  0x00  : motion = 3; break;  // ���ɕǂȂ�:����
-      case  0x01  : motion = 3; break;  // ���ɕǂȂ�:����
-      case  0x02  : motion = 3; break;  // ���ɕǂȂ�:����
-      case  0x03  : motion = 3; break;  // ���ɕǂȂ�:����
-      case  0x04  : motion = 3; break;  // ���ɕǂȂ�:����
-      case  0x05  : motion = 3; break;  // ���ɕǂȂ�:����
-      case  0x06  : motion = 3; break;  // ���ɕǂȂ�:����
-      case  0x07  : motion = 3; break;  // ���ɕǂȂ�:����
-      case  0x08  : motion = 0; break;  // ���ɕ�,�O�ɕǂȂ�:���i
-      case  0x09  : motion = 1; break;  // ���ɕ�,�O�ɕ�,�E�ɕǂȂ�:�E��
-      case  0x0a  : motion = 0; break;  // ���ɕ�,�O�ɕǂȂ�:���i
-      case  0x0b  : motion = 2; break;  // ���ɕ�,�O�ɕ�,�E�ɕ�:���]
-      default     : motion = 4; break;  // ���ɕ�:���蓾�Ȃ��̂Œ�~
+      case  0x00  : motion = 3; break;  // 左に壁なし:左折
+      case  0x01  : motion = 3; break;  // 左に壁なし:左折
+      case  0x02  : motion = 3; break;  // 左に壁なし:左折
+      case  0x03  : motion = 3; break;  // 左に壁なし:左折
+      case  0x04  : motion = 3; break;  // 左に壁なし:左折
+      case  0x05  : motion = 3; break;  // 左に壁なし:左折
+      case  0x06  : motion = 3; break;  // 左に壁なし:左折
+      case  0x07  : motion = 3; break;  // 左に壁なし:左折
+      case  0x08  : motion = 0; break;  // 左に壁,前に壁なし:直進
+      case  0x09  : motion = 1; break;  // 左に壁,前に壁,右に壁なし:右折
+      case  0x0a  : motion = 0; break;  // 左に壁,前に壁なし:直進
+      case  0x0b  : motion = 2; break;  // 左に壁,前に壁,右に壁:反転
+      default     : motion = 4; break;  // 後ろに壁:あり得ないので停止
   }
   return( motion );
 }
 
 //-------------------------------------------------------------------------
-//  �T���F�g������@
+//  探索：拡張左手法
 //-------------------------------------------------------------------------
 int search_ex_left_hand( void ){
   short wall_data, motion, val, min_val;
 
-  wall_data = map[ pos_x ][ pos_y ];  // ���݋��̕Ǐ��擾
+  wall_data = map[ pos_x ][ pos_y ];  // 現在区画の壁情報取得
 
-  min_val = 8;  // �v�Z�����D��x�̍ő�l+1�������l�ɐݒ�
+  min_val = 8;  // 計算される優先度の最大値+1を初期値に設定
 
-  // �k�����̗D��x�̌v�Z
-  if(( wall_data & 0x01 ) == 0 ){     // �k�����ɕǂ������Ƃ�
-    // 1.�����ɂ��D��x�̌v�Z
-    // �}�E�X���猩�����̕ǂ̕����ƗD��x ��:0, �O:1�C�E:2�C��:3
-    // head=0�i�}�E�X�̓����k�j�̏ꍇ�͗D��x1�i�k�͑O�j
-    // head=1�i�}�E�X�̓������j�̏ꍇ�͗D��x0�i�k�͍��j
-    // head=2�i�}�E�X�̓�����j�̏ꍇ�͗D��x3�i�k�͌�j
-    // head=3�i�}�E�X�̓������j�̏ꍇ�͗D��x2�i�k�͉E�j
+  // 北方向の優先度の計算
+  if(( wall_data & 0x01 ) == 0 ){     // 北方向に壁が無いとき
+    // 1.方向による優先度の計算
+    // マウスから見たこの壁の方向と優先度 左:0, 前:1，右:2，後:3
+    // head=0（マウスの頭が北）の場合は優先度1（北は前）
+    // head=1（マウスの頭が東）の場合は優先度0（北は左）
+    // head=2（マウスの頭が南）の場合は優先度3（北は後）
+    // head=3（マウスの頭が西）の場合は優先度2（北は右）
     val = (( 3 - head ) + 2 ) & 0x03;
 
-    // 2.���T���^���T���ɂ��D��x�̌v�Z
-    // ���T��:0�C���T��:+4
+    // 2.未探索／既探索による優先度の計算
+    // 未探索:0，既探索:+4
     if(( map[ pos_x ][ pos_y + 1 ] & 0xf0 ) == 0xf0 ) val += 4;
 
-    // 3.���̕ǂ��D�悩�ǂ����𔻒f
-    // �����܂ł̌v�Z�ňȉ��̗D��x�̂ǂꂩ�ɂȂ�
-    // 0:�k�������}�E�X�̍����Ŗ��T��
-    // 1:�k�������}�E�X�̑O���Ŗ��T��
-    // 2:�k�������}�E�X�̉E���Ŗ��T��
-    // 3:�k�������}�E�X�̌㑤�Ŗ��T���i���L�蓾�Ȃ��j
-    // 4:�k�������}�E�X�̍����Ŋ��T��
-    // 5:�k�������}�E�X�̑O���Ŋ��T��
-    // 6:�k�������}�E�X�̉E���Ŋ��T��
-    // 7:�k�������}�E�X�̌㑤�Ŋ��T��
+    // 3.この壁が優先かどうかを判断
+    // ここまでの計算で以下の優先度のどれかになる
+    // 0:北方向がマウスの左側で未探索
+    // 1:北方向がマウスの前側で未探索
+    // 2:北方向がマウスの右側で未探索
+    // 3:北方向がマウスの後側で未探索（※有り得ない）
+    // 4:北方向がマウスの左側で既探索
+    // 5:北方向がマウスの前側で既探索
+    // 6:北方向がマウスの右側で既探索
+    // 7:北方向がマウスの後側で既探索
 
     if( val < min_val ){
-      min_val = val;  // �ŏ��l�̍X�V
-      motion = 0;     // �ړ����ׂ�������k�ɐݒ�
+      min_val = val;  // 最小値の更新
+      motion = 0;     // 移動すべき方向を北に設定
     }
   }
 
-  // �������̗D��x�̌v�Z
-  if(( wall_data & 0x02 ) == 0 ){     // �������ɕǂ������Ƃ�
+  // 東方向の優先度の計算
+  if(( wall_data & 0x02 ) == 0 ){     // 東方向に壁が無いとき
     val = (( 3 - head ) + 3 ) & 0x03;
     if(( map[ pos_x + 1 ][ pos_y ] & 0xf0 ) == 0xf0 ) val += 4;
     if( val < min_val ){
-      min_val = val;  // �ŏ��l�̍X�V
-      motion = 1;     // �ړ����ׂ������𓌂ɐݒ�
+      min_val = val;  // 最小値の更新
+      motion = 1;     // 移動すべき方向を東に設定
     }
   }
 
-  // ������̗D��x�̌v�Z
-  if(( wall_data & 0x04 ) == 0 ){     // ������ɕǂ������Ƃ�
+  // 南方向の優先度の計算
+  if(( wall_data & 0x04 ) == 0 ){     // 南方向に壁が無いとき
     val = (( 3 - head ) + 0 ) & 0x03;
     if(( map[ pos_x ][ pos_y - 1 ] & 0xf0 ) == 0xf0 ) val += 4;
     if( val < min_val ){
-      min_val = val;  // �ŏ��l�̍X�V
-      motion = 2;     // �ړ����ׂ��������ɐݒ�
+      min_val = val;  // 最小値の更新
+      motion = 2;     // 移動すべき方向を南に設定
     }
   }
 
-  // �������̗D��x�̌v�Z
-  if(( wall_data & 0x08 ) == 0 ){     // �������ɕǂ������Ƃ�
+  // 西方向の優先度の計算
+  if(( wall_data & 0x08 ) == 0 ){     // 西方向に壁が無いとき
     val = (( 3 - head ) + 1 ) & 0x03;
     if(( map[ pos_x - 1 ][ pos_y ] & 0xf0 ) == 0xf0 ) val += 4;
     if( val < min_val ){
-      min_val = val;  // �ŏ��l�̍X�V
-      motion = 3;     // �ړ����ׂ������𐼂ɐݒ�
+      min_val = val;  // 最小値の更新
+      motion = 3;     // 移動すべき方向を西に設定
     }
   }
 
-  // �ړ����ׂ���������s��������
-  // (�ڕW����-���ݕ���)��2�i����2���Ń}�X�N
-  // �����Z�̌��ʂ����̏ꍇ��2�̕␔�Ń}�X�N�����
+  // 移動すべき方向から行動を決定
+  // (目標方向-現在方向)を2進数下2桁でマスク
+  // 引き算の結果が負の場合は2の補数でマスクされる
   // 11 -> 10 -> 01 -> 00 -> (-1)=11 -> (-2)=10 ...
   motion = ( motion - head ) & 0x03;
 
@@ -1639,128 +1657,128 @@ int search_ex_left_hand( void ){
 }
 
 //-------------------------------------------------------------------------
-//  �T���F�����@
+//  探索：足立法
 //-------------------------------------------------------------------------
 int search_adachi( void ){
   uchar wall_data, motion;
   short val, min_val;
 
-  // ���݋��̕Ǐ��擾
+  // 現在区画の壁情報取得
   wall_data = map[ pos_x ][ pos_y ];
 
-  // �v�Z�����D��x�̍ő�l�������l�ɐݒ�
-  min_val = 1025;  // ���|�e���V�����ő�l+1 255*4+4 +1 =1025
+  // 計算される優先度の最大値を初期値に設定
+  min_val = 1025;  // 区画ポテンシャル最大値+1 255*4+4 +1 =1025
 
-  // ���͂S�̕����ɑ΂��ėD��x���v�Z���C
-  // ��ԗD��x�������i�l���������j���Ɉړ�����D
-  // �D��x�̓|�e���V�����C���^���T���C���i�����̏��D
-  // ��F�|�e���V������0�̏ꍇ����{�D��x��0*4+4=4
-  // �����T���Ȃ�-2�C���i�Ȃ�-1�̌��Z����
-  // 4:���T�������i�ȊO
-  // 3:���T�������i
-  // 2:���T�������i�ȊO
-  // 1:���T�������i
-  // �D��x���������ʂ̏ꍇ�͖k���쐼�̏��ɗD�悳���
+  // 周囲４つの方向に対して優先度を計算し，
+  // 一番優先度が高い（値が小さい）区画に移動する．
+  // 優先度はポテンシャル，未／既探索，直進方向の順．
+  // 例：ポテンシャルが0の場合＝基本優先度は0*4+4=4
+  // ※未探索なら-2，直進なら-1の減算方式
+  // 4:既探索＆直進以外
+  // 3:既探索＆直進
+  // 2:未探索＆直進以外
+  // 1:未探索＆直進
+  // 優先度が同じ結果の場合は北東南西の順に優先される
 
-  // �k�����̗D��x�̌v�Z
-  if(( wall_data & 0x01 ) == 0 ){     // �k�����ɕǂ������Ƃ�
-    // 1.�|�e���V���������Ɋ�{�D��x���v�Z
+  // 北方向の優先度の計算
+  if(( wall_data & 0x01 ) == 0 ){     // 北方向に壁が無いとき
+    // 1.ポテンシャルを元に基本優先度を計算
     val = p_map[ pos_x ][ pos_y + 1 ] * 4 + 4;
-    // 2.�����ɂ��D��x�̌v�Z
-    // �k�������i�s�����������ꍇ�F-1(�D��x��1�グ��)
+    // 2.方向による優先度の計算
+    // 北方向が進行方向だった場合：-1(優先度を1上げる)
     if( head == 0 )  val -= 1;
-    // 3.���T���^���T���ɂ��D��x�̌v�Z
-    // ���T��:-2(�D��x��2�グ��)�C���T��:0
+    // 3.未探索／既探索による優先度の計算
+    // 未探索:-2(優先度を2上げる)，既探索:0
     if(( map[ pos_x ][ pos_y + 1 ] & 0xf0 ) != 0xf0 )  val -= 2;
-    // �ŏ��l�̍X�V
+    // 最小値の更新
     if( val < min_val ){
       min_val = val;
-      motion = 0;  // �ړ����ׂ�������k�ɐݒ�
+      motion = 0;  // 移動すべき方向を北に設定
     }
   }
 
-  // �������̗D��x�̌v�Z
-  if(( wall_data & 0x02 ) == 0 ){     // �������ɕǂ������Ƃ�
+  // 東方向の優先度の計算
+  if(( wall_data & 0x02 ) == 0 ){     // 東方向に壁が無いとき
     val = p_map[ pos_x + 1 ][ pos_y ] * 4 + 4;
     if( head == 1 )  val -= 1;
     if(( map[ pos_x + 1 ][ pos_y ] & 0xf0 ) != 0xf0 )  val -= 2;
     if( val < min_val ){
       min_val = val;
-      motion = 1;  // �ړ����ׂ������𓌂ɐݒ�
+      motion = 1;  // 移動すべき方向を東に設定
     }
   }
 
-  // ������̗D��x�̌v�Z
-  if(( wall_data & 0x04 ) == 0 ){     // ������ɕǂ������Ƃ�
+  // 南方向の優先度の計算
+  if(( wall_data & 0x04 ) == 0 ){     // 南方向に壁が無いとき
     val = p_map[ pos_x ][ pos_y - 1 ] * 4 + 4;
     if( head == 2 )  val -= 1;
     if(( map[ pos_x ][ pos_y - 1 ] & 0xf0 ) != 0xf0 )  val -= 2;
     if( val < min_val ){
       min_val = val;
-      motion = 2;  // �ړ����ׂ��������ɐݒ�
+      motion = 2;  // 移動すべき方向を南に設定
     }
   }
 
-  // �������̗D��x�̌v�Z
-  if(( wall_data & 0x08 ) == 0 ){     // �������ɕǂ������Ƃ�
+  // 西方向の優先度の計算
+  if(( wall_data & 0x08 ) == 0 ){     // 西方向に壁が無いとき
     val = p_map[ pos_x - 1 ][ pos_y ] * 4 + 4;
     if( head == 3 )  val -= 1;
     if(( map[ pos_x - 1 ][ pos_y ] & 0xf0 ) != 0xf0 )  val -= 2;
     if( val < min_val ){
       min_val = val;
-      motion = 3;  // �ړ����ׂ������𐼂ɐݒ�
+      motion = 3;  // 移動すべき方向を西に設定
     }
   }
 
-  // �ړ����ׂ���������s��������
+  // 移動すべき方向から行動を決定
   motion = ( motion - head ) & 0x03;
 
   return( motion );
 }
 
 //-------------------------------------------------------------------------
-//  �J�E���g�_�E��
+//  カウントダウン
 //-------------------------------------------------------------------------
 void countdown( void ){  
-  PIN_WRITE(LED) = LED_OFF;                       // LED������
-  R_SW = LED_OFF;        // �E�Z���TOFF
-  L_SW = LED_OFF;        // ���Z���TOFF
-  F_SW = LED_OFF;        // �O�Z���TOFF
-  Start_Sound(97);    // �J�E���g�_�E�����J�n
-  while( SoundStatus.BIT.SOUND_ON); // ������I���܂ő҂�
-  PIN_WRITE(LED) = LED_ON;                        // LED��_��
-  R_SW = LED_ON;         // �E�Z���TON
-  L_SW = LED_ON;         // ���Z���TON
-  F_SW = LED_ON;         // �O�Z���TON
+  PIN_WRITE(LED) = LED_OFF;                       // LEDを消灯
+  R_SW = LED_OFF;        // 右センサOFF
+  L_SW = LED_OFF;        // 左センサOFF
+  F_SW = LED_OFF;        // 前センサOFF
+  Start_Sound(97);    // カウントダウン音開始
+  while( SoundStatus.BIT.SOUND_ON); // 音が鳴り終わるまで待つ
+  PIN_WRITE(LED) = LED_ON;                        // LEDを点灯
+  R_SW = LED_ON;         // 右センサON
+  L_SW = LED_ON;         // 左センサON
+  F_SW = LED_ON;         // 前センサON
 }
 
 //-------------------------------------------------------------------------
-//  �S�[���I��
+//  ゴール選択
 //-------------------------------------------------------------------------
 void select_goal(int *gx, int *gy){
-  // �S�[�����W�ݒ�
+  // ゴール座標設定
   int goal_num = goal_find_index(*gx, *gy);
   if( goal_num < 0 ) goal_num = 0;
   LCD_print(8, "x:  y:  ");
   while (1) {
     LCD_dec_out(10, goals[goal_num][0], 1);
     LCD_dec_out(14, goals[goal_num][1], 1);
-    if ( PIN_READ(SW_UP) == SW_ON ) { // UP�{�^��
+    if ( PIN_READ(SW_UP) == SW_ON ) { // UPボタン
       goal_num++;
       if ( goal_num >= GOAL_NUM ) goal_num = 0;
-      WaitKeyOff(); // �`���^�����O�h�~
+      WaitKeyOff(); // チャタリング防止
     }
-    if ( PIN_READ(SW_DOWN) == SW_ON ) { // DOWN�{�^��
+    if ( PIN_READ(SW_DOWN) == SW_ON ) { // DOWNボタン
       goal_num--;
       if ( goal_num < 0 ) goal_num = GOAL_NUM - 1;
-      WaitKeyOff(); // �`���^�����O�h�~
+      WaitKeyOff(); // チャタリング防止
     }
-    if ( PIN_READ(SW_EXEC) == SW_ON ) { // ����{�^��
+    if ( PIN_READ(SW_EXEC) == SW_ON ) { // 決定ボタン
       *gx = goals[goal_num][0];
       *gy = goals[goal_num][1];
       break;
     }
-    if ( PIN_READ(SW_RETURN) == SW_ON ) { // �߂�{�^��
+    if ( PIN_READ(SW_RETURN) == SW_ON ) { // 戻るボタン
       break;
     }
   }
