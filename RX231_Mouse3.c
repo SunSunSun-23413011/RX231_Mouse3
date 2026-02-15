@@ -82,6 +82,7 @@ void abort(void);
 typedef uint16_t u16;
 typedef uint32_t u32;
 typedef void (*mode_func_t)(int);
+typedef void (*search_func_t)(int, int, int, int);
 
 //-------------------------------------------------------------------------
 //  マクロ定義
@@ -110,6 +111,8 @@ typedef void (*mode_func_t)(int);
 // 探索関連
 #define   S_MODE      0    // Search Mode : 未探索区間は壁無しとして扱う
 #define   T_MODE      1    // Try Mode    : 未探索区間は壁有りとして扱う
+#define   SEARCH_MOUSE   0
+#define   SEARCH_SLALOM  1
 #define MAP_DATA_NO (0)
 #define GOAL_DATA_NO (1)
 #define MAP_DATA_SLOTS (1u)
@@ -572,6 +575,9 @@ static const mode_func_t g_mode_table[] = {
   mode0, mode1, mode2, mode3, mode4, mode5, mode6, mode7, mode8, mode9
 };
 static const int g_mode_table_count = (int)(sizeof(g_mode_table) / sizeof(g_mode_table[0]));
+static const search_func_t g_search_table[] = {
+  mouse_search, slalom_search
+};
 
 void change_mode( int x ){
   MODE += x;                            // モード更新
@@ -721,6 +727,7 @@ void mode4( int x ){
 //  Mode5 : 探索走行
 //-------------------------------------------------------------------------
 void mode5( int x ){
+  search_func_t search;
   if( x == DISP ){  // DISPモードの場合
     // モード内容表示
     LCD_print( 0, "5:Search" );
@@ -733,10 +740,11 @@ void mode5( int x ){
   select_speed(&Global_Speed); // 速度選択
   countdown();               // カウントダウン
   pos_x = 0; pos_y = 0; head = 0; // 
+  search = g_search_table[SEARCH_MOUSE];
   Start_Sound(3);
-  mouse_search( goal[0], goal[1], Global_Speed, S_MODE );
+  search( goal[0], goal[1], Global_Speed, S_MODE );
   (void)map_writeDF(MAP_DATA_NO);
-  mouse_search(0, 0, Global_Speed, S_MODE);
+  search(0, 0, Global_Speed, S_MODE);
   (void)map_writeDF(MAP_DATA_NO);
   Start_Sound(96);
 }
@@ -745,8 +753,8 @@ void mode5( int x ){
 //  Mode6 : 二次走行
 //-------------------------------------------------------------------------
 void mode6( int x ){
-  if( x == DISP )  // DISPモードの場合
-  {
+  search_func_t search;
+  if( x == DISP ){  // DISPモードの場合
     // モード内容表示
     LCD_print( 0, "6:Try   " );
     LCD_print( 8, "Spd     " );
@@ -759,10 +767,11 @@ void mode6( int x ){
   // 二次走行
   countdown();           // カウントダウン
   pos_x = 0; pos_y = 0; head = 0;
+  search = g_search_table[SEARCH_SLALOM];
   Start_Sound(3);
   map_DFread(MAP_DATA_NO);
-  slalom_search( goal[0], goal[1], Global_Speed, T_MODE );
-  slalom_search( 0, 0, Global_Speed, T_MODE );
+  search( goal[0], goal[1], Global_Speed, T_MODE );
+  search( 0, 0, Global_Speed, T_MODE );
   Start_Sound(96);
 }
 
