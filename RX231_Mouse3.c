@@ -334,7 +334,7 @@ void load_param( void ){
   F_LIM2  = 200;    // 2マス先前
   F_LIM_SLA = 550;  // スラローム用前壁
   //走行パラメータ
-  GO_STEP = 1600;   // 1区間のステップ数
+  GO_STEP = 1610;   // 1区間のステップ数
   SLA_GO_STEP = 1580; //スラローム時1区間のステップ数
   HALF_STEP = 600; // 半区間のステップ数
   TURN_STEP = 550;  // 旋回ステップ数
@@ -1053,7 +1053,10 @@ void slalom_search( int goal_x, int goal_y, int spd, int mode ){
       head  = save_head;
     }
 
-    if( mode == T_MODE && next_motion == 0 && next_next_motion == 0 ) speed = spd; // speed setting
+    if( mode == T_MODE && next_motion == 0 && speed < 400 ) speed = 400; // speed setting
+    else if( mode == T_MODE && next_motion == 0 && next_next_motion == 0 && speed < 700 ) speed = 700; // speed setting
+    else if( mode == T_MODE && next_motion == 0 && next_next_motion == 0 ) speed = spd; // speed setting
+    else if( mode == T_MODE && next_motion == 0 && speed > 400 ) speed = 400; // speed setting
     else speed = 300;
     if( zerozero == 1 ){
       while( STEP < HALF_STEP );

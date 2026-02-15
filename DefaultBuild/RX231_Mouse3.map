@@ -1,4 +1,4 @@
-Renesas Optimizing Linker (W3.07.00 )             15-Feb-2026 15:57:31
+Renesas Optimizing Linker (W3.07.00 )             15-Feb-2026 16:54:01
 
 *** Options ***
 
@@ -120,7 +120,7 @@ W_2
 L
                                   fffe2500  fffe2656       157   4
 P
-                                  fffe2658  fffeb233      8bdc   4
+                                  fffe2658  fffeb303      8cac   4
 EXCEPTVECT
                                   ffffff80  fffffffb        7c   4
 RESETVECT
@@ -130,7 +130,7 @@ RESETVECT
 
 RAMDATA SECTION:  00003c9f Byte(s)
 ROMDATA SECTION:  00002674 Byte(s)
-PROGRAM SECTION:  00008c38 Byte(s)
+PROGRAM SECTION:  00008d08 Byte(s)
 
 *** Symbol List ***
 
@@ -788,7 +788,7 @@ FILE=DefaultBuild\Pin.obj
   _R_Pins_Create
                                   fffe3d8b        fd   func ,g         * 
 FILE=DefaultBuild\RX231_Mouse3.obj
-                                  fffe3e88  fffe77f6      396f
+                                  fffe3e88  fffe78c3      3a3c
   _LCD_init
                                   fffe3e88        6d   func ,g         * 
   _LCD
@@ -854,505 +854,505 @@ FILE=DefaultBuild\RX231_Mouse3.obj
   _mouse_search
                                   fffe52f6       4c7   func ,g         * 
   _slalom_search
-                                  fffe57bd       4cb   func ,g         * 
+                                  fffe57bd       598   func ,g         * 
   _com_go
-                                  fffe5c88        a9   func ,g         * 
+                                  fffe5d55        a9   func ,g         * 
   _com_go_half
-                                  fffe5d31        97   func ,g         * 
+                                  fffe5dfe        97   func ,g         * 
   _com_stop
-                                  fffe5dc8        4f   func ,g         * 
+                                  fffe5e95        4f   func ,g         * 
   _com_back
-                                  fffe5e17        9b   func ,g         * 
+                                  fffe5ee4        9b   func ,g         * 
   _com_turn
-                                  fffe5eb2        fd   func ,g         * 
+                                  fffe5f7f        fd   func ,g         * 
   _com_slalom_turn
-                                  fffe5faf       295   func ,g         * 
+                                  fffe607c       295   func ,g         * 
   _back_wall_set
-                                  fffe6244        15   func ,g         * 
+                                  fffe6311        15   func ,g         * 
   _goal_kbat_turn
-                                  fffe6259       123   func ,g         * 
+                                  fffe6326       123   func ,g         * 
   _kbat_lf_turn
-                                  fffe637c        9e   func ,g         * 
+                                  fffe6449        9e   func ,g         * 
   _Start_Sound
-                                  fffe641a       147   func ,g         * 
+                                  fffe64e7       147   func ,g         * 
   _Stop_Sound
-                                  fffe6561        2b   func ,g         * 
+                                  fffe662e        2b   func ,g         * 
   _AccTableGet
-                                  fffe658c        21   func ,g         * 
+                                  fffe6659        21   func ,g         * 
   _flash_dm_callback
-                                  fffe65ad        17   func ,l         * 
+                                  fffe667a        17   func ,l         * 
   _flash_dm_wait
-                                  fffe65c4        2f   func ,l         * 
+                                  fffe6691        2f   func ,l         * 
   _flash_dm_format
-                                  fffe65f3        2d   func ,l         * 
+                                  fffe66c0        2d   func ,l         * 
   _flash_dm_erase
-                                  fffe6620        37   func ,l         * 
+                                  fffe66ed        37   func ,l         * 
   _flash_dm_reclaim
-                                  fffe6657        6b   func ,l         * 
+                                  fffe6724        6b   func ,l         * 
   _flash_dm_init_once
-                                  fffe66c2        9f   func ,l         * 
+                                  fffe678f        9f   func ,l         * 
   _flash_dm_write
-                                  fffe6761        ba   func ,l         * 
+                                  fffe682e        ba   func ,l         * 
   _flash_dm_read
-                                  fffe681b        50   func ,l         * 
+                                  fffe68e8        50   func ,l         * 
   _map_writeDF
-                                  fffe686b        92   func ,g         * 
+                                  fffe6938        92   func ,g         * 
   _map_DFread
-                                  fffe68fd        93   func ,g         * 
+                                  fffe69ca        93   func ,g         * 
   _goal_find_index
-                                  fffe6990        54   func ,g         * 
+                                  fffe6a5d        54   func ,g         * 
   _goal_writeDF
-                                  fffe69e4        59   func ,g         * 
+                                  fffe6ab1        59   func ,g         * 
   _goal_DFread
-                                  fffe6a3d        a7   func ,g         * 
+                                  fffe6b0a        a7   func ,g         * 
   _get_wall_data
-                                  fffe6ae4        56   func ,g         * 
+                                  fffe6bb1        56   func ,g         * 
   _clear_map
-                                  fffe6b3a        e6   func ,g         * 
+                                  fffe6c07        e6   func ,g         * 
   _make_map_data
-                                  fffe6c20       199   func ,g         * 
+                                  fffe6ced       199   func ,g         * 
   _make_potential
-                                  fffe6db9       430   func ,g         * 
+                                  fffe6e86       430   func ,g         * 
   _search_left_hand
-                                  fffe71e9        5b   func ,g         * 
+                                  fffe72b6        5b   func ,g         * 
   _search_ex_left_hand
-                                  fffe7244       16c   func ,g         * 
+                                  fffe7311       16c   func ,g         * 
   _search_adachi
-                                  fffe73b0       20e   func ,g         * 
+                                  fffe747d       20e   func ,g         * 
   _countdown
-                                  fffe75be        55   func ,g         * 
+                                  fffe768b        55   func ,g         * 
   _select_speed
-                                  fffe7613        88   func ,g         * 
+                                  fffe76e0        88   func ,g         * 
   _select_search
-                                  fffe769b        76   func ,g         * 
+                                  fffe7768        76   func ,g         * 
   _select_goal
-                                  fffe7711        e6   func ,g         * 
+                                  fffe77de        e6   func ,g         * 
 FILE=DefaultBuild\Config_MTU1.obj
-                                  fffe77f7  fffe786a        74
+                                  fffe78c4  fffe7937        74
   _R_Config_MTU1_Create
-                                  fffe77f7        56   func ,g         * 
+                                  fffe78c4        56   func ,g         * 
   _R_Config_MTU1_Start
-                                  fffe784d         f   func ,g         * 
+                                  fffe791a         f   func ,g         * 
   _R_Config_MTU1_Stop
-                                  fffe785c         f   func ,g         * 
+                                  fffe7929         f   func ,g         * 
 FILE=DefaultBuild\Config_MTU1_user.obj
-                                  fffe786b  fffe7879         f
+                                  fffe7938  fffe7946         f
   _R_Config_MTU1_Create_UserInit
-                                  fffe786b         1   func ,g         * 
+                                  fffe7938         1   func ,g         * 
   _r_Config_MTU1_tgia1_interrupt
-                                  fffe786c         e   func ,l         * 
+                                  fffe7939         e   func ,l         * 
 FILE=DefaultBuild\r_flash_dm_rx_if.obj
-                                  fffe787a  fffe83ce       b55
+                                  fffe7947  fffe849b       b55
   _R_FLASH_DM_Open
-                                  fffe787a        95   func ,g         * 
+                                  fffe7947        95   func ,g         * 
   _R_FLASH_DM_Close
-                                  fffe790f        3a   func ,g         * 
+                                  fffe79dc        3a   func ,g         * 
   _R_FLASH_DM_GetVersion
-                                  fffe7949         d   func ,g         * 
+                                  fffe7a16         d   func ,g         * 
   _R_FLASH_DM_Init
-                                  fffe7956        10   func ,g         * 
+                                  fffe7a23        10   func ,g         * 
   _R_FLASH_DM_Format
-                                  fffe7966        10   func ,g         * 
+                                  fffe7a33        10   func ,g         * 
   _R_FLASH_DM_Read
-                                  fffe7976        14   func ,g         * 
+                                  fffe7a43        14   func ,g         * 
   _R_FLASH_DM_Write
-                                  fffe798a        14   func ,g         * 
+                                  fffe7a57        14   func ,g         * 
   _R_FLASH_DM_Erase
-                                  fffe799e        10   func ,g         * 
+                                  fffe7a6b        10   func ,g         * 
   _R_FLASH_DM_Control
-                                  fffe79ae        19   func ,g         * 
+                                  fffe7a7b        19   func ,g         * 
   _r_flash_dm_get_writable_size
-                                  fffe79c7        14   func ,l         * 
+                                  fffe7a94        14   func ,l         * 
   _R_FLASH_DM_Reclaim
-                                  fffe79db        d8   func ,g         * 
+                                  fffe7aa8        d8   func ,g         * 
   _r_flash_dm_d1_init
-                                  fffe7ab3       448   func ,l         * 
+                                  fffe7b80       448   func ,l         * 
   _r_flash_dm_d1_read
-                                  fffe7efb        c0   func ,l         * 
+                                  fffe7fc8        c0   func ,l         * 
   _r_flash_dm_d1_write
-                                  fffe7fbb       13b   func ,l         * 
+                                  fffe8088       13b   func ,l         * 
   _r_flash_dm_d1_erase
-                                  fffe80f6        e2   func ,l         * 
+                                  fffe81c3        e2   func ,l         * 
   _r_flash_dm_d1_format
-                                  fffe81d8        60   func ,l         * 
+                                  fffe82a5        60   func ,l         * 
   _r_flash_dm_d1_control
-                                  fffe8238        52   func ,l         * 
+                                  fffe8305        52   func ,l         * 
   _r_flash_dm_1_get_writable_size
-                                  fffe828a        76   func ,l         * 
+                                  fffe8357        76   func ,l         * 
   _r_flash_dm_drvif_close
-                                  fffe8300        18   func ,l         * 
+                                  fffe83cd        18   func ,l         * 
   _r_flash_dm_drvif_get_datanum
-                                  fffe8318         9   func ,g         * 
+                                  fffe83e5         9   func ,g         * 
   _r_flash_dm_drvif_get_datasize
-                                  fffe8321        13   func ,g         * 
+                                  fffe83ee        13   func ,g         * 
   _r_flash_dm_getdatasize
-                                  fffe8334        41   func ,l         * 
+                                  fffe8401        41   func ,l         * 
   _r_flash_dm_getdatanum
-                                  fffe8375        30   func ,l         * 
+                                  fffe8442        30   func ,l         * 
   _r_flash_dm_getactivity
-                                  fffe83a5        2a   func ,l         * 
+                                  fffe8472        2a   func ,l         * 
 FILE=DefaultBuild\r_dispatch_1.obj
-                                  fffe83cf  fffe94ca      10fc
+                                  fffe849c  fffe9597      10fc
   _r_flash_dm_advance
-                                  fffe83cf        22   func ,g         * 
+                                  fffe849c        22   func ,g         * 
   _r_flash_dm_memcopy
-                                  fffe83f1        30   func ,g         * 
+                                  fffe84be        30   func ,g         * 
   _r_flash_dm_memclr
-                                  fffe8421        22   func ,l         * 
+                                  fffe84ee        22   func ,l         * 
   _r_flash_dm_equal_p
-                                  fffe8443        3a   func ,l         * 
+                                  fffe8510        3a   func ,l         * 
   _r_flash_dm_init_env
-                                  fffe847d        fb   func ,g         * 
+                                  fffe854a        fb   func ,g         * 
   _r_flash_dm_free_area
-                                  fffe8578        25   func ,g         * 
+                                  fffe8645        25   func ,g         * 
   _r_flash_dm_link
-                                  fffe859d        2d   func ,l         * 
+                                  fffe866a        2d   func ,l         * 
   _r_flash_dm_try
-                                  fffe85ca         e   func ,l         * 
+                                  fffe8697         e   func ,l         * 
   _r_flash_dm_dispatch
-                                  fffe85d8       c56   func ,g         * 
+                                  fffe86a5       c56   func ,g         * 
   _r_flash_dm_drvif_set_dataaddr
-                                  fffe922e        13   func ,g         * 
+                                  fffe92fb        13   func ,g         * 
   _r_flash_dm_1st_check
-                                  fffe9241       190   func ,g         * 
+                                  fffe930e       190   func ,g         * 
   _r_flash_dm_softwaredelay
-                                  fffe93d1        6e   func ,g         * 
+                                  fffe949e        6e   func ,g         * 
   _r_flash_dm_drvif_get_dataaddr
-                                  fffe943f        13   func ,g         * 
+                                  fffe950c        13   func ,g         * 
   _r_flash_dm_drvif_get_dataaddr_of_addr
-                                  fffe9452        14   func ,g         * 
+                                  fffe951f        14   func ,g         * 
   _r_flash_dm_block_set_program_addr
-                                  fffe9466        10   func ,g         * 
+                                  fffe9533        10   func ,g         * 
   _r_flash_dm_block_get_program_addr
-                                  fffe9476        10   func ,g         * 
+                                  fffe9543        10   func ,g         * 
   _r_flash_dm_drvif_flash_busy
-                                  fffe9486        37   func ,g         * 
+                                  fffe9553        37   func ,g         * 
   _r_flash_dm_set_dispatch
-                                  fffe94bd         e   func ,g         * 
+                                  fffe958a         e   func ,g         * 
 FILE=DefaultBuild\r_dm_1.obj
-                                  fffe94cb  fffe9b1f       655
+                                  fffe9598  fffe9bec       655
   _r_flash_dm_drvif_open
-                                  fffe94cb        35   func ,g         * 
+                                  fffe9598        35   func ,g         * 
   _r_flash_dm_drvif_init_device
-                                  fffe9500         9   func ,g         * 
+                                  fffe95cd         9   func ,g         * 
   _r_flash_dm_drvif_erase_error
-                                  fffe9509        26   func ,g         * 
+                                  fffe95d6        26   func ,g         * 
   _r_flash_dm_drvif_program_error
-                                  fffe952f        26   func ,g         * 
+                                  fffe95fc        26   func ,g         * 
   _r_flash_dm_drvif_overwrite_block_flag
-                                  fffe9555        26   func ,g         * 
+                                  fffe9622        26   func ,g         * 
   _r_flash_dm_drvif_get_block_num
-                                  fffe957b         f   func ,g         * 
+                                  fffe9648         f   func ,g         * 
   _r_flash_dm_drvif_get_block_info
-                                  fffe958a        14   func ,g         * 
+                                  fffe9657        14   func ,g         * 
   _r_flash_dm_drvif_get_block_addr
-                                  fffe959e        13   func ,g         * 
+                                  fffe966b        13   func ,g         * 
   _r_flash_dm_drvif_set_addr_h
-                                  fffe95b1         6   func ,g         * 
+                                  fffe967e         6   func ,g         * 
   _r_flash_dm_drvif_get_addr
-                                  fffe95b7         c   func ,g         * 
+                                  fffe9684         c   func ,g         * 
   _r_flash_dm_drvif_get_block_erase_flag
-                                  fffe95c3         c   func ,g         * 
+                                  fffe9690         c   func ,g         * 
   _r_flash_dm_drvif_set_dh_flag
-                                  fffe95cf        13   func ,g         * 
+                                  fffe969c        13   func ,g         * 
   _r_flash_dm_drvif_overwrite
-                                  fffe95e2        7b   func ,l         * 
+                                  fffe96af        7b   func ,l         * 
   _r_flash_dm_drvif_api_flag
-                                  fffe965d        29   func ,g         * 
+                                  fffe972a        29   func ,g         * 
   _r_flash_dm_drvif_write
-                                  fffe9686        46   func ,g         * 
+                                  fffe9753        46   func ,g         * 
   _r_flash_dm_drvif_erase
-                                  fffe96cc        3a   func ,g         * 
+                                  fffe9799        3a   func ,g         * 
   _r_flash_dm_block_init
-                                  fffe9706        20   func ,g         * 
+                                  fffe97d3        20   func ,g         * 
   _r_flash_dm_block_program_init
-                                  fffe9726        49   func ,g         * 
+                                  fffe97f3        49   func ,g         * 
   _r_flash_dm_block_erase_init
-                                  fffe976f         a   func ,g         * 
+                                  fffe983c         a   func ,g         * 
   _r_flash_dm_block_copy_setup
-                                  fffe9779        de   func ,l         * 
+                                  fffe9846        de   func ,l         * 
   _r_flash_dm_block_fill_setup
-                                  fffe9857        88   func ,l         * 
+                                  fffe9924        88   func ,l         * 
   _r_flash_dm_block_program_setup
-                                  fffe98df        3b   func ,l         * 
+                                  fffe99ac        3b   func ,l         * 
   _r_flash_dm_block_program_check
-                                  fffe991a        ad   func ,g         * 
+                                  fffe99e7        ad   func ,g         * 
   _r_flash_dm_block_erase_check
-                                  fffe99c7        21   func ,g         * 
+                                  fffe9a94        21   func ,g         * 
   _r_flash_dm_block_command
-                                  fffe99e8        66   func ,g         * 
+                                  fffe9ab5        66   func ,g         * 
   _r_flash_dm_drvif_callback
-                                  fffe9a4e        c4   func ,g         * 
+                                  fffe9b1b        c4   func ,g         * 
   _r_flash_dm_set_dm
-                                  fffe9b12         e   func ,g         * 
+                                  fffe9bdf         e   func ,g         * 
 FILE=DefaultBuild\r_flash_group.obj
-                                  fffe9b20  fffea34a       82b
+                                  fffe9bed  fffea417       82b
   _r_flash_open
-                                  fffe9b20        5c   func ,g         * 
+                                  fffe9bed        5c   func ,g         * 
   _flash_interrupt_config
-                                  fffe9b7c        ab   func ,l         * 
+                                  fffe9c49        ab   func ,l         * 
   _r_flash_close
-                                  fffe9c27        31   func ,g         * 
+                                  fffe9cf4        31   func ,g         * 
   _r_flash_erase
-                                  fffe9c58        da   func ,g         * 
+                                  fffe9d25        da   func ,g         * 
   _get_erase_flash_type
-                                  fffe9d32        92   func ,l         * 
+                                  fffe9dff        92   func ,l         * 
   _is_cf_addr
-                                  fffe9dc4        29   func ,l         * 
+                                  fffe9e91        29   func ,l         * 
   _set_erase_params
-                                  fffe9ded        84   func ,l         * 
+                                  fffe9eba        84   func ,l         * 
   _r_flash_blankcheck
-                                  fffe9e71       14b   func ,g         * 
+                                  fffe9f3e       14b   func ,g         * 
   _set_blankcheck_params
-                                  fffe9fbc        89   func ,l         * 
+                                  fffea089        89   func ,l         * 
   _r_flash_write
-                                  fffea045        de   func ,g         * 
+                                  fffea112        de   func ,g         * 
   _get_bc_pgm_flash_type
-                                  fffea123        a7   func ,l         * 
+                                  fffea1f0        a7   func ,l         * 
   _set_write_params
-                                  fffea1ca        85   func ,l         * 
+                                  fffea297        85   func ,l         * 
   _r_flash_control
-                                  fffea24f        fc   func ,g         * 
+                                  fffea31c        fc   func ,g         * 
 FILE=DefaultBuild\r_flash_nofcu.obj
-                                  fffea34b  fffea9a9       65f
+                                  fffea418  fffeaa76       65f
   _flash_df_access_enable
-                                  fffea34b        1f   func ,g         * 
+                                  fffea418        1f   func ,g         * 
   _flash_df_pe_mode_enter
-                                  fffea36a        3d   func ,l         * 
+                                  fffea437        3d   func ,l         * 
   _flash_df_read_mode_enter
-                                  fffea3a7        23   func ,l         * 
+                                  fffea474        23   func ,l         * 
   _flash_df_erase
-                                  fffea3ca        5a   func ,l         * 
+                                  fffea497        5a   func ,l         * 
   _flash_df_blankcheck
-                                  fffea424        54   func ,l         * 
+                                  fffea4f1        54   func ,l         * 
   _flash_df_write
-                                  fffea478        5d   func ,l         * 
+                                  fffea545        5d   func ,l         * 
   _flash_get_status
-                                  fffea4d5        1a   func ,g         * 
+                                  fffea5a2        1a   func ,g         * 
   _flash_reset
-                                  fffea4ef         f   func ,g         * 
+                                  fffea5bc         f   func ,g         * 
   _flash_stop
-                                  fffea4fe        b1   func ,g         * 
+                                  fffea5cb        b1   func ,g         * 
   _flash_delay_us
-                                  fffea5af        2f   func ,g         * 
+                                  fffea67c        2f   func ,g         * 
   _flash_pe_mode_enter
-                                  fffea5de        28   func ,g         * 
+                                  fffea6ab        28   func ,g         * 
   _flash_pe_mode_exit
-                                  fffea606        1e   func ,g         * 
+                                  fffea6d3        1e   func ,g         * 
   _flash_erase
-                                  fffea624        5a   func ,g         * 
+                                  fffea6f1        5a   func ,g         * 
   _flash_blankcheck
-                                  fffea67e        7c   func ,g         * 
+                                  fffea74b        7c   func ,g         * 
   _flash_write
-                                  fffea6fa        d8   func ,g         * 
+                                  fffea7c7        d8   func ,g         * 
   _flash_write_fpmcr
-                                  fffea7d2        37   func ,l         * 
+                                  fffea89f        37   func ,l         * 
   _flash_wait_frdy
-                                  fffea809        9a   func ,l         * 
+                                  fffea8d6        9a   func ,l         * 
   _Excep_FCU_FRDYI
-                                  fffea8a3       107   func ,l         * 
+                                  fffea970       107   func ,l         * 
 FILE=DefaultBuild\r_flash_rx.obj
-                                  fffea9aa  fffeaad9       130
+                                  fffeaa77  fffeaba6       130
   _R_FLASH_Open
-                                  fffea9aa        1c   func ,g         * 
+                                  fffeaa77        1c   func ,g         * 
   _R_FLASH_Close
-                                  fffea9c6         a   func ,g         * 
+                                  fffeaa93         a   func ,g         * 
   _R_FLASH_Erase
-                                  fffea9d0        10   func ,g         * 
+                                  fffeaa9d        10   func ,g         * 
   _R_FLASH_BlankCheck
-                                  fffea9e0        15   func ,g         * 
+                                  fffeaaad        15   func ,g         * 
   _R_FLASH_Write
-                                  fffea9f5        15   func ,g         * 
+                                  fffeaac2        15   func ,g         * 
   _R_FLASH_Control
-                                  fffeaa0a        10   func ,g         * 
+                                  fffeaad7        10   func ,g         * 
   _R_FLASH_GetVersion
-                                  fffeaa1a         e   func ,g         * 
+                                  fffeaae7         e   func ,g         * 
   _flash_lock_state
-                                  fffeaa28        27   func ,g         * 
+                                  fffeaaf5        27   func ,g         * 
   _flash_release_state
-                                  fffeaa4f        13   func ,g         * 
+                                  fffeab1c        13   func ,g         * 
   _flash_softwareLock
-                                  fffeaa62        26   func ,g         * 
+                                  fffeab2f        26   func ,g         * 
   _flash_softwareUnlock
-                                  fffeaa88        10   func ,g         * 
+                                  fffeab55        10   func ,g         * 
   _flash_InterruptRequestEnable
-                                  fffeaa98        21   func ,g         * 
+                                  fffeab65        21   func ,g         * 
   _flash_InterruptRequestDisable
-                                  fffeaab9        21   func ,g         * 
+                                  fffeab86        21   func ,g         * 
 FILE=freopen
-                                  fffeaada  fffeab07        2e
+                                  fffeaba7  fffeabd4        2e
   _freopen
-                                  fffeaada        2e   func ,g         * 
+                                  fffeaba7        2e   func ,g         * 
 FILE=fclose
-                                  fffeab08  fffeab5b        54
+                                  fffeabd5  fffeac28        54
   _fclose
-                                  fffeab08        54   func ,g         * 
+                                  fffeabd5        54   func ,g         * 
 FILE=__COM_DIVd
-                                  fffeab5c  fffead38       1dd
+                                  fffeac29  fffeae05       1dd
   exception1
-                                  fffeab5c         0   none ,l         * 
+                                  fffeac29         0   none ,l         * 
   exception2
-                                  fffeab6b         0   none ,l         * 
+                                  fffeac38         0   none ,l         * 
   exception3
-                                  fffeab73         0   none ,l         * 
+                                  fffeac40         0   none ,l         * 
   normalize1
-                                  fffeab86         0   none ,l         * 
+                                  fffeac53         0   none ,l         * 
   p1_norm_loop
-                                  fffeab91         0   none ,l         * 
+                                  fffeac5e         0   none ,l         * 
   exception4
-                                  fffeabc7         0   none ,l         * 
+                                  fffeac94         0   none ,l         * 
   normalize2
-                                  fffeabcd         0   none ,l         * 
+                                  fffeac9a         0   none ,l         * 
   p2_norm_loop
-                                  fffeabd8         0   none ,l         * 
+                                  fffeaca5         0   none ,l         * 
   return_zero
-                                  fffeac05         0   none ,l         * 
+                                  fffeacd2         0   none ,l         * 
   return_inf
-                                  fffeac10         0   none ,l         * 
+                                  fffeacdd         0   none ,l         * 
   return_NaN
-                                  fffeac23         0   none ,l         * 
+                                  fffeacf0         0   none ,l         * 
   __COM_DIVd
-                                  fffeac2e         0   none ,g         * 
+                                  fffeacfb         0   none ,g         * 
   exception_return3
-                                  fffeac62         0   none ,l         * 
+                                  fffead2f         0   none ,l         * 
   exception_return4
-                                  fffeac67         0   none ,l         * 
+                                  fffead34         0   none ,l         * 
   div_loop
-                                  fffeac88         0   none ,l         * 
+                                  fffead55         0   none ,l         * 
   man_sub
-                                  fffeac9b         0   none ,l         * 
+                                  fffead68         0   none ,l         * 
   over_sub
-                                  fffeaca6         0   none ,l         * 
+                                  fffead73         0   none ,l         * 
   end_man_cal
-                                  fffeacae         0   none ,l         * 
+                                  fffead7b         0   none ,l         * 
   end_sticky_cal
-                                  fffeacb3         0   none ,l         * 
+                                  fffead80         0   none ,l         * 
   end_norm
-                                  fffeacc1         0   none ,l         * 
+                                  fffead8e         0   none ,l         * 
   denormalize_loop
-                                  fffeacce         0   none ,l         * 
+                                  fffead9b         0   none ,l         * 
   next_loop
-                                  fffeacd6         0   none ,l         * 
+                                  fffeada3         0   none ,l         * 
   round_denormal
-                                  fffeacde         0   none ,l         * 
+                                  fffeadab         0   none ,l         * 
   end_round_d
-                                  fffeacf8         0   none ,l         * 
+                                  fffeadc5         0   none ,l         * 
   end_denormal
-                                  fffeacfa         0   none ,l         * 
+                                  fffeadc7         0   none ,l         * 
   end_denormal_0
-                                  fffead0a         0   none ,l         * 
+                                  fffeadd7         0   none ,l         * 
   return_value
-                                  fffead18         0   none ,l         * 
+                                  fffeade5         0   none ,l         * 
   end_round
-                                  fffead18         0   none ,l         * 
+                                  fffeade5         0   none ,l         * 
   return
-                                  fffead32         0   none ,l         * 
+                                  fffeadff         0   none ,l         * 
 FILE=__COM_DIV64u
-                                  fffead39  fffeadd1        99
+                                  fffeae06  fffeae9e        99
   __COM_DIV64u
-                                  fffead39         0   none ,g         * 
+                                  fffeae06         0   none ,g         * 
   _Loop_Init
-                                  fffead43         0   none ,l         * 
+                                  fffeae10         0   none ,l         * 
   _Loop
-                                  fffead4b         0   none ,l         * 
+                                  fffeae18         0   none ,l         * 
   _DivStart
-                                  fffead57         0   none ,l         * 
+                                  fffeae24         0   none ,l         * 
   _Success
-                                  fffead65         0   none ,l         * 
+                                  fffeae32         0   none ,l         * 
   _DivEnd
-                                  fffead71         0   none ,l         * 
+                                  fffeae3e         0   none ,l         * 
   IXI6DIV
-                                  fffead76         0   none ,l         * 
+                                  fffeae43         0   none ,l         * 
   IXI4DIV
-                                  fffead88         0   none ,l         * 
+                                  fffeae55         0   none ,l         * 
   IXI2DIV
-                                  fffead98         0   none ,l         * 
+                                  fffeae65         0   none ,l         * 
   I8I2DIV
-                                  fffeada0         0   none ,l         * 
+                                  fffeae6d         0   none ,l         * 
   I4I2DIV
-                                  fffeadce         0   none ,l         * 
+                                  fffeae9b         0   none ,l         * 
   _i8divU_End
-                                  fffeadd1         0   none ,l         * 
+                                  fffeae9e         0   none ,l         * 
 FILE=__COM_CONV32ud
-                                  fffeadd2  fffeae0f        3e
+                                  fffeae9f  fffeaedc        3e
   __COM_CONV32ud
-                                  fffeadd2         0   none ,g         * 
+                                  fffeae9f         0   none ,g         * 
   next_8
-                                  fffeade4         0   none ,l         * 
+                                  fffeaeb1         0   none ,l         * 
   next_4
-                                  fffeadec         0   none ,l         * 
+                                  fffeaeb9         0   none ,l         * 
   next_2
-                                  fffeadf4         0   none ,l         * 
+                                  fffeaec1         0   none ,l         * 
   next_1
-                                  fffeadfc         0   none ,l         * 
+                                  fffeaec9         0   none ,l         * 
   next_0
-                                  fffeae04         0   none ,l         * 
+                                  fffeaed1         0   none ,l         * 
   pack
-                                  fffeae06         0   none ,l         * 
+                                  fffeaed3         0   none ,l         * 
   return
-                                  fffeae0f         0   none ,l         * 
+                                  fffeaedc         0   none ,l         * 
 FILE=__COM_CONVd32
-                                  fffeae10  fffeae62        53
+                                  fffeaedd  fffeaf2f        53
   __COM_CONVd32u
-                                  fffeae10         0   none ,g         * 
+                                  fffeaedd         0   none ,g         * 
   __COM_CONVd32s
-                                  fffeae13         0   none ,g         * 
+                                  fffeaee0         0   none ,g         * 
   unpack
-                                  fffeae16         0   none ,l         * 
+                                  fffeaee3         0   none ,l         * 
   return
-                                  fffeae3b         0   none ,l         * 
+                                  fffeaf08         0   none ,l         * 
   return_zero
-                                  fffeae3c         0   none ,l         * 
+                                  fffeaf09         0   none ,l         * 
   exp_over30
-                                  fffeae3f         0   none ,l         * 
+                                  fffeaf0c         0   none ,l         * 
   exp_over31
-                                  fffeae41         0   none ,l         * 
+                                  fffeaf0e         0   none ,l         * 
   exp_equal31
-                                  fffeae50         0   none ,l         * 
+                                  fffeaf1d         0   none ,l         * 
 FILE=__initsct
-                                  fffeae63  fffeaeac        4a
+                                  fffeaf30  fffeaf79        4a
   __INITSCT
-                                  fffeae63         0   none ,g         * 
+                                  fffeaf30         0   none ,g         * 
   loop1
-                                  fffeae75         0   none ,l         * 
+                                  fffeaf42         0   none ,l         * 
   next_loop1
-                                  fffeae83         0   none ,l         * 
+                                  fffeaf50         0   none ,l         * 
   loop3
-                                  fffeae95         0   none ,l         * 
+                                  fffeaf62         0   none ,l         * 
   next_loop3
-                                  fffeaea6         0   none ,l         * 
+                                  fffeaf73         0   none ,l         * 
 FILE=fflush
-                                  fffeaead  fffeaf2c        80
+                                  fffeaf7a  fffeaff9        80
   _fflush
-                                  fffeaead        80   func ,g         * 
+                                  fffeaf7a        80   func ,g         * 
 FILE=xfoprep
-                                  fffeaf2d  fffeaffe        d2
+                                  fffeaffa  fffeb0cb        d2
   __Foprep
-                                  fffeaf2d        d2   func ,g         * 
+                                  fffeaffa        d2   func ,g         * 
 FILE=xfofind
-                                  fffeafff  fffeb08b        8d
+                                  fffeb0cc  fffeb158        8d
   __Fofind
-                                  fffeafff        44   func ,g         * 
+                                  fffeb0cc        44   func ,g         * 
   __Fofree
-                                  fffeb043        49   func ,g         * 
+                                  fffeb110        49   func ,g         * 
 FILE=free
-                                  fffeb08c  fffeb10d        82
+                                  fffeb159  fffeb1da        82
   _free
-                                  fffeb08c        82   func ,g         * 
+                                  fffeb159        82   func ,g         * 
 FILE=xfopen
-                                  fffeb10e  fffeb13d        30
+                                  fffeb1db  fffeb20a        30
   __Fopen
-                                  fffeb10e        30   func ,g         * 
+                                  fffeb1db        30   func ,g         * 
 FILE=malloc
-                                  fffeb13e  fffeb218        db
+                                  fffeb20b  fffeb2e5        db
   _findmem
-                                  fffeb13e        79   func ,l         * 
+                                  fffeb20b        79   func ,l         * 
   _malloc
-                                  fffeb1b7        62   func ,g         * 
+                                  fffeb284        62   func ,g         * 
 FILE=xgetmem
-                                  fffeb219  fffeb233        1b
+                                  fffeb2e6  fffeb303        1e
   __Getmem
-                                  fffeb219        1b   func ,g         * 
+                                  fffeb2e6        1b   func ,g         * 
 
 SECTION=EXCEPTVECT
 FILE=DefaultBuild\vecttbl.obj
