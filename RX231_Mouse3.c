@@ -330,17 +330,17 @@ void load_param( void ){
   // 壁の有無判定用しきい値:各センサ壁あり最小値と壁なし値の中間値
   R_LIM   = 150;    // 右
   L_LIM   = 150;    // 左
-  F_LIM   = 280;    // 前
+  F_LIM   = 240;    // 前
   F_LIM2  = 200;    // 2マス先前
-  F_LIM_SLA = 550;  // スラローム用前壁
+  F_LIM_SLA = 480;  // スラローム用前壁
   //走行パラメータ
   GO_STEP = 1610;   // 1区間のステップ数
   SLA_GO_STEP = 1580; //スラローム時1区間のステップ数
   HALF_STEP = 600; // 半区間のステップ数
-  TURN_STEP = 550;  // 旋回ステップ数
-  SLALOM_STEP_FORWARD = 30; // スラローム内側ステップ数
+  TURN_STEP = 520;  // 旋回ステップ数
+  SLALOM_STEP_FORWARD = 1; // スラローム内側ステップ数
   SLALOM_STEP_OUT = 600; // スラローム外側ステップ数
-  SLALOM_INNER_SPEED = 10; // スラローム内輪速度
+  SLALOM_INNER_SPEED = 1; // スラローム内輪速度
   Global_Speed = 900; // グローバル速度
   zerozero = 0; // (0,0)スタートフラグ初期化
 }
@@ -883,9 +883,9 @@ void modeA( int x ){
   pos_x = 0; pos_y = 0; head = 0; // 
   search = g_search_table[select];
   Start_Sound(3);
-  search( goal[0], goal[1], 400, S_MODE );
+  search( goal[0], goal[1], 500, S_MODE );
   (void)map_writeDF(MAP_DATA_NO);
-  search(0, 0, 400, S_MODE);
+  search(0, 0, 500, S_MODE);
   (void)map_writeDF(MAP_DATA_NO);
   for(int i = 0; i < 4; i++){
     pos_x = 0; pos_y = 0; head = 0;
@@ -1053,11 +1053,11 @@ void slalom_search( int goal_x, int goal_y, int spd, int mode ){
       head  = save_head;
     }
 
-    if( mode == T_MODE && next_motion == 0 && speed < 500 ) speed = 500; // speed setting
+    if( mode == T_MODE && next_motion == 0 && speed < 600 ) speed = 600; // speed setting
     else if( mode == T_MODE && next_motion == 0 && next_next_motion == 0 && speed < 700 ) speed = 700; // speed setting
     else if( mode == T_MODE && next_motion == 0 && next_next_motion == 0 ) speed = spd; // speed setting
-    else if( mode == T_MODE && next_motion == 0 && speed > 500 ) speed = 500; // speed setting
-    else speed = 400;
+    else if( mode == T_MODE && next_motion == 0 && speed > 600 ) speed = 600; // speed setting
+    else speed = 500;
     if( zerozero == 1 ){
       while( STEP < HALF_STEP );
       step_l = 0;
@@ -1068,7 +1068,7 @@ void slalom_search( int goal_x, int goal_y, int spd, int mode ){
 
     // 旋回前の進入距離をスラローム向けに調整
     if( prev_motion == 1 || prev_motion == 3 ){
-      while( STEP < GO_STEP / 2 );
+      while( STEP < GO_STEP * 0.45 && F_SEN < F_LIM_SLA );
     }else{
       while( STEP < GO_STEP / 2 && F_SEN < F_LIM_SLA );
     }
