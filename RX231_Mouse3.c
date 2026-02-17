@@ -326,7 +326,7 @@ void load_param( void ){
   // センサしきい値の決め打ち
   R_REF   = 350;    // 区画中央での右センサ値
   L_REF   = 300;    // 区画中央での左センサ値
-  F_REF   = 1500;   // 区画中央での前センサ値
+  F_REF   = 1600;   // 区画中央での前センサ値
   // 壁の有無判定用しきい値:各センサ壁あり最小値と壁なし値の中間値
   R_LIM   = 150;    // 右
   L_LIM   = 150;    // 左
@@ -338,8 +338,8 @@ void load_param( void ){
   SLA_GO_STEP = 1580; //スラローム時1区間のステップ数
   HALF_STEP = 600; // 半区間のステップ数
   TURN_STEP = 550;  // 旋回ステップ数
-  SLALOM_STEP_FORWARD = 60; // スラローム内側ステップ数
-  SLALOM_STEP_OUT = 570; // スラローム外側ステップ数
+  SLALOM_STEP_FORWARD = 30; // スラローム内側ステップ数
+  SLALOM_STEP_OUT = 600; // スラローム外側ステップ数
   SLALOM_INNER_SPEED = 10; // スラローム内輪速度
   Global_Speed = 900; // グローバル速度
   zerozero = 0; // (0,0)スタートフラグ初期化
@@ -883,9 +883,9 @@ void modeA( int x ){
   pos_x = 0; pos_y = 0; head = 0; // 
   search = g_search_table[select];
   Start_Sound(3);
-  search( goal[0], goal[1], 300, S_MODE );
+  search( goal[0], goal[1], 400, S_MODE );
   (void)map_writeDF(MAP_DATA_NO);
-  search(0, 0, 300, S_MODE);
+  search(0, 0, 400, S_MODE);
   (void)map_writeDF(MAP_DATA_NO);
   for(int i = 0; i < 4; i++){
     pos_x = 0; pos_y = 0; head = 0;
@@ -1053,11 +1053,11 @@ void slalom_search( int goal_x, int goal_y, int spd, int mode ){
       head  = save_head;
     }
 
-    if( mode == T_MODE && next_motion == 0 && speed < 400 ) speed = 400; // speed setting
+    if( mode == T_MODE && next_motion == 0 && speed < 500 ) speed = 500; // speed setting
     else if( mode == T_MODE && next_motion == 0 && next_next_motion == 0 && speed < 700 ) speed = 700; // speed setting
     else if( mode == T_MODE && next_motion == 0 && next_next_motion == 0 ) speed = spd; // speed setting
-    else if( mode == T_MODE && next_motion == 0 && speed > 400 ) speed = 400; // speed setting
-    else speed = 300;
+    else if( mode == T_MODE && next_motion == 0 && speed > 500 ) speed = 500; // speed setting
+    else speed = 400;
     if( zerozero == 1 ){
       while( STEP < HALF_STEP );
       step_l = 0;
