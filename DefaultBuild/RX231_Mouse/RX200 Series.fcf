@@ -1,0 +1,41 @@
+[Header]
+Description=Renesas Flash Programmer Configuration File
+File Type=3.3
+[Device Info]
+Device Type=1
+Protocol=3
+Device Code=38613032
+Product Name=RX200 Series 
+Support FAW=TRUE
+Support AWPR=FALSE
+Support ESW=TRUE
+Memory Area Count=2
+External Memory Area Count=0
+[Clock Info]
+Clock Mode=0
+Support Clock=
+OSC Frequency Range=32000000,32000000
+CPU Frequency Range=64000000,64000000
+SCI Frequency Range=64000000,64000000
+CPU Ratio=2/1
+SCI Ratio=2/1
+[Memory Area 0]
+Area Type=0x00000001
+Start Address=0xFFF80000
+Size=0x00080000
+Erase Unit Size=0x00000800
+Write Unit Size=0x00000100
+Sum Unit Size=0x00000000
+Read Unit Size=0x00000001
+Attribute=0x00000002
+[Memory Area 1]
+Area Type=0x00000010
+Start Address=0x00100000
+Size=0x00002000
+Erase Unit Size=0x00000400
+Write Unit Size=0x00000004
+Sum Unit Size=0x00000000
+Read Unit Size=0x00000001
+Attribute=0x00000002
+[Checksum]
+Checksum=0x70CA3721
